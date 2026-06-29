@@ -1,0 +1,88 @@
+import 'package:flutter/material.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+
+class SkeletonLoaderVideos extends StatelessWidget {
+  const SkeletonLoaderVideos({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Skeletonizer(
+      enabled: true,
+      effect: const ShimmerEffect(
+        duration: Duration(milliseconds: 1500),
+        highlightColor: Colors.white,
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            crossAxisSpacing: 14,
+            mainAxisSpacing: 16,
+            childAspectRatio: 0.7,
+          ),
+          itemCount: 6,
+          itemBuilder: (context, index) {
+            return Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                    child: Container(
+                      width: double.infinity,
+                      height: 140,
+                      color: Colors.grey.shade300,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: 12,
+                          width: double.infinity,
+                          color: Colors.grey.shade300,
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          height: 10,
+                          width: 100,
+                          color: Colors.grey.shade300,
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Container(
+                              height: 8,
+                              width: 60,
+                              color: Colors.grey.shade300,
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              height: 8,
+                              width: 50,
+                              color: Colors.grey.shade300,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
