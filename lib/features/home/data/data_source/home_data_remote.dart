@@ -58,4 +58,18 @@ class HomeRemoteDataSource {
       rethrow;
     }
   }
+
+  Future<List<BookModel>> getBooksByCategory() async {
+    try {
+      final response = await dio.get(Api.books);
+      if (response.statusCode == 200) {
+        return (response.data['data'] as List)
+            .map((e) => BookModel.fromJson(e))
+            .toList();
+      }
+      throw Exception('Failed to load books :: status code != 200');
+    } catch (e) {
+      throw Exception('$e');
+    }
+  }
 }

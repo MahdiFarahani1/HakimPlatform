@@ -86,7 +86,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                           width: 80,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                             borderRadius: BorderRadius.circular(8),
                           ),
                         )
@@ -97,7 +97,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                           width: 120,
                           height: 32,
                           decoration: BoxDecoration(
-                            color: Colors.grey[300],
+                            color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                             borderRadius: BorderRadius.circular(8),
                           ),
                         )
@@ -110,7 +110,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                       width: double.infinity,
                       height: 20,
                       decoration: BoxDecoration(
-                        color: Colors.grey[300],
+                        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                         borderRadius: BorderRadius.circular(8),
                       ),
                     )
@@ -122,7 +122,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                     borderRadius: BorderRadius.circular(28),
                   ),
                   child: Column(
@@ -131,7 +131,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                             width: double.infinity,
                             height: 24,
                             decoration: BoxDecoration(
-                              color: Colors.grey[300],
+                              color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                               borderRadius: BorderRadius.circular(8),
                             ),
                           )
@@ -147,7 +147,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                                     width: double.infinity,
                                     height: 16,
                                     decoration: BoxDecoration(
-                                      color: Colors.grey[300],
+                                      color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                                       borderRadius: BorderRadius.circular(8),
                                     ),
                                   )
@@ -165,7 +165,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                                 Container(
                                       height: 80,
                                       decoration: BoxDecoration(
-                                        color: Colors.grey[300],
+                                        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                     )
@@ -181,7 +181,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                                 Container(
                                       height: 80,
                                       decoration: BoxDecoration(
-                                        color: Colors.grey[300],
+                                        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                                         borderRadius: BorderRadius.circular(16),
                                       ),
                                     )
@@ -205,7 +205,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                     child: Container(
                       height: 80,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(
@@ -215,7 +215,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                                 width: 50,
                                 height: 50,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[300],
+                                  color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                               )
@@ -233,7 +233,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                                       width: 150,
                                       height: 16,
                                       decoration: BoxDecoration(
-                                        color: Colors.grey[300],
+                                        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     )
@@ -247,7 +247,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                                       width: 200,
                                       height: 12,
                                       decoration: BoxDecoration(
-                                        color: Colors.grey[300],
+                                        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                     )

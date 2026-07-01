@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/features/bookmark/presentation/bookmark_view.dart';
 import 'package:flutter_application_1/features/gallery/presentation/gallery_view.dart';
@@ -22,7 +21,6 @@ class WrapperPage extends StatefulWidget {
 }
 
 class _WrapperPageState extends State<WrapperPage> {
-  PageController pageController = PageController();
   final pages = [
     HomePage(),
     Container(),
@@ -113,7 +111,7 @@ class _WrapperPageState extends State<WrapperPage> {
                   onPageChanged: (value) {
                     context.read<NavigationCubit>().changeNavState(value);
                   },
-                  controller: pageController,
+                  controller: context.read<NavigationCubit>().pageController,
                   itemCount: pages.length,
                   itemBuilder: (context, index) => pages[index],
                 ),
@@ -127,7 +125,10 @@ class _WrapperPageState extends State<WrapperPage> {
                         currentIndex: state,
                         onTap: (value) {
                           context.read<NavigationCubit>().changeNavState(value);
-                          pageController.jumpToPage(value);
+                          context
+                              .read<NavigationCubit>()
+                              .pageController
+                              .jumpToPage(value);
                         },
                       );
                     },

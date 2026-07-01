@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config/di.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/widgets/custom_loading.dart';
+import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/features/news/logic/all-news/news_cubit.dart';
 import 'package:flutter_application_1/features/news/presentation/detail_news_view.dart';
 import 'package:flutter_application_1/features/news/widgets/news_card.dart';
@@ -20,7 +21,8 @@ class NewsScreen extends StatefulWidget {
   State<NewsScreen> createState() => _NewsScreenState();
 }
 
-class _NewsScreenState extends State<NewsScreen> {
+class _NewsScreenState extends State<NewsScreen>
+    with AutomaticKeepAliveClientMixin {
   final ScrollController _scrollController = ScrollController();
   String? _selectedLanguage;
 
@@ -48,6 +50,7 @@ class _NewsScreenState extends State<NewsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocProvider(
       create: (context) => getIt<NewsCubit>()..fetchNews(isRefresh: true),
       child: Scaffold(
@@ -56,7 +59,6 @@ class _NewsScreenState extends State<NewsScreen> {
             decoration: BoxDecoration(
               gradient: context.appTheme.scaffoldGradient,
             ),
-
             child: Column(
               children: [
                 _buildHeader(),
@@ -68,7 +70,10 @@ class _NewsScreenState extends State<NewsScreen> {
                       if (state is NewsLoading) {
                         return _buildSkeletonLoader();
                       } else if (state is NewsError) {
-                        return _buildErrorWidget(state.message, context);
+                        return CustomErrorWidget(
+                          onRetry: () =>
+                              BlocProvider.of<NewsCubit>(context).fetchNews(),
+                        );
                       } else if (state is NewsSuccess) {
                         if (state.displayNews.isEmpty) {
                           return _buildEmptyWidget(state);
@@ -84,53 +89,67 @@ class _NewsScreenState extends State<NewsScreen> {
                             return false;
                           },
                           child: AnimationLimiter(
-                            child: GridView.builder(
+                            child: CustomScrollView(
                               controller: _scrollController,
-                              padding: const EdgeInsets.all(16),
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                    crossAxisCount: 2,
-                                    crossAxisSpacing: 14,
-                                    mainAxisSpacing: 16,
-                                    childAspectRatio: 0.75,
-                                  ),
-                              itemCount:
-                                  state.displayNews.length +
-                                  (state.hasMore ? 1 : 0),
-                              itemBuilder: (context, index) {
-                                if (index >= state.displayNews.length) {
-                                  return const Center(
-                                    child: Padding(
-                                      padding: EdgeInsets.all(16),
-                                      child: CustomLoading(),
-                                    ),
-                                  );
-                                }
-                                final news = state.displayNews[index];
-                                return AnimationConfiguration.staggeredGrid(
-                                  position: index,
-                                  duration: const Duration(milliseconds: 400),
-                                  columnCount: 2,
-                                  child: ScaleAnimation(
-                                    child: FadeInAnimation(
-                                      child: NewsCard(
-                                        news: news,
-                                        onTap: () {
-                                          // در صفحه لیست اخبار
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (_) => NewsDetailScreen(
-                                                newsModel: news,
-                                              ),
+                              slivers: [
+                                SliverPadding(
+                                  padding: const EdgeInsets.all(16),
+                                  sliver: SliverGrid(
+                                    gridDelegate:
+                                        const SliverGridDelegateWithFixedCrossAxisCount(
+                                          crossAxisCount: 2,
+                                          crossAxisSpacing: 14,
+                                          mainAxisSpacing: 16,
+                                          childAspectRatio: 0.75,
+                                        ),
+                                    delegate: SliverChildBuilderDelegate((
+                                      context,
+                                      index,
+                                    ) {
+                                      final news = state.displayNews[index];
+                                      return AnimationConfiguration.staggeredGrid(
+                                        position: index,
+                                        duration: const Duration(
+                                          milliseconds: 400,
+                                        ),
+                                        columnCount: 2,
+                                        child: ScaleAnimation(
+                                          child: FadeInAnimation(
+                                            child: NewsCard(
+                                              news: news,
+                                              onTap: () {
+                                                // در صفحه لیست اخبار
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (_) =>
+                                                        NewsDetailScreen(
+                                                          newsModel: news,
+                                                        ),
+                                                  ),
+                                                );
+                                              },
                                             ),
-                                          );
-                                        },
+                                          ),
+                                        ),
+                                      );
+                                    }, childCount: state.displayNews.length),
+                                  ),
+                                ),
+                                if (state.hasMore)
+                                  const SliverToBoxAdapter(
+                                    child: Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(16),
+                                        child: CustomLoading(),
                                       ),
                                     ),
                                   ),
-                                );
-                              },
+                                // فاصله پایین برای اینکه لودینگ به لبه پایین نچسبه
+                                const SliverToBoxAdapter(
+                                  child: SizedBox(height: 8),
+                                ),
+                              ],
                             ),
                           ),
                         );
@@ -150,9 +169,9 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget _buildHeader() {
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
+        borderRadius: const BorderRadius.only(
           bottomLeft: Radius.circular(28),
           bottomRight: Radius.circular(28),
         ),
@@ -186,12 +205,14 @@ class _NewsScreenState extends State<NewsScreen> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'الأخبار',
                     style: TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFF1E293B),
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : const Color(0xFF1E293B),
                     ),
                   ),
                   const SizedBox(height: 2),
@@ -223,12 +244,18 @@ class _NewsScreenState extends State<NewsScreen> {
           }
           return Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: Colors.grey.shade200),
+              border: Border.all(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white12
+                    : Colors.grey.shade200,
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.shade100,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.transparent
+                      : Colors.grey.shade100,
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -239,7 +266,12 @@ class _NewsScreenState extends State<NewsScreen> {
                 context.read<NewsCubit>().searchNews(value);
               },
               controller: TextEditingController(text: currentQuery),
-              style: const TextStyle(color: Color(0xFF1E293B), fontSize: 14),
+              style: TextStyle(
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : const Color(0xFF1E293B),
+                fontSize: 14,
+              ),
               decoration: InputDecoration(
                 hintText: 'بحث في الأخبار...',
                 hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
@@ -312,13 +344,17 @@ class _NewsScreenState extends State<NewsScreen> {
                         : null;
                     context.read<NewsCubit>().filterByLanguage(langCode);
                   },
-                  backgroundColor: Colors.white,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.onPrimaryContainer,
                   selectedColor: AppColor.primaryBlue.withOpacity(0.1),
                   checkmarkColor: AppColor.primaryBlue,
                   labelStyle: TextStyle(
                     color: isSelected
                         ? AppColor.primaryBlue
-                        : Colors.grey.shade700,
+                        : (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade300
+                              : Colors.grey.shade700),
                     fontWeight: isSelected
                         ? FontWeight.w600
                         : FontWeight.normal,
@@ -327,7 +363,9 @@ class _NewsScreenState extends State<NewsScreen> {
                   side: BorderSide(
                     color: isSelected
                         ? AppColor.primaryBlue
-                        : Colors.grey.shade300,
+                        : (Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white12
+                              : Colors.grey.shade300),
                   ),
                   shape: StadiumBorder(),
                 ),
@@ -342,9 +380,14 @@ class _NewsScreenState extends State<NewsScreen> {
   Widget _buildSkeletonLoader() {
     return Skeletonizer(
       enabled: true,
-      effect: const ShimmerEffect(
-        duration: Duration(milliseconds: 1500),
-        highlightColor: Colors.white,
+      effect: ShimmerEffect(
+        duration: const Duration(milliseconds: 1500),
+        highlightColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white12
+            : Colors.white,
+        baseColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey.shade800
+            : Colors.grey.shade300,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -359,7 +402,7 @@ class _NewsScreenState extends State<NewsScreen> {
           itemBuilder: (context, index) {
             return Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -420,50 +463,6 @@ class _NewsScreenState extends State<NewsScreen> {
     );
   }
 
-  Widget _buildErrorWidget(String message, BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: Colors.red.shade50,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.error_outline,
-              size: 50,
-              color: Colors.red.shade400,
-            ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            message,
-            style: TextStyle(color: Colors.grey.shade600, fontSize: 14),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton.icon(
-            onPressed: () {
-              context.read<NewsCubit>().fetchNews(isRefresh: true);
-            },
-            icon: const Icon(Icons.refresh, size: 18),
-            label: const Text('إعادة المحاولة'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.primaryBlue,
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildEmptyWidget(NewsSuccess state) {
     return Center(
       child: Column(
@@ -497,4 +496,7 @@ class _NewsScreenState extends State<NewsScreen> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

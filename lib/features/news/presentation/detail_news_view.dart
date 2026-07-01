@@ -2,7 +2,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/core/utils/share.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
+import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_state.dart';
 import 'package:flutter_application_1/features/news/data/models/news_detail.dart';
@@ -30,7 +33,7 @@ class NewsDetailScreen extends StatelessWidget {
       create: (context) =>
           NewsDetailCubit(getIt())..fetchNewsDetail(postId: newsModel.id),
       child: Scaffold(
-        backgroundColor: const Color(0xffF6F8FC),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: BlocBuilder<NewsDetailCubit, NewsDetailState>(
           builder: (context, state) {
             if (state is NewsDetailLoading) {
@@ -72,7 +75,7 @@ class NewsDetailsContent extends StatelessWidget {
     final hasImgTitle = news.imgTitle.isNotEmpty;
 
     return Scaffold(
-      backgroundColor: const Color(0xffF6F8FC),
+      backgroundColor: context.theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
           /// MAIN SCROLL
@@ -274,14 +277,16 @@ class NewsDetailsContent extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.theme.colorScheme.onPrimaryContainer,
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(30),
                       ),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 30,
-                          color: Colors.black.withOpacity(0.05),
+                          color: context.theme.brightness == Brightness.dark
+                              ? Colors.transparent
+                              : Colors.black.withOpacity(0.05),
                           offset: const Offset(0, -5),
                         ),
                       ],
@@ -320,7 +325,11 @@ class NewsDetailsContent extends StatelessWidget {
                                               fontSize: state.fontSize,
                                               fontWeight: FontWeight.w500,
                                               height: 1.5,
-                                              color: Color(0xff444444),
+                                              color:
+                                                  context.theme.brightness ==
+                                                      Brightness.dark
+                                                  ? Colors.white70
+                                                  : const Color(0xff444444),
                                             ),
                                           );
                                         },
@@ -344,23 +353,39 @@ class NewsDetailsContent extends StatelessWidget {
                                   fontFamily: state.selectedFont,
                                   textAlign: TextAlign.justify,
                                   lineHeight: LineHeight(1.8),
-                                  color: const Color(0xff444444),
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white70
+                                      : const Color(0xff444444),
                                   margin: Margins.only(bottom: 16),
                                 ),
                                 "strong": Style(
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black87,
                                 ),
                                 "h1": Style(
                                   fontSize: FontSize(24),
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black87,
                                   margin: Margins.only(top: 16, bottom: 12),
                                 ),
                                 "h2": Style(
                                   fontSize: FontSize(20),
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                  color:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : Colors.black87,
                                   margin: Margins.only(top: 16, bottom: 12),
                                 ),
                                 "br": Style(margin: Margins.only(bottom: 8)),
@@ -373,13 +398,19 @@ class NewsDetailsContent extends StatelessWidget {
 
                         /// MORE IMAGES GALLERY
                         if (hasMoreImages) ...[
-                          const Divider(height: 32, color: Color(0xffE0E0E0)),
-                          const Text(
+                          const Divider(
+                            height: 32,
+                            color: Colors
+                                .transparent, // Let dynamic color below apply
+                          ),
+                          Text(
                             "صور إضافية",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xff1A1A1A),
+                              color: context.theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : const Color(0xff1A1A1A),
                             ),
                           ),
                           const SizedBox(height: 16),
@@ -408,7 +439,11 @@ class NewsDetailsContent extends StatelessWidget {
                                               Container(
                                                 width: 140,
                                                 height: 120,
-                                                color: Colors.grey.shade200,
+                                                color:
+                                                    context.theme.brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.grey.shade800
+                                                    : Colors.grey.shade200,
                                                 child: Padding(
                                                   padding: const EdgeInsets.all(
                                                     12.0,
@@ -454,6 +489,7 @@ class NewsDetailsContent extends StatelessWidget {
             bottom: 20,
             child: SafeArea(
               child: _modernBottomBar(
+                context: context,
                 newsId: news.id,
                 onHomeTap: () {
                   Navigator.push(
@@ -463,12 +499,13 @@ class NewsDetailsContent extends StatelessWidget {
                 },
                 onBookmarkTap: () {
                   context.read<BookmarkCubit>().toggleBookmark(newsModel);
+                  AppSnackBar.success(context, 'تم حفظ التغييرات بنجاح');
                 },
                 onShareTap: () {
-                  // TODO: Share news
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(const SnackBar(content: Text('مشاركة الخبر')));
+                  ShareHelper.shareContent(
+                    title: news.title,
+                    content: news.content,
+                  );
                 },
                 onBackToListTap: () {
                   Navigator.pop(context);
@@ -518,6 +555,7 @@ class NewsDetailsContent extends StatelessWidget {
 // ================= BOTTOM NAVIGATION BAR =================
 
 Widget _modernBottomBar({
+  required BuildContext context,
   required VoidCallback onHomeTap,
   required VoidCallback onBookmarkTap,
   required VoidCallback onShareTap,
@@ -527,12 +565,16 @@ Widget _modernBottomBar({
   return Container(
     height: 70,
     decoration: BoxDecoration(
-      color: Colors.white.withOpacity(0.95),
+      color: Theme.of(context).brightness == Brightness.dark
+          ? const Color(0xff1A1C20).withOpacity(0.95)
+          : Colors.white.withOpacity(0.95),
       borderRadius: BorderRadius.circular(35),
       boxShadow: [
         BoxShadow(
           blurRadius: 25,
-          color: Colors.black.withOpacity(0.1),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.transparent
+              : Colors.black.withOpacity(0.1),
           offset: const Offset(0, 5),
         ),
       ],

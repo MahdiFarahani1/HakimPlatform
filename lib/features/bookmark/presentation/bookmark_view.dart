@@ -53,7 +53,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
           const Color.fromARGB(255, 89, 197, 161),
 
           Assets.icons.bookOpenCover.path,
-          'کتاب',
+          'كتاب',
         );
       default:
         return (
@@ -114,12 +114,16 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                 ),
                               ),
                               const SizedBox(width: 16),
-                              const Text(
+                              Text(
                                 'علاماتي المرجعية',
                                 style: TextStyle(
                                   fontSize: 28,
                                   fontWeight: FontWeight.bold,
-                                  color: Color(0xFF1A1F36),
+                                  color:
+                                      context.theme.brightness ==
+                                          Brightness.dark
+                                      ? Colors.white
+                                      : const Color(0xFF1A1F36),
                                   letterSpacing: -0.5,
                                 ),
                               ),
@@ -130,7 +134,9 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                             "إدارة ذكية للكتب والبودكاست والمقالات",
                             style: TextStyle(
                               fontSize: 14,
-                              color: const Color(0xFF6B7280),
+                              color: context.theme.brightness == Brightness.dark
+                                  ? Colors.grey.shade400
+                                  : const Color(0xFF6B7280),
                               height: 1.4,
                             ),
                           ),
@@ -184,12 +190,14 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
+                          Text(
                             "التصنيفات",
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
-                              color: Color(0xFF1A1F36),
+                              color: context.theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : const Color(0xFF1A1F36),
                             ),
                           ),
                           const SizedBox(height: 12),
@@ -237,11 +245,13 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                       ),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: context.theme.colorScheme.onPrimaryContainer,
                           borderRadius: BorderRadius.circular(20),
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.black.withOpacity(0.04),
+                              color: context.theme.brightness == Brightness.dark
+                                  ? Colors.transparent
+                                  : Colors.black.withOpacity(0.04),
                               blurRadius: 8,
                               offset: const Offset(0, 2),
                             ),
@@ -249,6 +259,11 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                         ),
                         child: TextField(
                           controller: _searchController,
+                          style: TextStyle(
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.white
+                                : Colors.black,
+                          ),
                           onChanged: (value) {
                             setState(() {
                               _searchQuery = value;
@@ -382,11 +397,13 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.theme.colorScheme.onPrimaryContainer,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.04),
+              color: context.theme.brightness == Brightness.dark
+                  ? Colors.transparent
+                  : Colors.black.withOpacity(0.04),
               blurRadius: 10,
               offset: const Offset(0, 2),
             ),
@@ -405,9 +422,11 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
             const SizedBox(height: 6),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
-                color: Color(0xFF6B7280),
+                color: context.theme.brightness == Brightness.dark
+                    ? Colors.grey.shade400
+                    : const Color(0xFF6B7280),
                 fontWeight: FontWeight.w500,
               ),
             ),
@@ -437,10 +456,16 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
         duration: Duration(milliseconds: 400),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppColor.primaryBlue : Colors.white,
+          color: isSelected
+              ? AppColor.primaryBlue
+              : context.theme.colorScheme.onPrimaryContainer,
           borderRadius: BorderRadius.circular(30),
           border: Border.all(
-            color: isSelected ? Colors.transparent : const Color(0xFFE5E7EB),
+            color: isSelected
+                ? Colors.transparent
+                : (context.theme.brightness == Brightness.dark
+                      ? Colors.white10
+                      : const Color(0xFFE5E7EB)),
             width: 1,
           ),
           boxShadow: isSelected
@@ -473,7 +498,9 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                 fontWeight: FontWeight.w600,
                 color: isSelected
                     ? AppColor.primaryOrange
-                    : const Color(0xFF374151),
+                    : (context.theme.brightness == Brightness.dark
+                          ? Colors.grey.shade300
+                          : const Color(0xFF374151)),
               ),
             ),
           ],
@@ -490,11 +517,13 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
       padding: const EdgeInsets.only(bottom: 16),
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.theme.colorScheme.onPrimaryContainer,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: context.theme.brightness == Brightness.dark
+                  ? Colors.transparent
+                  : Colors.black.withOpacity(0.05),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -611,10 +640,12 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                         const SizedBox(height: 8),
                         Text(
                           news.title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1A1F36),
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.white
+                                : const Color(0xFF1A1F36),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -622,9 +653,11 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                         const SizedBox(height: 4),
                         Text(
                           news.intro ?? '',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: Color(0xFF9CA3AF),
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.grey.shade400
+                                : const Color(0xFF9CA3AF),
                           ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,

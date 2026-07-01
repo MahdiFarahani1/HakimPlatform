@@ -15,4 +15,11 @@ class ShareHelper {
       sharePositionOrigin: box!.localToGlobal(Offset.zero) & box.size,
     );
   }
+
+  static Future<void> shareContent({
+    required String title,
+    required String content,
+  }) async {
+    await SharePlus.instance.share(ShareParams(title: title, text: content));
+  }
 }

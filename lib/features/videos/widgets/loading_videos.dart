@@ -8,9 +8,14 @@ class SkeletonLoaderVideos extends StatelessWidget {
   Widget build(BuildContext context) {
     return Skeletonizer(
       enabled: true,
-      effect: const ShimmerEffect(
-        duration: Duration(milliseconds: 1500),
-        highlightColor: Colors.white,
+      effect: ShimmerEffect(
+        duration: const Duration(milliseconds: 1500),
+        highlightColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white12
+            : Colors.white,
+        baseColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey.shade800
+            : Colors.grey.shade300,
       ),
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -25,7 +30,7 @@ class SkeletonLoaderVideos extends StatelessWidget {
           itemBuilder: (context, index) {
             return Container(
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Column(
@@ -39,7 +44,9 @@ class SkeletonLoaderVideos extends StatelessWidget {
                     child: Container(
                       width: double.infinity,
                       height: 140,
-                      color: Colors.grey.shade300,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey.shade800
+                          : Colors.grey.shade300,
                     ),
                   ),
                   Padding(
@@ -50,13 +57,17 @@ class SkeletonLoaderVideos extends StatelessWidget {
                         Container(
                           height: 12,
                           width: double.infinity,
-                          color: Colors.grey.shade300,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade800
+                              : Colors.grey.shade300,
                         ),
                         const SizedBox(height: 8),
                         Container(
                           height: 10,
                           width: 100,
-                          color: Colors.grey.shade300,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade800
+                              : Colors.grey.shade300,
                         ),
                         const SizedBox(height: 8),
                         Row(
@@ -64,13 +75,17 @@ class SkeletonLoaderVideos extends StatelessWidget {
                             Container(
                               height: 8,
                               width: 60,
-                              color: Colors.grey.shade300,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.grey.shade800
+                                  : Colors.grey.shade300,
                             ),
                             const SizedBox(width: 8),
                             Container(
                               height: 8,
                               width: 50,
-                              color: Colors.grey.shade300,
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.grey.shade800
+                                  : Colors.grey.shade300,
                             ),
                           ],
                         ),

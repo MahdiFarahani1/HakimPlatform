@@ -43,7 +43,7 @@ class NewsListSection extends StatelessWidget {
           separatorBuilder: (_, __) => SizedBox(height: 12.h),
           itemBuilder: (context, index) {
             final newsItem = news[index];
-            return _buildNewsCard(newsItem);
+            return _buildNewsCard(context, newsItem);
           },
         ),
       ],
@@ -51,13 +51,13 @@ class NewsListSection extends StatelessWidget {
   }
 
   /// NEWS CARD WIDGET
-  Widget _buildNewsCard(NewsHomeModel newsItem) {
+  Widget _buildNewsCard(BuildContext context, NewsHomeModel newsItem) {
     return GestureDetector(
       onTap: () {},
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16.r),
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
           boxShadow: [
             BoxShadow(
               blurRadius: 12.r,
@@ -154,7 +154,9 @@ class NewsListSection extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 13.sp,
                         fontWeight: FontWeight.w700,
-                        color: Colors.grey.shade800,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.grey.shade800,
                         height: 1.3,
                       ),
                     ),
@@ -169,7 +171,9 @@ class NewsListSection extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           fontSize: 11.sp,
-                          color: Colors.grey.shade600,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade400
+                              : Colors.grey.shade600,
                           height: 1.2,
                         ),
                       ),

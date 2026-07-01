@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/core/utils/share.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_state.dart';
@@ -26,9 +27,9 @@ class NewsInfoDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.only(
+      decoration: BoxDecoration(
+        color: context.theme.colorScheme.onPrimaryContainer,
+        borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(30),
           topRight: Radius.circular(30),
         ),
@@ -76,10 +77,12 @@ class NewsInfoDialog extends StatelessWidget {
                       Expanded(
                         child: Text(
                           news.title,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E293B),
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.white
+                                : const Color(0xFF1E293B),
                             height: 1.3,
                           ),
                         ),
@@ -111,12 +114,14 @@ class NewsInfoDialog extends StatelessWidget {
                   Row(
                     children: [
                       _buildInfoChip(
+                        context: context,
                         icon: Assets.icons.clockThree.path,
                         label: news.createdAt.toRelativeTime(),
                       ),
                       const SizedBox(width: 12),
                       if (news.categoryId != null)
                         _buildInfoChip(
+                          context: context,
                           icon: Assets.icons.category.path,
                           label: news.categoryId!.toString(),
                         ),
@@ -139,7 +144,9 @@ class NewsInfoDialog extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14,
                       height: 1.6,
-                      color: Colors.grey.shade700,
+                      color: context.theme.brightness == Brightness.dark
+                          ? Colors.grey.shade300
+                          : Colors.grey.shade700,
                     ),
                     textAlign: TextAlign.justify,
                   ),
@@ -154,7 +161,10 @@ class NewsInfoDialog extends StatelessWidget {
                           label: 'مشاركة',
                           color: AppColor.primaryOrange,
                           onTap: () {
-                            // Share news
+                            ShareHelper.shareContent(
+                              title: news.title,
+                              content: news.intro ?? "no intro",
+                            );
                           },
                         ),
                       ),
@@ -211,21 +221,39 @@ class NewsInfoDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoChip({required String icon, required String label}) {
+  Widget _buildInfoChip({
+    required String icon,
+    required String label,
+    required BuildContext context,
+  }) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.grey.shade100,
+        color: context!.theme.brightness == Brightness.dark
+            ? Colors.grey.shade800
+            : Colors.grey.shade100,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(icon, color: Colors.grey.shade600, width: 10, height: 10),
+          Image.asset(
+            icon,
+            color: context.theme.brightness == Brightness.dark
+                ? Colors.grey.shade400
+                : Colors.grey.shade600,
+            width: 10,
+            height: 10,
+          ),
           const SizedBox(width: 4),
           Text(
             label,
-            style: TextStyle(fontSize: 11, color: Colors.grey.shade700),
+            style: TextStyle(
+              fontSize: 11,
+              color: context.theme.brightness == Brightness.dark
+                  ? Colors.grey.shade300
+                  : Colors.grey.shade700,
+            ),
           ),
         ],
       ),

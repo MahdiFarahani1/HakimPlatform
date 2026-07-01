@@ -201,22 +201,26 @@ class _SearchPageState extends State<SearchPage>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
+                        Text(
                           'Discover',
                           style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
                             letterSpacing: -0.5,
-                            color: Color(0xFF0F172A),
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.white
+                                : const Color(0xFF0F172A),
                           ),
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: context.theme.colorScheme.onPrimaryContainer,
                             borderRadius: BorderRadius.circular(30),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
+                                color: context.theme.brightness == Brightness.dark
+                                    ? Colors.transparent
+                                    : Colors.black.withOpacity(0.05),
                                 blurRadius: 10,
                                 offset: const Offset(0, 2),
                               ),
@@ -231,9 +235,14 @@ class _SearchPageState extends State<SearchPage>
                       ],
                     ),
                     const SizedBox(height: 8),
-                    const Text(
+                    Text(
                       'Find the world\'s most amazing places',
-                      style: TextStyle(fontSize: 14, color: Color(0xFF64748B)),
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: context.theme.brightness == Brightness.dark
+                            ? Colors.grey.shade400
+                            : const Color(0xFF64748B),
+                      ),
                     ),
                     const SizedBox(height: 20),
 
@@ -241,13 +250,15 @@ class _SearchPageState extends State<SearchPage>
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.theme.colorScheme.onPrimaryContainer,
                         borderRadius: BorderRadius.circular(24),
                         boxShadow: [
                           BoxShadow(
-                            color: _focusNode.hasFocus
-                                ? AppColor.primaryBlue.withOpacity(0.2)
-                                : Colors.black.withOpacity(0.03),
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.transparent
+                                : (_focusNode.hasFocus
+                                    ? AppColor.primaryBlue.withOpacity(0.2)
+                                    : Colors.black.withOpacity(0.03)),
                             blurRadius: _focusNode.hasFocus ? 16 : 8,
                             offset: const Offset(0, 4),
                           ),
@@ -256,7 +267,12 @@ class _SearchPageState extends State<SearchPage>
                       child: TextField(
                         controller: _searchController,
                         focusNode: _focusNode,
-                        style: const TextStyle(fontSize: 16),
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: context.theme.brightness == Brightness.dark
+                              ? Colors.white
+                              : Colors.black,
+                        ),
                         decoration: InputDecoration(
                           hintText: 'Search destinations...',
                           hintStyle: TextStyle(color: Colors.grey.shade400),
@@ -270,7 +286,9 @@ class _SearchPageState extends State<SearchPage>
                                   child: Container(
                                     margin: const EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey.shade200,
+                                      color: context.theme.brightness == Brightness.dark
+                                          ? Colors.grey.shade800
+                                          : Colors.grey.shade200,
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Icon(
@@ -286,7 +304,7 @@ class _SearchPageState extends State<SearchPage>
                             borderSide: BorderSide.none,
                           ),
                           filled: true,
-                          fillColor: Colors.white,
+                          fillColor: context.theme.colorScheme.onPrimaryContainer,
                           contentPadding: const EdgeInsets.symmetric(
                             vertical: 14,
                           ),
@@ -316,12 +334,14 @@ class _SearchPageState extends State<SearchPage>
                             ),
                           ),
                           const SizedBox(width: 8),
-                          const Text(
+                          Text(
                             'Recent Searches',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF1E293B),
+                              color: context.theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : const Color(0xFF1E293B),
                             ),
                           ),
                         ],
@@ -349,12 +369,14 @@ class _SearchPageState extends State<SearchPage>
                             ),
                           ),
                           const SizedBox(width: 8),
-                          const Text(
+                          Text(
                             'Trending Destinations',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
-                              color: Color(0xFF1E293B),
+                              color: context.theme.brightness == Brightness.dark
+                                  ? Colors.white
+                                  : const Color(0xFF1E293B),
                             ),
                           ),
                         ],
@@ -436,19 +458,30 @@ class _SearchPageState extends State<SearchPage>
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.theme.colorScheme.onPrimaryContainer,
           borderRadius: BorderRadius.circular(30),
-          border: Border.all(color: Colors.grey.shade200),
+          border: Border.all(
+            color: context.theme.brightness == Brightness.dark
+                ? Colors.white12
+                : Colors.grey.shade200,
+          ),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4),
+            BoxShadow(
+              color: context.theme.brightness == Brightness.dark
+                  ? Colors.transparent
+                  : Colors.black.withOpacity(0.02),
+              blurRadius: 4,
+            ),
           ],
         ),
         child: Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 13,
             fontWeight: FontWeight.w500,
-            color: Color(0xFF334155),
+            color: context.theme.brightness == Brightness.dark
+                ? Colors.grey.shade300
+                : const Color(0xFF334155),
           ),
         ),
       ),
@@ -472,11 +505,13 @@ class _SearchPageState extends State<SearchPage>
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.theme.colorScheme.onPrimaryContainer,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: context.theme.brightness == Brightness.dark
+                  ? Colors.transparent
+                  : Colors.black.withOpacity(0.03),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -509,10 +544,12 @@ class _SearchPageState extends State<SearchPage>
                       Expanded(
                         child: Text(
                           item['title'],
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.w600,
-                            color: Color(0xFF0F172A),
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.white
+                                : const Color(0xFF0F172A),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -552,7 +589,12 @@ class _SearchPageState extends State<SearchPage>
                   const SizedBox(height: 4),
                   Text(
                     '${item['category']} • ${item['location']}',
-                    style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: context.theme.brightness == Brightness.dark
+                          ? Colors.grey.shade400
+                          : Colors.grey.shade600,
+                    ),
                   ),
                   const SizedBox(height: 6),
                   Container(

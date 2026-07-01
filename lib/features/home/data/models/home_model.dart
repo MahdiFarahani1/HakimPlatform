@@ -15,7 +15,7 @@ class HomeData {
   final List<DialogueModel> dialogues;
   final List<BookCategoryModel> bookCategories;
 
-  HomeData({
+  const HomeData({
     required this.sliders,
     required this.news,
     required this.videos,
@@ -24,4 +24,24 @@ class HomeData {
     required this.dialogues,
     required this.bookCategories,
   });
+
+  HomeData copyWith({
+    List<SliderModel>? sliders,
+    List<NewsHomeModel>? news,
+    List<VideoModel>? videos,
+    List<BookModel>? books,
+    List<GalleryModel>? galleries,
+    List<DialogueModel>? dialogues,
+    List<BookCategoryModel>? bookCategories,
+  }) {
+    return HomeData(
+      sliders: sliders ?? this.sliders,
+      news: news ?? this.news,
+      videos: videos ?? this.videos,
+      books: books ?? this.books,
+      galleries: galleries ?? this.galleries,
+      dialogues: dialogues ?? this.dialogues,
+      bookCategories: bookCategories ?? this.bookCategories,
+    );
+  }
 }

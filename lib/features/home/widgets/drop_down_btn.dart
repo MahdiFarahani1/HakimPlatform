@@ -83,7 +83,7 @@ class _SimpleDropdownState extends State<SimpleDropdown>
                     child: Container(
                       width: 180.w,
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).colorScheme.onPrimaryContainer,
                         borderRadius: BorderRadius.circular(16.r),
                         boxShadow: [
                           BoxShadow(
@@ -125,13 +125,17 @@ class _SimpleDropdownState extends State<SimpleDropdown>
                                   child: Container(
                                     padding: EdgeInsets.all(4.r),
                                     decoration: BoxDecoration(
-                                      color: Colors.grey.shade200,
+                                      color: Theme.of(context).brightness == Brightness.dark
+                                          ? Colors.grey.shade800
+                                          : Colors.grey.shade200,
                                       shape: BoxShape.circle,
                                     ),
                                     child: Icon(
                                       Icons.close_rounded,
                                       size: 14.sp,
-                                      color: Colors.grey.shade600,
+                                      color: Theme.of(context).brightness == Brightness.dark
+                                          ? Colors.grey.shade400
+                                          : Colors.grey.shade600,
                                     ),
                                   ),
                                 ),
@@ -157,7 +161,9 @@ class _SimpleDropdownState extends State<SimpleDropdown>
                                   border: index != _options.length - 1
                                       ? Border(
                                           bottom: BorderSide(
-                                            color: Colors.grey.shade100,
+                                            color: Theme.of(context).brightness == Brightness.dark
+                                                ? Colors.white10
+                                                : Colors.grey.shade100,
                                           ),
                                         )
                                       : null,

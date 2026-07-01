@@ -1,5 +1,7 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 part 'settings_state.dart';
 
@@ -10,8 +12,13 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
     emit(state.copyWith(isDarkMode: value));
   }
 
-  void toggleNotifications(bool value) {
-    emit(state.copyWith(notifications: value));
+  Future<void> toggleNotifications(bool value) async {
+    await AppSettings.openAppSettings(type: AppSettingsType.notification);
+  }
+
+  void refreshNotificationStatus() async {
+    final status = await Permission.notification.status;
+    emit(state.copyWith(notifications: status.isGranted));
   }
 
   void updateFontSize(double value) {

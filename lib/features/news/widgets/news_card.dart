@@ -20,11 +20,13 @@ class NewsCard extends StatelessWidget {
         tag: 'news_${news.id}',
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: context.theme.colorScheme.onPrimaryContainer,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.shade200,
+                color: context.theme.brightness == Brightness.dark
+                    ? Colors.transparent
+                    : Colors.grey.shade200,
                 blurRadius: 10,
                 offset: const Offset(0, 4),
               ),
@@ -123,10 +125,12 @@ class NewsCard extends StatelessWidget {
                       news.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF1E293B),
+                        color: context.theme.brightness == Brightness.dark
+                            ? Colors.white
+                            : const Color(0xFF1E293B),
                         height: 1.4,
                       ),
                     ),

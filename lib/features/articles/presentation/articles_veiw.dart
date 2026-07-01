@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 
@@ -172,8 +173,11 @@ class _ArticlesPageState extends State<ArticlesPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAFC),
-      body: CustomScrollView(
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: context.appTheme.scaffoldGradient,
+        ),
+        child: CustomScrollView(
         slivers: [
           // App Bar with gradient
           SliverAppBar(
@@ -229,12 +233,16 @@ class _ArticlesPageState extends State<ArticlesPage>
                                 colors: [Color(0xFF7C3AED), Color(0xFF6366F1)],
                               )
                             : null,
-                        color: isSelected ? null : Colors.white,
+                        color: isSelected
+                            ? null
+                            : context.theme.colorScheme.onPrimaryContainer,
                         borderRadius: BorderRadius.circular(30),
                         border: Border.all(
                           color: isSelected
                               ? Colors.transparent
-                              : Colors.grey.shade200,
+                              : (context.theme.brightness == Brightness.dark
+                                  ? Colors.white12
+                                  : Colors.grey.shade200),
                         ),
                         boxShadow: isSelected
                             ? [
@@ -253,7 +261,9 @@ class _ArticlesPageState extends State<ArticlesPage>
                         style: TextStyle(
                           color: isSelected
                               ? Colors.white
-                              : Colors.grey.shade600,
+                              : (context.theme.brightness == Brightness.dark
+                                  ? Colors.grey.shade300
+                                  : Colors.grey.shade600),
                           fontWeight: isSelected
                               ? FontWeight.w600
                               : FontWeight.w500,
@@ -290,10 +300,12 @@ class _ArticlesPageState extends State<ArticlesPage>
                       const SizedBox(width: 8),
                       Text(
                         '${_filteredArticles.length} articles',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
-                          color: Color(0xFF475569),
+                          color: context.theme.brightness == Brightness.dark
+                              ? Colors.grey.shade300
+                              : const Color(0xFF475569),
                         ),
                       ),
                     ],
@@ -304,9 +316,13 @@ class _ArticlesPageState extends State<ArticlesPage>
                       vertical: 5,
                     ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: context.theme.colorScheme.onPrimaryContainer,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.grey.shade200),
+                      border: Border.all(
+                        color: context.theme.brightness == Brightness.dark
+                            ? Colors.white12
+                            : Colors.grey.shade200,
+                      ),
                     ),
                     child: Row(
                       children: [
@@ -326,7 +342,9 @@ class _ArticlesPageState extends State<ArticlesPage>
                         Icon(
                           Icons.arrow_drop_down,
                           size: 16,
-                          color: Colors.grey.shade600,
+                          color: context.theme.brightness == Brightness.dark
+                              ? Colors.grey.shade400
+                              : Colors.grey.shade600,
                         ),
                       ],
                     ),
@@ -350,8 +368,9 @@ class _ArticlesPageState extends State<ArticlesPage>
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildArticleCard(Article article) {
     return GestureDetector(
@@ -362,11 +381,13 @@ class _ArticlesPageState extends State<ArticlesPage>
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.theme.colorScheme.onPrimaryContainer,
           borderRadius: BorderRadius.circular(24),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.03),
+              color: context.theme.brightness == Brightness.dark
+                  ? Colors.transparent
+                  : Colors.black.withOpacity(0.03),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -477,11 +498,13 @@ class _ArticlesPageState extends State<ArticlesPage>
                 children: [
                   Text(
                     article.title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
                       height: 1.3,
-                      color: Color(0xFF1E293B),
+                      color: context.theme.brightness == Brightness.dark
+                          ? Colors.white
+                          : const Color(0xFF1E293B),
                     ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
@@ -491,7 +514,9 @@ class _ArticlesPageState extends State<ArticlesPage>
                     article.subtitle,
                     style: TextStyle(
                       fontSize: 13,
-                      color: Colors.grey.shade600,
+                      color: context.theme.brightness == Brightness.dark
+                          ? Colors.grey.shade400
+                          : Colors.grey.shade600,
                       height: 1.4,
                     ),
                     maxLines: 2,
@@ -532,10 +557,12 @@ class _ArticlesPageState extends State<ArticlesPage>
                           children: [
                             Text(
                               article.author,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF334155),
+                                color: context.theme.brightness == Brightness.dark
+                                    ? Colors.grey.shade300
+                                    : const Color(0xFF334155),
                               ),
                             ),
                             const SizedBox(height: 2),
@@ -552,7 +579,9 @@ class _ArticlesPageState extends State<ArticlesPage>
                                   article.readTime,
                                   style: TextStyle(
                                     fontSize: 10,
-                                    color: Colors.grey.shade500,
+                                    color: context.theme.brightness == Brightness.dark
+                                        ? Colors.grey.shade400
+                                        : Colors.grey.shade500,
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -566,7 +595,9 @@ class _ArticlesPageState extends State<ArticlesPage>
                                   article.date,
                                   style: TextStyle(
                                     fontSize: 10,
-                                    color: Colors.grey.shade500,
+                                    color: context.theme.brightness == Brightness.dark
+                                        ? Colors.grey.shade400
+                                        : Colors.grey.shade500,
                                   ),
                                 ),
                               ],
@@ -649,9 +680,9 @@ class _ArticlesPageState extends State<ArticlesPage>
         minChildSize: 0.5,
         maxChildSize: 0.95,
         builder: (_, controller) => Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: context.theme.colorScheme.onPrimaryContainer,
+            borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(30),
               topRight: Radius.circular(30),
             ),
@@ -663,7 +694,9 @@ class _ArticlesPageState extends State<ArticlesPage>
                 width: 40,
                 height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade300,
+                  color: context.theme.brightness == Brightness.dark
+                      ? Colors.grey.shade800
+                      : Colors.grey.shade300,
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -728,7 +761,9 @@ class _ArticlesPageState extends State<ArticlesPage>
                       style: TextStyle(
                         fontSize: 14,
                         height: 1.6,
-                        color: Colors.grey.shade700,
+                        color: context.theme.brightness == Brightness.dark
+                            ? Colors.grey.shade300
+                            : Colors.grey.shade700,
                       ),
                     ),
                     const SizedBox(height: 100),

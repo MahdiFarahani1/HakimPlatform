@@ -8,10 +8,14 @@ class GallerySkeleton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Skeletonizer(
       enabled: true,
-      effect: const ShimmerEffect(
-        baseColor: Color(0xFFE4E8EE),
-        highlightColor: Colors.grey,
-        duration: Duration(milliseconds: 2000),
+      effect: ShimmerEffect(
+        baseColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey.shade800
+            : const Color(0xFFE4E8EE),
+        highlightColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey.shade700
+            : Colors.grey,
+        duration: const Duration(milliseconds: 2000),
       ),
       child: Column(
         children: [
@@ -54,11 +58,13 @@ class GallerySkeleton extends StatelessWidget {
                 itemBuilder: (context, index) {
                   return Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                       borderRadius: BorderRadius.circular(16),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.grey.shade200,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.transparent
+                              : Colors.grey.shade200,
                           blurRadius: 8,
                           offset: const Offset(0, 3),
                         ),

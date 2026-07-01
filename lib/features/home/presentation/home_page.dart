@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
@@ -17,6 +18,8 @@ import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/features/books/data/models/book_model.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -25,10 +28,25 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
   final TextEditingController searchController = TextEditingController();
 
   ValueNotifier<int> selectedIndex = ValueNotifier(0);
+
+  List<BookModel> get _dummyBooks => List.generate(
+    4,
+    (index) => BookModel(
+      id: index,
+      title: 'عنوان کتاب تست شیک و مدرن',
+      image: '',
+      number: 'جلد ۱',
+      category: 'تست',
+      pdf: '',
+      date: '1300/4/2',
+      code: '',
+    ),
+  );
 
   @override
   void initState() {
@@ -44,6 +62,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -63,6 +82,7 @@ class _HomePageState extends State<HomePage> {
                 return HomeLoadingWidget();
               }
               if (state is HomeLoaded) {
+                final isBooksLoading = state.isBooksLoading;
                 final data = state.data;
                 final books = data.books;
                 final sliders = data.sliders;
@@ -81,7 +101,8 @@ class _HomePageState extends State<HomePage> {
                           child: Container(
                             height: 50.h,
                             decoration: BoxDecoration(
-                              color: Colors.white,
+                              color:
+                                  context.theme.colorScheme.onPrimaryContainer,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Padding(
@@ -89,6 +110,13 @@ class _HomePageState extends State<HomePage> {
                               child: Form(
                                 child: TextField(
                                   controller: searchController,
+                                  style: TextStyle(
+                                    color:
+                                        context.theme.brightness ==
+                                            Brightness.dark
+                                        ? Colors.white
+                                        : Colors.black,
+                                  ),
                                   onSubmitted: (value) {
                                     if (value.isEmpty) {
                                       AppSnackBar.error(
@@ -148,7 +176,11 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                     ),
                                     hintStyle: TextStyle(
-                                      color: Colors.grey,
+                                      color:
+                                          context.theme.brightness ==
+                                              Brightness.dark
+                                          ? Colors.grey.shade400
+                                          : Colors.grey,
                                       fontSize: 12.sp,
                                     ),
                                     hintText: "ابحث هنا...",
@@ -245,7 +277,15 @@ class _HomePageState extends State<HomePage> {
                               final isSelected = i == value;
 
                               return GestureDetector(
-                                onTap: () => selectedIndex.value = i,
+                                onTap: () {
+                                  selectedIndex.value = i;
+
+                                  BlocProvider.of<HomeBloc>(context).add(
+                                    FetchBooksByCategory(
+                                      titleSelected: categoryBook[i].title,
+                                    ),
+                                  );
+                                },
                                 child: AnimatedContainer(
                                   duration: const Duration(milliseconds: 500),
                                   margin: EdgeInsets.symmetric(horizontal: 6.w),
@@ -256,7 +296,10 @@ class _HomePageState extends State<HomePage> {
                                   decoration: BoxDecoration(
                                     color: isSelected
                                         ? AppColor.primaryBlue
-                                        : Colors.white,
+                                        : context
+                                              .theme
+                                              .colorScheme
+                                              .onPrimaryContainer,
                                     borderRadius: BorderRadius.circular(8),
                                   ),
                                   alignment: Alignment.center,
@@ -266,7 +309,10 @@ class _HomePageState extends State<HomePage> {
                                       fontSize: isSelected ? 14 : 12,
                                       color: isSelected
                                           ? AppColor.primaryOrange
-                                          : Colors.black,
+                                          : (context.theme.brightness ==
+                                                    Brightness.dark
+                                                ? Colors.white
+                                                : Colors.black),
                                     ),
                                     child: Text(categoryBook[i].title),
                                   ),
@@ -281,78 +327,173 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
 
                     /// BOOK LIST (FIXED - NO EXPANDED!)
-                    SizedBox(
-                      height: 220,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: books.length,
-                        physics: const BouncingScrollPhysics(),
-                        itemBuilder: (_, i) {
-                          final book = books[i];
-                          return GestureDetector(
-                            onTap: () {},
-                            child: Hero(
-                              tag: book.title,
-                              child: Container(
-                                width: 150,
-                                margin: const EdgeInsets.only(right: 16),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.15),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 8),
-                                    ),
+                    if (books.isEmpty && !isBooksLoading) ...[
+                      SizedBox(
+                        width: context.screenWidth,
+                        height: context.screenHeight * 0.3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(28),
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                gradient: LinearGradient(
+                                  colors: [
+                                    Colors.grey.shade50,
+                                    Colors.grey.shade100,
                                   ],
-                                  image: DecorationImage(
-                                    image: NetworkImage(book.image),
-                                    fit: BoxFit.cover,
-                                  ),
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
                                 ),
-                                child: Stack(
-                                  children: [
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(8),
-                                        gradient: LinearGradient(
-                                          begin: Alignment.topCenter,
-                                          end: Alignment.bottomCenter,
-                                          colors: [
-                                            Colors.transparent,
-                                            Colors.black.withOpacity(0.75),
-                                          ],
-                                        ),
-                                      ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade300.withOpacity(
+                                      0.3,
                                     ),
-
-                                    Positioned(
-                                      bottom: 12,
-                                      left: 12,
-                                      right: 12,
-                                      child: Text(
-                                        book.title,
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                  BoxShadow(
+                                    color: Colors.white.withOpacity(0.8),
+                                    blurRadius: 10,
+                                    offset: const Offset(-4, -4),
+                                  ),
+                                ],
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(0.6),
+                                  width: 2,
                                 ),
                               ),
+                              child: Assets.icons.bookOpenCover.image(
+                                width: 70,
+                                height: 70,
+                                color: Colors.grey,
+                              ),
                             ),
-                          );
-                        },
+
+                            const SizedBox(height: 24),
+
+                            Text(
+                              "لا توجد أي كتب في هذا التصنيف",
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.grey.shade700,
+                                letterSpacing: 0.5,
+                              ),
+                            ),
+
+                            const SizedBox(height: 8),
+
+                            Text(
+                              'ستتم إضافة كتب جديدة قريباً',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey.shade500,
+                                fontWeight: FontWeight.w400,
+                              ),
+                            ),
+                          ],
+                        ).animate().scale(),
                       ),
-                    ),
+                    ] else
+                      Skeletonizer(
+                        enabled: isBooksLoading,
+                        child: SizedBox(
+                          height: 220,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: isBooksLoading ? 4 : books.length,
+                            physics: isBooksLoading
+                                ? const NeverScrollableScrollPhysics()
+                                : const BouncingScrollPhysics(),
+                            itemBuilder: (_, i) {
+                              final book = isBooksLoading
+                                  ? _dummyBooks[i]
+                                  : books[i];
+                              return GestureDetector(
+                                onTap: isBooksLoading
+                                    ? null
+                                    : () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const BooksPage(),
+                                          ),
+                                        );
+                                      },
+
+                                child: Hero(
+                                  tag: isBooksLoading
+                                      ? 'dummy_tag_$i'
+                                      : book.title,
+                                  child: Container(
+                                    width: 150,
+                                    margin: const EdgeInsets.only(right: 16),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.15),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 8),
+                                        ),
+                                      ],
+                                      image: book.image.isNotEmpty
+                                          ? DecorationImage(
+                                              image: NetworkImage(book.image),
+                                              fit: BoxFit.cover,
+                                            )
+                                          : null,
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        Container(
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.circular(
+                                              8,
+                                            ),
+                                            gradient: LinearGradient(
+                                              begin: Alignment.topCenter,
+                                              end: Alignment.bottomCenter,
+                                              colors: [
+                                                Colors.transparent,
+                                                Colors.black.withOpacity(0.75),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+
+                                        Positioned(
+                                          bottom: 12,
+                                          left: 12,
+                                          right: 12,
+                                          child: Text(
+                                            book.title,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
 
                     SizedBox(height: 35),
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: context.theme.colorScheme.onPrimaryContainer,
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
@@ -594,6 +735,9 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 class CategoryItem extends StatelessWidget {
@@ -619,7 +763,7 @@ class CategoryItem extends StatelessWidget {
               height: 60.h,
               width: 60.w,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: context.theme.colorScheme.onPrimaryContainer,
                 borderRadius: BorderRadius.circular(8),
                 boxShadow: [
                   BoxShadow(

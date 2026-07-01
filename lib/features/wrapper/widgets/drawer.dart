@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_application_1/config/app_version.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -22,11 +23,17 @@ void drawerApp(BuildContext context) {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white,
-                        const Color(0xffF8F9FF),
-                        const Color(0xffF0F2FF),
-                      ],
+                      colors: Theme.of(context).brightness == Brightness.dark
+                          ? [
+                              const Color(0xff1A1C20),
+                              const Color(0xff15161A),
+                              const Color(0xff121212),
+                            ]
+                          : [
+                              Colors.white,
+                              const Color(0xffF8F9FF),
+                              const Color(0xffF0F2FF),
+                            ],
                     ),
                     borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(32),
@@ -71,24 +78,28 @@ void drawerApp(BuildContext context) {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           children: [
                             _buildMenuItem(
+                              context,
                               Assets.icons.home.path,
                               "الصفحة الرئيسية",
                               0,
                               Icons.home_outlined,
                             ),
                             _buildMenuItem(
+                              context,
                               Assets.icons.search.path,
                               "جستجو",
                               1,
                               Icons.search_outlined,
                             ),
                             _buildMenuItem(
+                              context,
                               Assets.icons.bookmark.path,
                               "ذخیره شده",
                               2,
                               Icons.bookmark_border_outlined,
                             ),
                             _buildMenuItem(
+                              context,
                               Assets.icons.video.path,
                               "ویدئوها",
                               3,
@@ -101,13 +112,18 @@ void drawerApp(BuildContext context) {
                             Container(
                               height: 1,
                               margin: const EdgeInsets.symmetric(vertical: 8),
-                              color: Colors.grey[200],
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white10
+                                  : Colors.grey[200],
                             ),
 
                             const SizedBox(height: 4),
 
                             /// Settings Menu
                             _buildMenuItem(
+                              context,
                               Assets.icons.user.path,
                               "تنظیمات",
                               4,
@@ -117,7 +133,7 @@ void drawerApp(BuildContext context) {
                             const SizedBox(height: 20),
 
                             /// App Info Card
-                            _buildAppInfoCard(),
+                            _buildAppInfoCard(context),
                           ],
                         ),
                       ),
@@ -130,27 +146,26 @@ void drawerApp(BuildContext context) {
                         ),
                         decoration: BoxDecoration(
                           border: Border(
-                            top: BorderSide(color: Colors.grey[200]!, width: 1),
+                            top: BorderSide(
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.white10
+                                  : Colors.grey[200]!,
+                              width: 1,
+                            ),
                           ),
                         ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.favorite,
-                              size: 12.sp,
-                              color: Colors.red[300],
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'نسخه 1.0.1',
-                              style: TextStyle(
-                                color: Colors.grey[400],
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          AppVersion.instance.fullVersion,
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey.shade500
+                                : Colors.grey[400],
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],
@@ -170,6 +185,7 @@ void drawerApp(BuildContext context) {
 }
 
 Widget _buildMenuItem(
+  BuildContext context,
   String icon,
   String title,
   int index,
@@ -179,12 +195,14 @@ Widget _buildMenuItem(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Container(
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
                 blurRadius: 10,
-                color: Colors.black.withOpacity(0.03),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.transparent
+                    : Colors.black.withOpacity(0.03),
                 offset: const Offset(0, 2),
               ),
             ],
@@ -220,22 +238,28 @@ Widget _buildMenuItem(
                 ),
                 title: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 15,
-                    color: Color(0xff2C3E50),
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.white
+                        : const Color(0xff2C3E50),
                   ),
                 ),
                 trailing: Container(
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey.shade800
+                        : Colors.grey[100],
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     Icons.arrow_forward_ios,
                     size: 12,
-                    color: Colors.grey[400],
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey.shade500
+                        : Colors.grey[400],
                   ),
                 ),
               ),
@@ -249,7 +273,7 @@ Widget _buildMenuItem(
       .scale(begin: const Offset(.95, .95));
 }
 
-Widget _buildAppInfoCard() {
+Widget _buildAppInfoCard(BuildContext context) {
   return Container(
         margin: const EdgeInsets.symmetric(vertical: 8),
         padding: const EdgeInsets.all(16),
@@ -295,7 +319,9 @@ Widget _buildAppInfoCard() {
                   Text(
                     'کتابخانه دیجیتال با بیش از ۱۰۰۰ کتاب و محتوای صوتی',
                     style: TextStyle(
-                      color: Colors.grey[600],
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[400]
+                          : Colors.grey[600],
                       fontSize: 11,
                       height: 1.4,
                     ),
@@ -306,12 +332,14 @@ Widget _buildAppInfoCard() {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: Theme.of(context).colorScheme.onPrimaryContainer,
                 borderRadius: BorderRadius.circular(15),
                 boxShadow: [
                   BoxShadow(
                     blurRadius: 8,
-                    color: Colors.black.withOpacity(0.05),
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.transparent
+                        : Colors.black.withOpacity(0.05),
                   ),
                 ],
               ),

@@ -30,7 +30,9 @@ class HomeHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
-                  color: const Color(0xFF1E293B),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white
+                      : const Color(0xFF1E293B),
                   letterSpacing: -0.5,
                 ),
               ),
@@ -45,7 +47,9 @@ class HomeHeader extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w500,
-                  color: const Color(0xFF64748B),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.grey.shade400
+                      : const Color(0xFF64748B),
                 ),
               ),
             ),

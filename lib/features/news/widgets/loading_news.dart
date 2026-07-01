@@ -11,7 +11,7 @@ class SkeletonLoadingWidget extends StatelessWidget {
       enabled: true,
       effect: const PulseEffect(duration: Duration(milliseconds: 1500)),
       child: Scaffold(
-        backgroundColor: const Color(0xffF6F8FC),
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: CustomScrollView(
           slivers: [
             SliverAppBar(
@@ -26,9 +26,9 @@ class SkeletonLoadingWidget extends StatelessWidget {
               child: Container(
                 margin: const EdgeInsets.only(top: 20),
                 padding: const EdgeInsets.all(20),
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.vertical(top: Radius.circular(30)),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

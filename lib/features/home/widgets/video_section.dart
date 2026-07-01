@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
-import 'package:flutter_application_1/core/widgets/custom_loading.dart';
+import 'package:flutter_application_1/features/home/logic/cubit/navigation_cubit.dart';
 import 'package:flutter_application_1/features/home/widgets/header.dart';
 import 'package:flutter_application_1/features/videos/data/models/video_model.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 class VideoListSection extends StatelessWidget {
   final List<VideoModel> videos;
@@ -18,7 +18,13 @@ class VideoListSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeHeader(title: "أحدث المرئيات", onTap: () {}),
+        HomeHeader(
+          title: "أحدث المرئيات",
+          onTap: () {
+            BlocProvider.of<NavigationCubit>(context).changeNavState(4);
+            context.read<NavigationCubit>().pageController.jumpToPage(4);
+          },
+        ),
 
         const SizedBox(height: 16),
 

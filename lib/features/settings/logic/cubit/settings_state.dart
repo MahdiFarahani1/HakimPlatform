@@ -16,7 +16,7 @@ class SettingsState {
   factory SettingsState.initial() {
     return SettingsState(
       isDarkMode: false,
-      notifications: true,
+      notifications: false,
       fontSize: 16.0,
       selectedFont: GoogleFonts.rubik().fontFamily!,
     );

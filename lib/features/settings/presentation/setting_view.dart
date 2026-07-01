@@ -9,8 +9,33 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SettingsPage extends StatelessWidget {
-  SettingsPage({super.key});
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({super.key});
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage>
+    with WidgetsBindingObserver {
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      context.read<SettingsCubit>().refreshNotificationStatus();
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
 
   final List<String> fonts = [
     GoogleFonts.rubik().fontFamily!,
@@ -155,7 +180,6 @@ class SettingsPage extends StatelessWidget {
   }
 
   // ================= SECTION WIDGET =================
-
   Widget _buildSection({
     required String title,
     required List<Widget> children,
@@ -207,7 +231,6 @@ class SettingsPage extends StatelessWidget {
   }
 
   // ================= MODERN SWITCH =================
-
   Widget _buildModernSwitch({
     required String icon,
     required String title,
@@ -256,7 +279,6 @@ class SettingsPage extends StatelessWidget {
   }
 
   // ================= MODERN SLIDER =================
-
   Widget _buildModernSlider({
     required String icon,
     required String title,
@@ -336,7 +358,6 @@ class SettingsPage extends StatelessWidget {
   }
 
   // ================= MODERN DROPDOWN =================
-
   Widget _buildModernDropdown(
     BuildContext context, {
     required String icon,

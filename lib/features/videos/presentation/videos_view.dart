@@ -13,9 +13,15 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 
-class VideoGalleryScreen extends StatelessWidget {
+class VideoGalleryScreen extends StatefulWidget {
   const VideoGalleryScreen({super.key});
 
+  @override
+  State<VideoGalleryScreen> createState() => _VideoGalleryScreenState();
+}
+
+class _VideoGalleryScreenState extends State<VideoGalleryScreen>
+    with AutomaticKeepAliveClientMixin {
   Future<void> openYouTube(String youtubeId, BuildContext context) async {
     final url = 'https://www.youtube.com/watch?v=$youtubeId';
 
@@ -35,6 +41,7 @@ class VideoGalleryScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return BlocProvider(
       create: (context) => getIt<VideosCubit>()..fetchVideos(),
       child: Scaffold(
@@ -50,9 +57,9 @@ class VideoGalleryScreen extends StatelessWidget {
                 // Header
                 Container(
                   padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.only(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    borderRadius: const BorderRadius.only(
                       bottomLeft: Radius.circular(28),
                       bottomRight: Radius.circular(28),
                     ),
@@ -83,12 +90,16 @@ class VideoGalleryScreen extends StatelessWidget {
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
+                                  Text(
                                     'مكتبة الفيديو',
                                     style: TextStyle(
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
-                                      color: Color(0xFF1E293B),
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
+                                          ? Colors.white
+                                          : const Color(0xFF1E293B),
                                     ),
                                   ),
                                   const SizedBox(height: 2),
@@ -116,7 +127,11 @@ class VideoGalleryScreen extends StatelessWidget {
                           }
                           return Container(
                             decoration: BoxDecoration(
-                              color: Colors.grey.shade100,
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? Colors.grey.shade800
+                                  : Colors.grey.shade100,
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: TextField(
@@ -126,8 +141,12 @@ class VideoGalleryScreen extends StatelessWidget {
                               controller: TextEditingController(
                                 text: currentQuery,
                               ),
-                              style: const TextStyle(
-                                color: Color(0xFF1E293B),
+                              style: TextStyle(
+                                color:
+                                    Theme.of(context).brightness ==
+                                        Brightness.dark
+                                    ? Colors.white
+                                    : const Color(0xFF1E293B),
                                 fontSize: 14,
                               ),
                               decoration: InputDecoration(
@@ -251,6 +270,9 @@ class VideoGalleryScreen extends StatelessWidget {
       ),
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
 
 // Video Card
@@ -266,11 +288,13 @@ class VideoCard extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: context.theme.colorScheme.onPrimaryContainer,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.shade200,
+              color: context.theme.brightness == Brightness.dark
+                  ? Colors.transparent
+                  : Colors.grey.shade200,
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),
@@ -297,11 +321,16 @@ class VideoCard extends StatelessWidget {
                             video.image,
                             fit: BoxFit.cover,
                             width: double.infinity,
-                            errorBuilder: (_, __, ___) =>
-                                Container(color: Colors.grey.shade200),
+                            errorBuilder: (_, __, ___) => Container(
+                              color: context.theme.brightness == Brightness.dark
+                                  ? Colors.grey.shade800
+                                  : Colors.grey.shade200,
+                            ),
                           )
                         : Container(
-                            color: Colors.grey.shade200,
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.grey.shade800
+                                : Colors.grey.shade200,
                             child: const Icon(
                               Icons.video_library,
                               size: 40,
@@ -375,10 +404,12 @@ class VideoCard extends StatelessWidget {
                     video.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w600,
-                      color: Color(0xFF1E293B),
+                      color: context.theme.brightness == Brightness.dark
+                          ? Colors.white
+                          : const Color(0xFF1E293B),
                       height: 1.4,
                     ),
                   ),
@@ -419,14 +450,18 @@ class VideoCard extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.grey.shade100,
+                          color: context.theme.brightness == Brightness.dark
+                              ? Colors.grey.shade800
+                              : Colors.grey.shade100,
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           video.category,
                           style: TextStyle(
                             fontSize: 8,
-                            color: Colors.grey.shade600,
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade600,
                           ),
                         ),
                       ),

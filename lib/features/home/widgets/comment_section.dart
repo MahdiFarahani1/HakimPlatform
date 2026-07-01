@@ -20,7 +20,7 @@ class InterviewsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeHeader(title: "آخرین المقابلات", onTap: () {}),
+        HomeHeader(title: "آخر المقابلات", onTap: () {}),
         SizedBox(height: 20.h),
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
@@ -29,20 +29,23 @@ class InterviewsSection extends StatelessWidget {
           itemCount: interviews.length,
           separatorBuilder: (_, __) => SizedBox(height: 16.h),
           itemBuilder: (context, index) {
-            return _buildModernInterviewCard(interviews[index]);
+            return _buildModernInterviewCard(context, interviews[index]);
           },
         ),
       ],
     );
   }
 
-  Widget _buildModernInterviewCard(DialogueModel interview) {
+  Widget _buildModernInterviewCard(
+    BuildContext context,
+    DialogueModel interview,
+  ) {
     return GestureDetector(
       onTap: () {},
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24.r),
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
           boxShadow: [
             BoxShadow(
               blurRadius: 20.r,
@@ -141,7 +144,9 @@ class InterviewsSection extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 15.sp,
                       fontWeight: FontWeight.w700,
-                      color: const Color(0xFF1E293B),
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : const Color(0xFF1E293B),
                       height: 1.4,
                     ),
                     maxLines: 2,
@@ -228,7 +233,9 @@ class InterviewsSection extends StatelessWidget {
                       interview.excerpt,
                       style: TextStyle(
                         fontSize: 12.sp,
-                        color: const Color(0xFF64748B),
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade400
+                            : const Color(0xFF64748B),
                         height: 1.4,
                       ),
                       maxLines: 2,
@@ -242,7 +249,12 @@ class InterviewsSection extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 8.h),
                     decoration: BoxDecoration(
                       border: Border(
-                        top: BorderSide(color: Colors.grey.shade200, width: 1),
+                        top: BorderSide(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white24
+                              : Colors.grey.shade200,
+                          width: 1,
+                        ),
                       ),
                     ),
                     child: Row(

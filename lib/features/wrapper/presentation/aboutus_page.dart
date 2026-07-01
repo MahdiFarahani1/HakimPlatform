@@ -59,14 +59,16 @@ class _AboutView extends StatelessWidget {
         ).animate().fade(duration: 300.ms).slideX(begin: -0.2),
         centerTitle: true,
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         actions: [
           BlocBuilder<AboutCubit, AboutState>(
             builder: (context, state) {
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: AppColor.primaryBlue.withOpacity(0.05),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.white.withOpacity(0.1)
+                      : AppColor.primaryBlue.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(30.r),
                 ),
                 child: Row(
@@ -255,7 +257,9 @@ class _AboutContent extends StatelessWidget {
                     aboutData.getAboutSubtitle(isArabic),
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: Colors.grey.shade600,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey.shade400
+                          : Colors.grey.shade600,
                     ),
                   ).animate().fade(duration: 500.ms).slideX(begin: -0.15),
                   SizedBox(height: 24.h),
@@ -265,11 +269,13 @@ class _AboutContent extends StatelessWidget {
                     width: double.infinity,
                     padding: EdgeInsets.all(24.w),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                       borderRadius: BorderRadius.circular(28.r),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColor.primaryBlue.withOpacity(.08),
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.transparent
+                              : AppColor.primaryBlue.withOpacity(.08),
                           blurRadius: 25,
                           offset: const Offset(0, 8),
                         ),
@@ -355,7 +361,11 @@ class _AboutContent extends StatelessWidget {
                           SizedBox(height: 8.h),
                           Text(
                             aboutData.getAboutMetricSubtitle(isArabic),
-                            style: TextStyle(color: Colors.grey.shade700),
+                            style: TextStyle(
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.grey.shade400
+                                  : Colors.grey.shade700,
+                            ),
                             textAlign: TextAlign.center,
                           ),
                         ],
@@ -382,7 +392,7 @@ class _AboutContent extends StatelessWidget {
                             .asMap()
                             .entries
                             .map(
-                              (entry) => _pillarTile(entry.value, entry.key),
+                              (entry) => _pillarTile(context, entry.value, entry.key),
                             ),
                       ],
                     ),
@@ -428,7 +438,7 @@ class _AboutContent extends StatelessWidget {
                               .asMap()
                               .entries
                               .map(
-                                (entry) => _socialIcon(entry.value, entry.key),
+                                (entry) => _socialIcon(context, entry.value, entry.key),
                               )
                               .toList(),
                         ),
@@ -493,16 +503,18 @@ class _AboutContent extends StatelessWidget {
     );
   }
 
-  Widget _pillarTile(PillarModel pillar, int index) {
+  Widget _pillarTile(BuildContext context, PillarModel pillar, int index) {
     return Container(
           margin: EdgeInsets.only(bottom: 12.h),
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.onPrimaryContainer,
             borderRadius: BorderRadius.circular(20.r),
             boxShadow: [
               BoxShadow(
-                color: AppColor.primaryBlue.withOpacity(.05),
+                color: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.transparent
+                    : AppColor.primaryBlue.withOpacity(.05),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               ),
@@ -546,7 +558,9 @@ class _AboutContent extends StatelessWidget {
                       pillar.desc,
                       style: TextStyle(
                         fontSize: 13.sp,
-                        color: Colors.grey.shade600,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade400
+                            : Colors.grey.shade600,
                       ),
                     ),
                   ],
@@ -561,7 +575,7 @@ class _AboutContent extends StatelessWidget {
         .then(delay: Duration(milliseconds: 50 * index));
   }
 
-  Widget _socialIcon(SocialLinkModel link, int index) {
+  Widget _socialIcon(BuildContext context, SocialLinkModel link, int index) {
     IconData icon;
     Color color;
 
@@ -605,11 +619,15 @@ class _AboutContent extends StatelessWidget {
       child: Container(
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(.95),
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(.95)
+              : Colors.white.withOpacity(.95),
           borderRadius: BorderRadius.circular(40.r),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.1),
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.transparent
+                  : Colors.black.withOpacity(.1),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),

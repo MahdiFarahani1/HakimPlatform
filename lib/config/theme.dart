@@ -19,6 +19,7 @@ class AppTheme {
       ),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.white,
+
         iconTheme: IconThemeData(color: AppColor.primaryBlue),
 
         elevation: 0,
@@ -33,7 +34,10 @@ class AppTheme {
           scaffoldGradient: const LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [Color(0xffEBF1FC), Color(0xffF6F8FC)],
+            colors: [
+              Color.fromARGB(255, 248, 250, 255),
+              Color.fromARGB(255, 252, 253, 255),
+            ],
           ),
         ),
       ],

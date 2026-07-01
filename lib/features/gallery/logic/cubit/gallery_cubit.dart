@@ -9,7 +9,6 @@ class GalleryCubit extends Cubit<GalleryState> {
   final GalleryRepository repository;
 
   GalleryCubit(this.repository) : super(GalleryInitial());
-
   Future<void> loadData() async {
     emit(GalleryLoading());
     try {

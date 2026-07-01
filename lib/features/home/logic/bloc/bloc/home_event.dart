@@ -8,3 +8,8 @@ sealed class HomeEvent extends Equatable {
 }
 
 class FetchHomeData extends HomeEvent {}
+
+class FetchBooksByCategory extends HomeEvent {
+  final String titleSelected;
+  const FetchBooksByCategory({required this.titleSelected});
+}

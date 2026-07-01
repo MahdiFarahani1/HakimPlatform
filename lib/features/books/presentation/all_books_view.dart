@@ -95,7 +95,7 @@ class BooksPage extends StatelessWidget {
               ),
               const Divider(),
               Text(
-                '$bookCount کتاب',
+                '$bookCount كتاب',
                 style: TextStyle(
                   color: Colors.grey.shade500,
                   fontSize: 12,
@@ -106,8 +106,10 @@ class BooksPage extends StatelessWidget {
           );
         },
       ),
-      backgroundColor: Colors.white,
-      foregroundColor: const Color(0xFF1A1A2E),
+      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+      foregroundColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.white
+          : const Color(0xFF1A1A2E),
       elevation: 0,
       actions: [
         Padding(
@@ -121,7 +123,12 @@ class BooksPage extends StatelessWidget {
       ],
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(1),
-        child: Container(height: 1, color: Colors.grey.shade100),
+        child: Container(
+          height: 1,
+          color: Theme.of(context).brightness == Brightness.dark
+              ? Colors.white10
+              : Colors.grey.shade100,
+        ),
       ),
     );
   }
@@ -174,7 +181,9 @@ class BooksPage extends StatelessWidget {
           curve: Curves.easeInOut,
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
           decoration: BoxDecoration(
-            color: isSelected ? AppColor.primaryBlue : Colors.grey.shade100,
+            color: isSelected
+                ? AppColor.primaryBlue
+                : Theme.of(context).colorScheme.onPrimaryContainer,
             borderRadius: BorderRadius.circular(16),
             boxShadow: isSelected
                 ? [
@@ -202,7 +211,9 @@ class BooksPage extends StatelessWidget {
                 style: TextStyle(
                   color: isSelected
                       ? AppColor.primaryOrange
-                      : const Color(0xFF1A1A2E),
+                      : (Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade300
+                            : const Color(0xFF1A1A2E)),
                   fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                   fontSize: 13,
                 ),
@@ -225,7 +236,9 @@ class BooksPage extends StatelessWidget {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 gradient: LinearGradient(
-                  colors: [Colors.grey.shade50, Colors.grey.shade100],
+                  colors: Theme.of(context).brightness == Brightness.dark
+                      ? [Colors.grey.shade800, Colors.grey.shade900]
+                      : [Colors.grey.shade50, Colors.grey.shade100],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -306,10 +319,12 @@ class BookCardItem extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          color: Colors.white,
+          color: Theme.of(context).colorScheme.onPrimaryContainer,
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.shade200,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.transparent
+                  : Colors.grey.shade200,
               blurRadius: 15,
               offset: const Offset(0, 8),
             ),
@@ -328,9 +343,13 @@ class BookCardItem extends StatelessWidget {
                     book.image,
                     fit: BoxFit.cover,
                     errorBuilder: (_, __, ___) => Container(
-                      color: Colors.grey.shade100,
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey.shade800
+                          : Colors.grey.shade100,
                       child: Assets.icons.bookOpenCover.image(
-                        color: Colors.grey,
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade400
+                            : Colors.grey,
                       ),
                     ),
                   ),
@@ -346,7 +365,9 @@ class BookCardItem extends StatelessWidget {
                         color: AppColor.primaryOrange.withOpacity(0.06),
                         borderRadius: BorderRadius.circular(8),
                         border: Border.all(
-                          color: Colors.grey.shade200,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.grey.shade800
+                              : Colors.grey.shade200,
                           width: 0.5,
                         ),
                       ),
@@ -447,8 +468,11 @@ class BookCardItem extends StatelessWidget {
                       children: [
                         Text(
                           book.title,
-                          style: const TextStyle(
-                            color: Color(0xFF1A1A2E),
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : const Color(0xFF1A1A2E),
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
                             height: 1.3,
@@ -503,7 +527,7 @@ class BookCardItem extends StatelessWidget {
                               ),
                               child: const Center(
                                 child: Text(
-                                  'مطالعة.....................................................................',
+                                  'مطالعة',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 11,

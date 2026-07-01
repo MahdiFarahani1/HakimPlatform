@@ -10,8 +10,12 @@ class HomeLoadingWidget extends StatelessWidget {
     return Skeletonizer(
       enabled: true,
       effect: ShimmerEffect(
-        baseColor: Colors.grey.shade300,
-        highlightColor: Colors.grey.shade100,
+        baseColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey.shade800
+            : Colors.grey.shade300,
+        highlightColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.grey.shade700
+            : Colors.grey.shade100,
         duration: const Duration(milliseconds: 1500),
       ),
       child: ListView(
@@ -24,7 +28,7 @@ class HomeLoadingWidget extends StatelessWidget {
                 child: Container(
                   height: 50.h,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Padding(
@@ -38,7 +42,7 @@ class HomeLoadingWidget extends StatelessWidget {
                 width: 80.w,
                 height: 50.h,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -65,7 +69,7 @@ class HomeLoadingWidget extends StatelessWidget {
             margin: const EdgeInsets.symmetric(horizontal: 6),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
             ),
           ),
           const SizedBox(height: 25),
@@ -80,7 +84,7 @@ class HomeLoadingWidget extends StatelessWidget {
                 margin: EdgeInsets.symmetric(horizontal: 6.w),
                 width: 80.w,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -99,7 +103,7 @@ class HomeLoadingWidget extends StatelessWidget {
                 margin: const EdgeInsets.only(right: 16),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  color: Colors.white,
+                  color: Theme.of(context).colorScheme.onPrimaryContainer,
                 ),
               ),
             ),
@@ -110,7 +114,7 @@ class HomeLoadingWidget extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
               borderRadius: BorderRadius.circular(8),
             ),
             child: Column(
@@ -197,7 +201,7 @@ class HomeLoadingWidget extends StatelessWidget {
                     margin: const EdgeInsets.only(right: 16),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
                     ),
                   ),
                 ),
@@ -220,7 +224,7 @@ class HomeLoadingWidget extends StatelessWidget {
                   height: 100,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                 ),
               ),
@@ -242,7 +246,7 @@ class HomeLoadingWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.onPrimaryContainer,
                   ),
                   child: Row(
                     children: [
@@ -299,7 +303,7 @@ class CategoryItemSkeleton extends StatelessWidget {
             height: 60.h,
             width: 60.w,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.onPrimaryContainer,
               borderRadius: BorderRadius.circular(8),
             ),
           ),
