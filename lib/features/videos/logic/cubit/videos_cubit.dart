@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter_application_1/features/videos/data/models/video_category_model.dart';
 import 'package:flutter_application_1/features/videos/data/models/video_model.dart';
 import 'package:flutter_application_1/features/videos/data/repositories/repo_videos.dart';
 
@@ -21,31 +20,31 @@ class VideosCubit extends Cubit<VideosState> {
     }
   }
 
-  void searchVideos(String query) {
-    final currentState = state;
-    if (currentState is VideosSuccess) {
-      if (query.isEmpty) {
-        emit(VideosSuccess(currentState.allVideos, searchQuery: query));
-      } else {
-        final filtered = currentState.allVideos.where((video) {
-          return video.title.toLowerCase().contains(query.toLowerCase()) ||
-              video.description.toLowerCase().contains(query.toLowerCase());
-        }).toList();
-        emit(
-          VideosSuccess(
-            currentState.allVideos,
-            filteredVideos: filtered,
-            searchQuery: query,
-          ),
-        );
-      }
-    }
-  }
+  // void searchVideos(String query) {
+  //   final currentState = state;
+  //   if (currentState is VideosSuccess) {
+  //     if (query.isEmpty) {
+  //       emit(VideosSuccess(currentState.allVideos, searchQuery: query));
+  //     } else {
+  //       final filtered = currentState.allVideos.where((video) {
+  //         return video.title.toLowerCase().contains(query.toLowerCase()) ||
+  //             video.description.toLowerCase().contains(query.toLowerCase());
+  //       }).toList();
+  //       emit(
+  //         VideosSuccess(
+  //           currentState.allVideos,
+  //           filteredVideos: filtered,
+  //           searchQuery: query,
+  //         ),
+  //       );
+  //     }
+  //   }
+  // }
 
-  void clearSearch() {
-    final currentState = state;
-    if (currentState is VideosSuccess) {
-      emit(VideosSuccess(currentState.allVideos, searchQuery: ''));
-    }
-  }
+  // void clearSearch() {
+  //   final currentState = state;
+  //   if (currentState is VideosSuccess) {
+  //     emit(VideosSuccess(currentState.allVideos, searchQuery: ''));
+  //   }
+  // }
 }

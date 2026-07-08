@@ -109,6 +109,10 @@ class $AssetsIconsGen {
   AssetGenImage get messageImage =>
       const AssetGenImage('assets/icons/message-image.png');
 
+  /// File path: assets/icons/music-note.png
+  AssetGenImage get musicNote =>
+      const AssetGenImage('assets/icons/music-note.png');
+
   /// File path: assets/icons/newspaper.png
   AssetGenImage get newspaper =>
       const AssetGenImage('assets/icons/newspaper.png');
@@ -129,6 +133,10 @@ class $AssetsIconsGen {
   AssetGenImage get playCircle =>
       const AssetGenImage('assets/icons/play-circle.png');
 
+  /// File path: assets/icons/play-pause.png
+  AssetGenImage get playPause =>
+      const AssetGenImage('assets/icons/play-pause.png');
+
   /// File path: assets/icons/play.png
   AssetGenImage get play => const AssetGenImage('assets/icons/play.png');
 
@@ -142,6 +150,10 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/refresh.png
   AssetGenImage get refresh => const AssetGenImage('assets/icons/refresh.png');
+
+  /// File path: assets/icons/replay-10.png
+  AssetGenImage get replay10 =>
+      const AssetGenImage('assets/icons/replay-10.png');
 
   /// File path: assets/icons/search.png
   AssetGenImage get search => const AssetGenImage('assets/icons/search.png');
@@ -158,6 +170,14 @@ class $AssetsIconsGen {
   AssetGenImage get squareInfo =>
       const AssetGenImage('assets/icons/square-info.png');
 
+  /// File path: assets/icons/step-backward.png
+  AssetGenImage get stepBackward =>
+      const AssetGenImage('assets/icons/step-backward.png');
+
+  /// File path: assets/icons/step-forward.png
+  AssetGenImage get stepForward =>
+      const AssetGenImage('assets/icons/step-forward.png');
+
   /// File path: assets/icons/terms-info.png
   AssetGenImage get termsInfo =>
       const AssetGenImage('assets/icons/terms-info.png');
@@ -169,6 +189,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/text-size.png
   AssetGenImage get textSize =>
       const AssetGenImage('assets/icons/text-size.png');
+
+  /// File path: assets/icons/time-forward-ten.png
+  AssetGenImage get timeForwardTen =>
+      const AssetGenImage('assets/icons/time-forward-ten.png');
 
   /// File path: assets/icons/user.png
   AssetGenImage get user => const AssetGenImage('assets/icons/user.png');
@@ -216,22 +240,28 @@ class $AssetsIconsGen {
     images,
     menu,
     messageImage,
+    musicNote,
     newspaper,
     nightDay,
     notFound,
     octagonCheck,
     playCircle,
+    playPause,
     play,
     privacySettings,
     radioAlt,
     refresh,
+    replay10,
     search,
     settings,
     shareSquare,
     squareInfo,
+    stepBackward,
+    stepForward,
     termsInfo,
     textCheck,
     textSize,
+    timeForwardTen,
     user,
     video,
     waveformPath,

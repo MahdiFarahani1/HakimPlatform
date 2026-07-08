@@ -10,9 +10,11 @@ import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cu
 import 'package:flutter_application_1/features/home/data/repositories/home_repository.dart';
 import 'package:flutter_application_1/features/home/logic/bloc/bloc/home_bloc.dart';
 import 'package:flutter_application_1/features/settings/logic/cubit/settings_cubit.dart';
+import 'package:flutter_application_1/features/sounds/logic/cubit/player_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -20,7 +22,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setupDependencyInjection();
   await AppVersion.instance.init();
-
+  await GetStorage.init();
   final directory = await getApplicationDocumentsDirectory();
 
   HydratedBloc.storage = await HydratedStorage.build(
@@ -50,6 +52,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(create: (context) => BookmarkCubit()),
             BlocProvider(create: (context) => SettingsCubit()),
             BlocProvider(create: (context) => InternetCubit()),
+            BlocProvider(create: (context) => PlayerCubit()),
           ],
 
           child: BlocSelector<SettingsCubit, SettingsState, bool>(

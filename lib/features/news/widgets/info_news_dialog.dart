@@ -4,6 +4,7 @@ import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/core/utils/share.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
+import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_state.dart';
 import 'package:flutter_application_1/features/news/data/models/news_model.dart';
@@ -184,7 +185,7 @@ class NewsInfoDialog extends StatelessWidget {
                       Expanded(
                         child: BlocBuilder<BookmarkCubit, BookmarkState>(
                           builder: (context, state) {
-                            final isSaved = state.savedNews.any(
+                            final isSaved = state.savedItems.any(
                               (item) => item.id == news.id,
                             );
                             return _buildActionButton(
@@ -195,8 +196,11 @@ class NewsInfoDialog extends StatelessWidget {
                               label: 'حفظ',
                               color: AppColor.primaryOrange,
                               onTap: () {
-                                context.read<BookmarkCubit>().toggleBookmark(
+                                final newsbookmark = BookmarkItem.fromNews(
                                   news,
+                                );
+                                context.read<BookmarkCubit>().toggleBookmark(
+                                  newsbookmark,
                                 );
                                 AppSnackBar.success(
                                   context,

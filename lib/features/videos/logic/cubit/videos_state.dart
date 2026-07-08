@@ -11,19 +11,11 @@ final class VideosLoading extends VideosState {}
 
 final class VideosSuccess extends VideosState {
   final List<VideoModel> allVideos;
-  final List<VideoModel> filteredVideos;
-  final String searchQuery;
 
-  const VideosSuccess(
-    this.allVideos, {
-    List<VideoModel>? filteredVideos,
-    this.searchQuery = '',
-  }) : filteredVideos = filteredVideos ?? allVideos;
-
-  List<VideoModel> get displayVideos => filteredVideos;
+  const VideosSuccess(this.allVideos);
 
   @override
-  List<Object> get props => [allVideos, filteredVideos, searchQuery];
+  List<Object> get props => [allVideos];
 }
 
 final class VideosError extends VideosState {

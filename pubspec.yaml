@@ -66,6 +66,9 @@ dependencies:
   connectivity_plus: ^7.2.0
   permission_handler: ^12.0.3
   app_settings: ^7.0.0
+  image_gallery_saver_plus: ^5.0.0
+  just_audio: ^0.10.6
+  zoom_tap_animation: ^1.1.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

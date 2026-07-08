@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_state.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
-import 'package:flutter_application_1/features/news/data/models/news_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BookmarkScreen extends StatefulWidget {
@@ -20,54 +20,51 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
-  // Get filtered bookmarks from cubit state
-  List<NewsModel> _getFilteredBookmarks(List<NewsModel> savedNews) {
-    return savedNews.where((news) {
-      // Category filter - using news type or category field
+  // فیلتر کردن هوشمند و داینامیک آیتم‌ها بر اساس مدل جدید
+  List<BookmarkItem> _getFilteredBookmarks(List<BookmarkItem> savedItems) {
+    return savedItems.where((item) {
+      // فیلتر دسته بندی
       final matchesCategory =
-          _selectedCategory == 'all' || 'news' == _selectedCategory;
+          _selectedCategory == 'all' || item.category == _selectedCategory;
 
-      // Search filter
+      // فیلتر سرچ بر اساس عنوان یا توضیحات کوتاه
       final matchesSearch =
           _searchQuery.isEmpty ||
-          news.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
-          (news.intro?.toLowerCase().contains(_searchQuery.toLowerCase()) ??
+          item.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
+          (item.intro?.toLowerCase().contains(_searchQuery.toLowerCase()) ??
               false);
 
       return matchesCategory && matchesSearch;
     }).toList();
   }
 
-  // Get category icon and color
-  (Color color, String icon, String text) _getCategoryInfo(NewsModel news) {
-    final category = 'news';
-    switch (category) {
-      case 'audio':
+  (Color color, String icon, String text) _getCategoryInfo(BookmarkItem item) {
+    switch (item.category) {
+      case 'video':
         return (
-          const Color.fromARGB(255, 132, 0, 255),
+          const Color(0xFF8400FF),
           Assets.icons.headphonesRhythm.path,
-          'پادکست',
+          'فيديو',
         );
       case 'book':
         return (
-          const Color.fromARGB(255, 89, 197, 161),
-
+          const Color(0xFF59C5A1),
           Assets.icons.bookOpenCover.path,
           'كتاب',
         );
       default:
         return (
-          Color.fromARGB(255, 0, 98, 255),
+          const Color(0xFF0062FF),
           Assets.icons.newspaper.path,
           'الأخبار',
         );
     }
   }
 
-  // Get category counts
-  int _getCategoryCount(List<NewsModel> savedNews, String category) {
-    if (category == 'all') return savedNews.length;
-    return savedNews.where((news) => 'news' == category).length;
+  // محاسبه پویای تعداد بوکمارک‌های هر دسته بندی برای کارت‌های آماری بالای صفحه
+  int _getCategoryCount(List<BookmarkItem> savedItems, String category) {
+    if (category == 'all') return savedItems.length;
+    return savedItems.where((item) => item.category == category).length;
   }
 
   @override
@@ -78,8 +75,8 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
         child: SafeArea(
           child: BlocBuilder<BookmarkCubit, BookmarkState>(
             builder: (context, state) {
-              final savedNews = state.savedNews;
-              final filteredNews = _getFilteredBookmarks(savedNews);
+              final savedItems = state.savedItems;
+              final filteredItems = _getFilteredBookmarks(savedItems);
 
               return CustomScrollView(
                 slivers: [
@@ -153,30 +150,30 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                         children: [
                           _buildCategoryStatCard(
                             'الكل',
-                            _getCategoryCount(savedNews, 'all'),
+                            _getCategoryCount(savedItems, 'all'),
                             Assets.icons.bookmark.path,
-                            const Color.fromARGB(255, 255, 0, 0),
+                            const Color(0xFFFF3B30),
                           ),
                           const SizedBox(width: 12),
                           _buildCategoryStatCard(
                             'الأصوات',
-                            _getCategoryCount(savedNews, 'audio'),
+                            _getCategoryCount(savedItems, 'video'),
                             Assets.icons.headphonesRhythm.path,
-                            const Color.fromARGB(255, 132, 0, 255),
+                            const Color(0xFF8400FF),
                           ),
                           const SizedBox(width: 12),
                           _buildCategoryStatCard(
                             'الكتب',
-                            _getCategoryCount(savedNews, 'book'),
+                            _getCategoryCount(savedItems, 'book'),
                             Assets.icons.bookOpenCover.path,
-                            const Color.fromARGB(255, 89, 197, 161),
+                            const Color(0xFF59C5A1),
                           ),
                           const SizedBox(width: 12),
                           _buildCategoryStatCard(
                             'الأخبار',
-                            _getCategoryCount(savedNews, 'news'),
+                            _getCategoryCount(savedItems, 'news'),
                             Assets.icons.newspaper.path,
-                            const Color.fromARGB(255, 0, 98, 255),
+                            const Color(0xFF0062FF),
                           ),
                         ],
                       ),
@@ -212,9 +209,9 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                 ),
                                 const SizedBox(width: 12),
                                 _buildCategoryChip(
-                                  'الأصوات',
-                                  'audio',
-                                  Assets.icons.headphonesRhythm.path,
+                                  'فيديو',
+                                  'video',
+                                  Assets.icons.video.path,
                                 ),
                                 const SizedBox(width: 12),
                                 _buildCategoryChip(
@@ -275,11 +272,11 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                               color: Color(0xFF9CA3AF),
                             ),
                             prefixIcon: Container(
-                              margin: EdgeInsets.all(14),
+                              margin: const EdgeInsets.all(14),
                               child: Assets.icons.search.image(
-                                color: Color(0xFF9CA3AF),
-                                width: 2,
-                                height: 2,
+                                color: const Color(0xFF9CA3AF),
+                                width: 16,
+                                height: 16,
                               ),
                             ),
                             suffixIcon: _searchQuery.isNotEmpty
@@ -310,7 +307,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                   // Bookmarks List
                   SliverPadding(
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
-                    sliver: filteredNews.isEmpty
+                    sliver: filteredItems.isEmpty
                         ? SliverToBoxAdapter(
                             child: Center(
                               child: Column(
@@ -323,7 +320,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                       color: AppColor.primaryOrange.withOpacity(
                                         0.1,
                                       ),
-
                                       border: Border.all(
                                         color: Colors.white.withOpacity(0.6),
                                         width: 2,
@@ -335,9 +331,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                       color: AppColor.primaryOrange,
                                     ),
                                   ),
-
                                   const SizedBox(height: 24),
-
                                   Text(
                                     "لم يتم حفظ أي عنصر",
                                     style: TextStyle(
@@ -347,10 +341,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                       letterSpacing: 0.5,
                                     ),
                                   ),
-
                                   const SizedBox(height: 8),
-
-                                  // متن فرعی
                                   Text(
                                     "يمكنك الحفظ من القسم المرتبط",
                                     style: TextStyle(
@@ -359,7 +350,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                       fontWeight: FontWeight.w400,
                                     ),
                                   ),
-
                                   const SizedBox(height: 24),
                                 ],
                               ),
@@ -370,9 +360,9 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                               context,
                               index,
                             ) {
-                              final news = filteredNews[index];
-                              return _buildBookmarkCard(news);
-                            }, childCount: filteredNews.length),
+                              final item = filteredItems[index];
+                              return _buildBookmarkCard(item);
+                            }, childCount: filteredItems.length),
                           ),
                   ),
                   SliverToBoxAdapter(
@@ -453,7 +443,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
         });
       },
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 400),
+        duration: const Duration(milliseconds: 400),
         padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
         decoration: BoxDecoration(
           color: isSelected
@@ -489,7 +479,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                   ? AppColor.primaryOrange
                   : const Color(0xFF6B7280),
             ),
-
             const SizedBox(width: 8),
             Text(
               label,
@@ -509,9 +498,12 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     );
   }
 
-  Widget _buildBookmarkCard(NewsModel news) {
-    final (categoryColor, categoryIcon, categoryText) = _getCategoryInfo(news);
-    final imageEmoji = _getImageEmoji(news);
+  Widget _buildBookmarkCard(BookmarkItem item) {
+    final (categoryColor, categoryIcon, categoryText) = _getCategoryInfo(item);
+    final imageEmoji = _getImageEmoji(item);
+
+    // استخراج زبان دیتای اختصاصی از مپ در صورت وجود (برای اخبار)
+    final String languageLabel = item.extraData['lan'] ?? '';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
@@ -532,7 +524,9 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {},
+            onTap: () {
+              // TODO: براساس item.category کاربر را به پلیر ویدیو، نمایش کتاب یا متن خبر هدایت کنید
+            },
             borderRadius: BorderRadius.circular(24),
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -555,15 +549,15 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                     ),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: news.image.isNotEmpty
+                      child: item.image.isNotEmpty
                           ? Image.network(
-                              news.image,
+                              item.image,
                               fit: BoxFit.cover,
                               errorBuilder: (context, error, stackTrace) {
                                 return Center(
                                   child: Text(
                                     imageEmoji,
-                                    style: const TextStyle(fontSize: 36),
+                                    style: const TextStyle(fontSize: 32),
                                   ),
                                 );
                               },
@@ -571,12 +565,13 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                           : Center(
                               child: Text(
                                 imageEmoji,
-                                style: const TextStyle(fontSize: 36),
+                                style: const TextStyle(fontSize: 32),
                               ),
                             ),
                     ),
                   ),
                   const SizedBox(width: 16),
+
                   // Info
                   Expanded(
                     child: Column(
@@ -602,7 +597,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                     height: 12,
                                     color: categoryColor,
                                   ),
-
                                   const SizedBox(width: 4),
                                   Text(
                                     categoryText,
@@ -616,30 +610,35 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                               ),
                             ),
                             const Spacer(),
+
                             // Language badge
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
-                              ),
-                              decoration: BoxDecoration(
-                                color: news.languageColor.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(6),
-                              ),
-                              child: Text(
-                                news.languageName,
-                                style: TextStyle(
-                                  fontSize: 9,
-                                  fontWeight: FontWeight.w500,
-                                  color: news.languageColor,
-                                ),
-                              ),
-                            ),
+                            languageLabel != ''
+                                ? Container(
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 6,
+                                      vertical: 2,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: categoryColor.withOpacity(
+                                        0.1,
+                                      ), // اختصاص رنگ دسته بندی به بج زبان جهت پایداری گرافیک
+                                      borderRadius: BorderRadius.circular(6),
+                                    ),
+                                    child: Text(
+                                      languageLabel,
+                                      style: TextStyle(
+                                        fontSize: 9,
+                                        fontWeight: FontWeight.w500,
+                                        color: categoryColor,
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox.shrink(),
                           ],
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          news.title,
+                          item.title,
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -652,7 +651,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          news.intro ?? '',
+                          item.intro ?? '',
                           style: TextStyle(
                             fontSize: 12,
                             color: context.theme.brightness == Brightness.dark
@@ -665,29 +664,14 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                         const SizedBox(height: 4),
                         Row(
                           children: [
-                            Assets.icons.clockThree.image(
-                              width: 10,
-                              height: 10,
-                              color: Colors.grey,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              _getTimeAgo(news.createdAt),
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: Color(0xFF9CA3AF),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
                             Assets.icons.calendar.image(
                               width: 10,
                               height: 10,
-                              color: Color(0xFF9CA3AF),
+                              color: const Color(0xFF9CA3AF),
                             ),
-
                             const SizedBox(width: 4),
                             Text(
-                              _formatDate(news.createdAt),
+                              _formatDate(item.createdAt),
                               style: const TextStyle(
                                 fontSize: 11,
                                 color: Color(0xFF9CA3AF),
@@ -701,7 +685,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                   Assets.icons.angleSmallLeft.image(
                     width: 16,
                     height: 16,
-                    color: Color(0xFF9CA3AF),
+                    color: const Color(0xFF9CA3AF),
                   ),
                 ],
               ),
@@ -712,11 +696,10 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     );
   }
 
-  String _getImageEmoji(NewsModel news) {
-    final category = 'news';
-    switch (category) {
-      case 'audio':
-        return '🎧';
+  String _getImageEmoji(BookmarkItem item) {
+    switch (item.category) {
+      case 'video':
+        return '🎥';
       case 'book':
         return '📚';
       default:

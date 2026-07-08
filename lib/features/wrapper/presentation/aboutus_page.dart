@@ -30,8 +30,6 @@ class _AboutView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: BlocBuilder<AboutCubit, AboutState>(
@@ -362,7 +360,9 @@ class _AboutContent extends StatelessWidget {
                           Text(
                             aboutData.getAboutMetricSubtitle(isArabic),
                             style: TextStyle(
-                              color: Theme.of(context).brightness == Brightness.dark
+                              color:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
                                   ? Colors.grey.shade400
                                   : Colors.grey.shade700,
                             ),
@@ -392,7 +392,8 @@ class _AboutContent extends StatelessWidget {
                             .asMap()
                             .entries
                             .map(
-                              (entry) => _pillarTile(context, entry.value, entry.key),
+                              (entry) =>
+                                  _pillarTile(context, entry.value, entry.key),
                             ),
                       ],
                     ),
@@ -438,7 +439,11 @@ class _AboutContent extends StatelessWidget {
                               .asMap()
                               .entries
                               .map(
-                                (entry) => _socialIcon(context, entry.value, entry.key),
+                                (entry) => _socialIcon(
+                                  context,
+                                  entry.value,
+                                  entry.key,
+                                ),
                               )
                               .toList(),
                         ),
@@ -620,7 +625,9 @@ class _AboutContent extends StatelessWidget {
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
           color: Theme.of(context).brightness == Brightness.dark
-              ? Theme.of(context).colorScheme.onPrimaryContainer.withOpacity(.95)
+              ? Theme.of(
+                  context,
+                ).colorScheme.onPrimaryContainer.withOpacity(.95)
               : Colors.white.withOpacity(.95),
           borderRadius: BorderRadius.circular(40.r),
           boxShadow: [

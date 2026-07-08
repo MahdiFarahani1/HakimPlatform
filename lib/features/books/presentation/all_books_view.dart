@@ -398,7 +398,21 @@ class BookCardItem extends StatelessWidget {
                     child: BlocBuilder<PdfCubit, PdfState>(
                       builder: (context, state) {
                         if (state is PdfDownloaded) {
-                          return const SizedBox.shrink();
+                          return Container(
+                            width: 32,
+                            height: 32,
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: AppColor.primaryBlue,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(2.0),
+                              child: Assets.icons.wishlistStar.image(
+                                color: AppColor.primaryOrange,
+                              ),
+                            ),
+                          );
                         }
                         if (state is PdfDownloading) {
                           double progress = state.progress;

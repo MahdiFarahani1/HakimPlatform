@@ -5,9 +5,14 @@ import 'package:flutter_application_1/features/books/data/data_source/books_data
 import 'package:flutter_application_1/features/books/data/repositories/books_repo.dart';
 import 'package:flutter_application_1/features/books/logic/book/book_cubit.dart';
 import 'package:flutter_application_1/features/books/logic/pdf/pdf_cubit.dart';
+import 'package:flutter_application_1/features/dialogue/data/data_source/dialogue_datasource.dart';
+import 'package:flutter_application_1/features/dialogue/data/repositories/dialogue_repository.dart';
+import 'package:flutter_application_1/features/dialogue/logic/cubit/dialouge_cubit.dart';
+import 'package:flutter_application_1/features/gallery/data/data_source/gallery_local_datasource.dart';
 import 'package:flutter_application_1/features/gallery/data/data_source/gallery_remote_datasource.dart';
 import 'package:flutter_application_1/features/gallery/data/repositories/gallery_repo.dart';
 import 'package:flutter_application_1/features/gallery/logic/cubit/gallery_cubit.dart';
+import 'package:flutter_application_1/features/gallery/logic/gallery_detail_cubit/gallery_detail_cubit.dart';
 import 'package:flutter_application_1/features/home/data/data_source/home_data_remote.dart';
 import 'package:flutter_application_1/features/home/data/repositories/home_repository.dart';
 import 'package:flutter_application_1/features/news/data/data_source/remote_news_data.dart';
@@ -19,12 +24,14 @@ import 'package:flutter_application_1/features/videos/logic/cubit/videos_cubit.d
 import 'package:flutter_application_1/features/wrapper/data/data_source/about_datasource.dart';
 import 'package:flutter_application_1/features/wrapper/logic/cubit/about_cubit.dart';
 import 'package:get_it/get_it.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 final GetIt getIt = GetIt.instance;
 
 void setupDependencyInjection() {
   // Services
+  getIt.registerLazySingleton<GetStorage>(() => GetStorage());
   getIt.registerLazySingleton<Dio>(() {
     final dio = Dio(BaseOptions(baseUrl: Api.baseUrl));
 
@@ -64,13 +71,17 @@ void setupDependencyInjection() {
 
   // Gallery
 
+  getIt.registerLazySingleton<GalleryLocalDataSource>(
+    () => GalleryLocalDataSource(getIt<GetStorage>()),
+  );
   getIt.registerLazySingleton<GalleryDataSource>(
     () => GalleryDataSource(getIt()),
   );
   getIt.registerLazySingleton<GalleryRepository>(
-    () => GalleryRepository(getIt()),
+    () => GalleryRepository(dataSource: getIt(), localDataSource: getIt()),
   );
   getIt.registerFactory<GalleryCubit>(() => GalleryCubit(getIt()));
+  getIt.registerFactory<GalleryDetailCubit>(() => GalleryDetailCubit(getIt()));
   // Books
   getIt.registerLazySingleton<BooksRemoteDataSource>(
     () => BooksRemoteDataSource(getIt<Dio>()),
@@ -82,6 +93,15 @@ void setupDependencyInjection() {
 
   getIt.registerFactory<BooksCubit>(() => BooksCubit(getIt<BooksRepository>()));
   getIt.registerFactory<PdfCubit>(() => PdfCubit(dio: getIt<Dio>()));
+
+  //dialogue
+  getIt.registerLazySingleton<DialogueDataSource>(
+    () => DialogueDataSource(getIt()),
+  );
+  getIt.registerLazySingleton<DialogueRepository>(
+    () => DialogueRepository(getIt()),
+  );
+  getIt.registerFactory<DialougeCubit>(() => DialougeCubit(getIt()));
 }
 
 Interceptor get _prettyLogger => PrettyDioLogger(

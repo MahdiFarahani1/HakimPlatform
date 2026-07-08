@@ -6,6 +6,7 @@ import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/core/utils/share.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
+import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_state.dart';
 import 'package:flutter_application_1/features/news/data/models/news_detail.dart';
@@ -498,7 +499,9 @@ class NewsDetailsContent extends StatelessWidget {
                   );
                 },
                 onBookmarkTap: () {
-                  context.read<BookmarkCubit>().toggleBookmark(newsModel);
+                  final newsbookmark = BookmarkItem.fromNews(newsModel);
+
+                  context.read<BookmarkCubit>().toggleBookmark(newsbookmark);
                   AppSnackBar.success(context, 'تم حفظ التغييرات بنجاح');
                 },
                 onShareTap: () {
@@ -592,7 +595,7 @@ Widget _modernBottomBar({
         // بوکمارک
         BlocBuilder<BookmarkCubit, BookmarkState>(
           builder: (context, state) {
-            final isSaved = state.savedNews.any((item) => item.id == newsId);
+            final isSaved = state.savedItems.any((item) => item.id == newsId);
             return _bottomActionItem(
               icon: isSaved
                   ? Assets.icons.wishlistStarFill.path

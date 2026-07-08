@@ -1,19 +1,19 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter_application_1/features/news/data/models/news_model.dart';
+import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
 
 class BookmarkState extends Equatable {
-  final List<NewsModel> savedNews;
+  final List<BookmarkItem> savedItems;
 
-  const BookmarkState({required this.savedNews});
+  const BookmarkState({required this.savedItems});
 
   factory BookmarkState.initial() {
-    return const BookmarkState(savedNews: []);
+    return const BookmarkState(savedItems: []);
   }
 
-  BookmarkState copyWith({List<NewsModel>? savedNews}) {
-    return BookmarkState(savedNews: savedNews ?? this.savedNews);
+  BookmarkState copyWith({List<BookmarkItem>? savedItems}) {
+    return BookmarkState(savedItems: savedItems ?? this.savedItems);
   }
 
   @override
-  List<Object?> get props => [savedNews];
+  List<Object?> get props => [savedItems];
 }

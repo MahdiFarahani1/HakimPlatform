@@ -6,6 +6,7 @@ import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:flutter_application_1/features/articles/presentation/articles_veiw.dart';
 import 'package:flutter_application_1/features/books/presentation/all_books_view.dart';
+import 'package:flutter_application_1/features/dialogue/presentation/dialouge_view.dart';
 
 import 'package:flutter_application_1/features/home/logic/bloc/bloc/home_bloc.dart';
 import 'package:flutter_application_1/features/home/widgets/news_section.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_application_1/features/home/widgets/drop_down_btn.dart';
 import 'package:flutter_application_1/features/home/widgets/home_loading.dart';
 import 'package:flutter_application_1/features/home/widgets/video_section.dart';
 import 'package:flutter_application_1/features/search/presentation/search_view.dart';
+import 'package:flutter_application_1/features/sounds/presentation/music_list_view.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -238,12 +240,26 @@ class _HomePageState extends State<HomePage>
                             title: "الكتب",
                           ),
                           CategoryItem(
-                            onTab: () {},
+                            onTab: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const MusicListScreen(),
+                                ),
+                              );
+                            },
                             icon: Assets.icons.waveformPath.path,
                             title: "الصوتيات",
                           ),
                           CategoryItem(
-                            onTab: () {},
+                            onTab: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const DialogueScreen(),
+                                ),
+                              );
+                            },
                             icon: Assets.icons.browser.path,
                             title: "المقالات",
                           ),
