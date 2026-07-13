@@ -1,4 +1,3 @@
-// lib/features/news/presentation/widgets/news_info_dialog.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
@@ -38,7 +37,6 @@ class NewsInfoDialog extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // Drag Handle
           Container(
             margin: const EdgeInsets.only(top: 12),
             width: 40,
@@ -49,14 +47,12 @@ class NewsInfoDialog extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          // Content
           Flexible(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(20),
                     child: SizedBox(
@@ -72,7 +68,6 @@ class NewsInfoDialog extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Title
                   Row(
                     children: [
                       Expanded(
@@ -89,7 +84,6 @@ class NewsInfoDialog extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 12),
-                      // Language Badge
                       Container(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 10,
@@ -111,7 +105,6 @@ class NewsInfoDialog extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 16),
-                  // Meta Info Row
                   Row(
                     children: [
                       _buildInfoChip(
@@ -129,7 +122,6 @@ class NewsInfoDialog extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  // Divider
                   Container(
                     height: 4,
                     width: 50,
@@ -139,7 +131,6 @@ class NewsInfoDialog extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  // Description
                   Text(
                     news.intro ?? 'لا يوجد وصف لهذا الخبر',
                     style: TextStyle(
@@ -152,7 +143,6 @@ class NewsInfoDialog extends StatelessWidget {
                     textAlign: TextAlign.justify,
                   ),
                   const SizedBox(height: 24),
-                  // Action Buttons
                   Row(
                     children: [
                       Expanded(
@@ -177,7 +167,6 @@ class NewsInfoDialog extends StatelessWidget {
                           label: 'نسخ الرابط',
                           color: AppColor.primaryOrange,
                           onTap: () {
-                            // Copy link
                           },
                         ),
                       ),

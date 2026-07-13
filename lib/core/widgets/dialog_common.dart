@@ -22,12 +22,7 @@ class AppDialog {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Assets.newicons.termsInfo.image(
-                //   width: 60,
-                //   height: 60,
-                //   color: theme.primaryColor,
-                // ),
-                Icon(Icons.telegram_outlined), //* delete
+                Icon(Icons.telegram_outlined), 
                 const SizedBox(height: 16),
                 Text(
                   title,
@@ -168,9 +163,7 @@ class AppDialog {
           backgroundColor: Colors.white,
           title: Row(
             children: [
-              // Assets.newicons.triangleWarning
-              //     .image(color: Colors.orange.shade600, width: 20, height: 20),
-              Icon(Icons.telegram_outlined), //* delete
+              Icon(Icons.telegram_outlined), 
 
               const SizedBox(width: 8),
               Text(

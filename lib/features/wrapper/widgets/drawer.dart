@@ -51,7 +51,6 @@ void drawerApp(BuildContext context) {
                     children: [
                       const SizedBox(height: 12),
 
-                      /// Modern Handle
                       Container(
                             height: 5,
                             width: 60,
@@ -66,7 +65,6 @@ void drawerApp(BuildContext context) {
 
                       const SizedBox(height: 30),
 
-                      /// Header Title
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                         child: Row(children: [const Spacer()]),
@@ -108,7 +106,6 @@ void drawerApp(BuildContext context) {
 
                             const SizedBox(height: 12),
 
-                            /// Divider
                             Container(
                               height: 1,
                               margin: const EdgeInsets.symmetric(vertical: 8),
@@ -121,7 +118,6 @@ void drawerApp(BuildContext context) {
 
                             const SizedBox(height: 4),
 
-                            /// Settings Menu
                             _buildMenuItem(
                               context,
                               Assets.icons.user.path,
@@ -132,13 +128,11 @@ void drawerApp(BuildContext context) {
 
                             const SizedBox(height: 20),
 
-                            /// App Info Card
                             _buildAppInfoCard(context),
                           ],
                         ),
                       ),
 
-                      /// Version
                       Container(
                         padding: EdgeInsets.symmetric(
                           vertical: 16.w,

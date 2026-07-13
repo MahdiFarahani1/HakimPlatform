@@ -44,8 +44,6 @@ class PlayerCubit extends Cubit<PlayerState> {
     });
   }
 
-  /// لیست آهنگ‌ها رو ثبت می‌کنه تا next/previous بدونن ترتیب چیه.
-  /// صدا زدنش هزینه‌ای نداره، می‌تونید هر بار build صدا بزنیدش.
   void setPlaylist(List<Song> songs) {
     _playlist = songs;
   }
@@ -96,14 +94,11 @@ class PlayerCubit extends Cubit<PlayerState> {
     }
   }
 
-  /// آهنگ بعدی توی پلی‌لیست. اگه آخرین آهنگ باشه، کاری نمی‌کنه.
   Future<void> playNext() async {
     if (!hasNext) return;
     await playSong(_playlist[_currentIndex + 1]);
   }
 
-  /// آهنگ قبلی. اگه بیش از ۳ ثانیه از آهنگ فعلی گذشته باشه،
-  /// به‌جای رفتن به قبلی، همین آهنگ از اول پخش می‌شه (رفتار استاندارد پلیرها).
   Future<void> playPrevious() async {
     if (state.position > const Duration(seconds: 3) || !hasPrevious) {
       await seekTo(Duration.zero);

@@ -1,8 +1,8 @@
-// lib/pages/about_page.dart
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config/di.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
+import 'package:flutter_application_1/core/utils/url_luncher.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/features/wrapper/data/models/about_model.dart';
 import 'package:flutter_application_1/features/wrapper/logic/cubit/about_cubit.dart';
@@ -134,7 +134,6 @@ class _AboutContent extends StatelessWidget {
 
         child: Column(
           children: [
-            // Header Section with Animation
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
@@ -222,13 +221,11 @@ class _AboutContent extends StatelessWidget {
               ),
             ).animate().fade(duration: 500.ms),
 
-            // Content Section
             Padding(
               padding: EdgeInsets.all(20.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title
                   Row(
                     children: [
                       Text(
@@ -262,7 +259,6 @@ class _AboutContent extends StatelessWidget {
                   ).animate().fade(duration: 500.ms).slideX(begin: -0.15),
                   SizedBox(height: 24.h),
 
-                  // Description Card
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(24.w),
@@ -331,7 +327,6 @@ class _AboutContent extends StatelessWidget {
                   ).animate().fade(duration: 500.ms).slideY(begin: 0.1),
                   SizedBox(height: 20.h),
 
-                  // Metric Card
                   if (aboutData.getAboutMetricTitle(isArabic).isNotEmpty)
                     Container(
                       width: double.infinity,
@@ -373,7 +368,6 @@ class _AboutContent extends StatelessWidget {
                     ).animate().fade(duration: 500.ms).scale(delay: 200.ms),
                   SizedBox(height: 20.h),
 
-                  // Pillars Section
                   if (aboutData.getPillars(isArabic).isNotEmpty)
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -399,7 +393,6 @@ class _AboutContent extends StatelessWidget {
                     ),
                   SizedBox(height: 20.h),
 
-                  // Social Links Card
                   Container(
                     width: double.infinity,
                     padding: EdgeInsets.all(24.w),
@@ -452,7 +445,6 @@ class _AboutContent extends StatelessWidget {
                   ).animate().fade(duration: 500.ms).slideY(begin: 0.1),
                   SizedBox(height: 40.h),
 
-                  // Footer
                   Center(
                     child: Text(
                       '© ${DateTime.now().year} ${isArabic ? 'جميع الحقوق محفوظة' : 'All Rights Reserved'}',
@@ -619,7 +611,9 @@ class _AboutContent extends StatelessWidget {
     }
 
     return InkWell(
-      onTap: () {},
+      onTap: () {
+        LunchUrlService.urlOpener(context, link.url);
+      },
       borderRadius: BorderRadius.circular(40.r),
       child: Container(
         padding: EdgeInsets.all(12.w),

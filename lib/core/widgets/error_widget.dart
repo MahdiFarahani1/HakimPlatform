@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 
 class CustomErrorWidget extends StatelessWidget {
@@ -19,7 +18,6 @@ class CustomErrorWidget extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Animated Error Icon
             Container(
                   width: context.screenWidth * 0.35,
                   height: context.screenWidth * 0.35,
@@ -49,7 +47,6 @@ class CustomErrorWidget extends StatelessWidget {
 
             context.gap(24),
 
-            // Animated Title
             Text(
                   'حدثت مشكلة!',
                   style: TextStyle(
@@ -67,7 +64,6 @@ class CustomErrorWidget extends StatelessWidget {
 
             context.gap(12),
 
-            // Animated Error Message
             Text(
                   'حدث خطأ أثناء تحميل البيانات',
                   style: TextStyle(
@@ -85,7 +81,6 @@ class CustomErrorWidget extends StatelessWidget {
 
             context.gap(32),
 
-            // Animated Retry Button with Shake Effect
             Material(
                   elevation: 0,
                   borderRadius: BorderRadius.circular(16),

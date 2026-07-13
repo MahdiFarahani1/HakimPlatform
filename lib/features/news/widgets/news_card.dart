@@ -1,4 +1,3 @@
-// lib/features/news/presentation/widgets/news_card.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
@@ -35,7 +34,6 @@ class NewsCard extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Image Section
               ClipRRect(
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
@@ -55,7 +53,6 @@ class NewsCard extends StatelessWidget {
                                   _buildImagePlaceholder(),
                             )
                           : _buildImagePlaceholder(),
-                      // Language Badge
                       Positioned(
                         top: 8,
                         left: 8,
@@ -78,7 +75,6 @@ class NewsCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      // Gradient Overlay
                       Positioned.fill(
                         child: Container(
                           decoration: BoxDecoration(
@@ -115,7 +111,6 @@ class NewsCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // Content Section
               Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(

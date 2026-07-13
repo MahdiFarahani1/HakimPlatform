@@ -21,7 +21,6 @@ class NewsListSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// HEADER
         HomeHeader(
           title: "آخر الاخبار",
           onTap: () {
@@ -34,7 +33,6 @@ class NewsListSection extends StatelessWidget {
 
         const SizedBox(height: 16),
 
-        /// NEWS LIST
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -50,7 +48,6 @@ class NewsListSection extends StatelessWidget {
     );
   }
 
-  /// NEWS CARD WIDGET
   Widget _buildNewsCard(BuildContext context, NewsHomeModel newsItem) {
     return GestureDetector(
       onTap: () {},
@@ -67,9 +64,8 @@ class NewsListSection extends StatelessWidget {
           ],
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center, // ✅ تغییر به center
+          crossAxisAlignment: CrossAxisAlignment.center, 
           children: [
-            /// IMAGE
             ClipRRect(
               borderRadius: BorderRadius.only(
                 topRight: Radius.circular(16.r),
@@ -83,15 +79,13 @@ class NewsListSection extends StatelessWidget {
               ),
             ),
 
-            /// CONTENT
             Expanded(
               child: Padding(
                 padding: EdgeInsets.all(12.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min, // ✅ اضافه شد
+                  mainAxisSize: MainAxisSize.min, 
                   children: [
-                    /// CATEGORY & DATE
                     Row(
                       children: [
                         Container(
@@ -146,7 +140,6 @@ class NewsListSection extends StatelessWidget {
 
                     SizedBox(height: 8.h),
 
-                    /// TITLE
                     Text(
                       newsItem.title,
                       maxLines: 2,
@@ -163,7 +156,6 @@ class NewsListSection extends StatelessWidget {
 
                     SizedBox(height: 6.h),
 
-                    /// EXCERPT (if available)
                     if (newsItem.excerpt.isNotEmpty) ...[
                       Text(
                         newsItem.excerpt,
@@ -183,10 +175,9 @@ class NewsListSection extends StatelessWidget {
               ),
             ),
 
-            /// ARROW ICON - کاملاً در مرکز عمودی
             Container(
               width: 40.w,
-              height: 110.h, // هم ارتفاع با تصویر
+              height: 110.h, 
               alignment: Alignment.center,
               child: Assets.icons.angleSmallLeft.image(
                 width: 15.w,
@@ -200,7 +191,6 @@ class NewsListSection extends StatelessWidget {
     );
   }
 
-  /// FORMAT DATE
   String _formatDate(String dateTimeString) {
     try {
       final dateTime = DateTime.parse(dateTimeString);

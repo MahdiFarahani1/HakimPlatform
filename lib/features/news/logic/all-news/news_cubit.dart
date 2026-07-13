@@ -1,4 +1,3 @@
-// lib/features/news/logic/cubit/news_cubit.dart
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_application_1/features/news/data/models/news_model.dart';
@@ -30,27 +29,28 @@ class NewsCubit extends Cubit<NewsState> {
       return;
     }
 
-    try {
-      final response = await repository.getNews(
-        page: _currentPage,
-        lang: _currentLang,
-      );
+    final result = await repository.getNews(
+      page: _currentPage,
+      lang: _currentLang,
+    );
 
-      _allNews.addAll(response.data);
-      _hasMore = _currentPage < response.lastPage;
-      _currentPage++;
+    result.fold(
+      (failure) => emit(NewsError(failure.message)),
+      (response) {
+        _allNews.addAll(response.data);
+        _hasMore = _currentPage < response.lastPage;
+        _currentPage++;
 
-      emit(
-        NewsSuccess(
-          List.from(_allNews),
-          hasMore: _hasMore,
-          currentPage: response.currentPage,
-          total: response.total,
-        ),
-      );
-    } catch (e) {
-      emit(NewsError(e.toString()));
-    }
+        emit(
+          NewsSuccess(
+            List.from(_allNews),
+            hasMore: _hasMore,
+            currentPage: response.currentPage,
+            total: response.total,
+          ),
+        );
+      },
+    );
   }
 
   void filterByLanguage(String? lang) {

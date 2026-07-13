@@ -1,4 +1,3 @@
-// lib/features/news/presentation/screens/news_detail_screen.dart
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -79,11 +78,9 @@ class NewsDetailsContent extends StatelessWidget {
       backgroundColor: context.theme.scaffoldBackgroundColor,
       body: Stack(
         children: [
-          /// MAIN SCROLL
           CustomScrollView(
             physics: const BouncingScrollPhysics(),
             slivers: [
-              /// MODERN HEADER
               SliverAppBar(
                 stretch: true,
                 expandedHeight: 520.h,
@@ -120,7 +117,6 @@ class NewsDetailsContent extends StatelessWidget {
                             ),
                           ),
 
-                          /// ADVANCED GRADIENT OVERLAY
                           Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -137,7 +133,6 @@ class NewsDetailsContent extends StatelessWidget {
                             ),
                           ),
 
-                          /// IMAGE TITLE (بالای عکس، وسط)
                           if (hasImgTitle)
                             Positioned(
                               top: 100,
@@ -169,7 +164,6 @@ class NewsDetailsContent extends StatelessWidget {
                               ),
                             ),
 
-                          /// BLUR EFFECT ON BOTTOM
                           Positioned(
                             bottom: 0,
                             left: 0,
@@ -188,7 +182,6 @@ class NewsDetailsContent extends StatelessWidget {
                             ),
                           ),
 
-                          /// TITLE SECTION (پایین عکس)
                           Positioned(
                             left: 24,
                             right: 24,
@@ -196,7 +189,6 @@ class NewsDetailsContent extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                /// ANIMATED TAGS
                                 Wrap(
                                       spacing: 10,
                                       runSpacing: 10,
@@ -221,7 +213,6 @@ class NewsDetailsContent extends StatelessWidget {
 
                                 const SizedBox(height: 16),
 
-                                /// TITLE WITH GRADIENT
                                 ShaderMask(
                                       shaderCallback: (bounds) =>
                                           const LinearGradient(
@@ -271,7 +262,6 @@ class NewsDetailsContent extends StatelessWidget {
                 ),
               ),
 
-              /// BODY
               SliverToBoxAdapter(
                 child: Transform.translate(
                   offset: const Offset(0, -25),
@@ -342,7 +332,6 @@ class NewsDetailsContent extends StatelessWidget {
                           const SizedBox(height: 24),
                         ],
 
-                        /// CONTENT WITH HTML
                         BlocBuilder<SettingsCubit, SettingsState>(
                           builder: (context, state) {
                             return Html(
@@ -397,12 +386,11 @@ class NewsDetailsContent extends StatelessWidget {
 
                         const SizedBox(height: 24),
 
-                        /// MORE IMAGES GALLERY
                         if (hasMoreImages) ...[
                           const Divider(
                             height: 32,
                             color: Colors
-                                .transparent, // Let dynamic color below apply
+                                .transparent, 
                           ),
                           Text(
                             "صور إضافية",
@@ -483,7 +471,6 @@ class NewsDetailsContent extends StatelessWidget {
             ],
           ),
 
-          /// BOTTOM ACTION BAR (دکمه‌های خانه، بوکمارک، شیر، برگشت به لیست)
           Positioned(
             left: 20,
             right: 20,
@@ -555,7 +542,6 @@ class NewsDetailsContent extends StatelessWidget {
   }
 }
 
-// ================= BOTTOM NAVIGATION BAR =================
 
 Widget _modernBottomBar({
   required BuildContext context,
@@ -585,14 +571,12 @@ Widget _modernBottomBar({
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        // خانه
         _bottomActionItem(
           icon: Assets.icons.settings.path,
           label: "الإعدادات",
           color: AppColor.primaryOrange,
           onTap: onHomeTap,
         ),
-        // بوکمارک
         BlocBuilder<BookmarkCubit, BookmarkState>(
           builder: (context, state) {
             final isSaved = state.savedItems.any((item) => item.id == newsId);
@@ -606,14 +590,12 @@ Widget _modernBottomBar({
             );
           },
         ),
-        // شیر
         _bottomActionItem(
           icon: Assets.icons.shareSquare.path,
           label: "مشاركة",
           color: AppColor.primaryOrange,
           onTap: onShareTap,
         ),
-        // برگشت به لیست اخبار
         _bottomActionItem(
           icon: Assets.icons.angleSmallLeft.path,
           label: "رجوع",
@@ -651,7 +633,6 @@ Widget _bottomActionItem({
   );
 }
 
-// ================= MODERN GLASS BUTTON =================
 
 Widget _modernGlassButton({required IconData icon, VoidCallback? onTap}) {
   return GestureDetector(
@@ -685,7 +666,6 @@ Widget _modernGlassButton({required IconData icon, VoidCallback? onTap}) {
   );
 }
 
-// ================= MODERN TAG =================
 
 class _ModernTag extends StatelessWidget {
   final String text;

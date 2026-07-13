@@ -1,4 +1,5 @@
-// lib/features/news/data/repositories/news_repository.dart
+import 'package:dartz/dartz.dart';
+import 'package:flutter_application_1/core/error/failure.dart';
 import 'package:flutter_application_1/features/books/data/data_source/books_datasource.dart';
 import 'package:flutter_application_1/features/books/data/models/book_content_model.dart';
 import 'package:flutter_application_1/features/books/data/models/book_model.dart';
@@ -9,15 +10,17 @@ class BooksRepository {
 
   BooksRepository(this.remoteDataSource);
 
-  Future<List<BookModel>> getAllBooks() async {
-    return await remoteDataSource.getAllBooksData();
+  Future<Either<Failure, List<BookModel>>> getAllBooks() {
+    return remoteDataSource.getAllBooksData();
   }
 
-  Future<List<BookCategoryModel>> getAllCategories() async {
-    return await remoteDataSource.getBooksCategoryData();
+  Future<Either<Failure, List<BookCategoryModel>>> getAllCategories() {
+    return remoteDataSource.getBooksCategoryData();
   }
 
-  Future<BookContentModel> getDetailsBooks({required int bookId}) async {
-    return await remoteDataSource.getBookDetail(bookId);
+  Future<Either<Failure, BookContentModel>> getDetailsBooks({
+    required int bookId,
+  }) {
+    return remoteDataSource.getBookDetail(bookId);
   }
 }

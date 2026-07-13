@@ -1,53 +1,40 @@
 class Api {
   Api._();
-
+  static const String baseImageUrl = 'http://ammaralhakeem.com/';
   static const String baseUrl = 'http://ammaralhakeem.com/new2/api';
 
-  // Config
   static const String configurations = '/configurations';
 
-  // Menus
   static const String menus = '/menus';
 
-  // Home
   static const String sliders = '/sliders';
   static const String news = '/news';
   static const String statements = '/statements';
   static const String dialogues = '/dialogues';
 
-  // News
   static const String allNews = '/all-news';
   static const String newsCategories = '/news-categories';
 
-  // Books
   static const String books = '/books';
   static const String bookCategories = '/book-categories';
 
-  // Videos
   static const String videos = '/videos';
   static const String videoCategories = '/video-categories';
 
-  // Galleries
   static const String galleries = '/galleries';
   static const String galleryCategories = '/gallery-categories';
 
-  // Sounds
   static const String sounds = '/sounds';
 
-  // Search
   static const String search = '/search';
 
-  // Optional
   static const String notifications = '/notifications';
 
-  // Content
   static const String testimonials = '/content/testimonials';
   static const String teachers = '/content/teachers';
   static const String siteStats = '/content/site-stats';
   static const String heroSlides = '/content/hero-slides';
   static const String articles = '/content/articles';
-
-  // Dynamic Endpoints
 
   static String post(int id) => '/post/$id';
 

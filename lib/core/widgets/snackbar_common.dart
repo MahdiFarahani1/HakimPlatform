@@ -123,7 +123,7 @@ class AppSnackBar {
       color: color,
       icon: icon,
       config: finalConfig,
-      context: context, // اضافه شد
+      context: context, 
       onDismiss: () => completer.complete(),
     );
 
@@ -242,7 +242,6 @@ class AppSnackBar {
               primaryBlue: color,
               showCloseButton: config.showCloseButton,
               onClose: () {
-                // بستن اسنک‌بار با کلیک روی ضربدر
                 ScaffoldMessenger.of(context).hideCurrentSnackBar();
                 onDismiss?.call();
               },
@@ -272,7 +271,6 @@ class AppSnackBar {
                 if (config.showCloseButton && onDismiss == null)
                   GestureDetector(
                     onTap: () {
-                      // بستن اسنک‌بار با کلیک روی ضربدر
                       ScaffoldMessenger.of(context).hideCurrentSnackBar();
                     },
                     child: Container(
@@ -308,7 +306,6 @@ class AppSnackBar {
   }
 }
 
-// ویجت انیمیشن دار برای محتوای اسنک‌بار
 class _AnimatedSnackBarContent extends StatefulWidget {
   final String message;
   final IconData icon;
@@ -393,7 +390,7 @@ class _AnimatedSnackBarContentState extends State<_AnimatedSnackBarContent>
             ),
             if (widget.showCloseButton)
               GestureDetector(
-                onTap: widget.onClose, // حالا این درست کار می‌کنه
+                onTap: widget.onClose, 
                 child: Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
@@ -414,7 +411,6 @@ class _AnimatedSnackBarContentState extends State<_AnimatedSnackBarContent>
   }
 }
 
-// اکستنشن برای استفاده راحت‌تر
 extension AppSnackBarExtension on BuildContext {
   void showSuccessSnackBar(String message, {SnackBarConfig? config}) {
     AppSnackBar.success(this, message, config: config);

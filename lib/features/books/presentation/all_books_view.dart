@@ -2,13 +2,19 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_1/config/di.dart';
+import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/core/utils/url_luncher.dart';
+import 'package:flutter_application_1/core/widgets/custom_refresh_widget.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
+import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
+import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
+import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
+import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_state.dart';
 import 'package:flutter_application_1/features/books/data/models/book_model.dart';
 import 'package:flutter_application_1/features/books/data/models/category_book.dart';
 import 'package:flutter_application_1/features/books/logic/book/book_cubit.dart';
-import 'package:flutter_application_1/features/books/logic/pdf/pdf_cubit.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -272,18 +278,21 @@ class BooksPage extends StatelessWidget {
       ).animate().scale();
     }
 
-    return GridView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.62,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
+    return SimpleRefreshIndicator(
+      onRefresh: () => context.read<BooksCubit>().getAllBooksData(),
+      child: GridView.builder(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 0.62,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: books.length,
+        itemBuilder: (context, index) {
+          return BookCardItem(book: books[index]);
+        },
       ),
-      itemCount: books.length,
-      itemBuilder: (context, index) {
-        return BookCardItem(book: books[index]);
-      },
     );
   }
 
@@ -313,254 +322,215 @@ class BookCardItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          getIt<PdfCubit>()..checkFileExists(fileName: 'book_${book.id}'),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: Theme.of(context).colorScheme.onPrimaryContainer,
-          boxShadow: [
-            BoxShadow(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.transparent
-                  : Colors.grey.shade200,
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              flex: 4,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.network(
-                    book.image,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).brightness == Brightness.dark
+                ? Colors.transparent
+                : Colors.grey.shade200,
+            blurRadius: 15,
+            offset: const Offset(0, 8),
+          ),
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 4,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Image.network(
+                  book.image,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.grey.shade800
+                        : Colors.grey.shade100,
+                    child: Assets.icons.bookOpenCover.image(
                       color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.grey.shade800
-                          : Colors.grey.shade100,
-                      child: Assets.icons.bookOpenCover.image(
-                        color: Theme.of(context).brightness == Brightness.dark
-                            ? Colors.grey.shade400
-                            : Colors.grey,
-                      ),
+                          ? Colors.grey.shade400
+                          : Colors.grey,
                     ),
                   ),
-                  Positioned(
-                    top: 10,
-                    left: 10,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
+                ),
+                Positioned(
+                  top: 10,
+                  left: 10,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColor.primaryOrange.withOpacity(0.06),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey.shade800
+                            : Colors.grey.shade200,
+                        width: 0.5,
                       ),
-                      decoration: BoxDecoration(
-                        color: AppColor.primaryOrange.withOpacity(0.06),
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(
-                          color: Theme.of(context).brightness == Brightness.dark
-                              ? Colors.grey.shade800
-                              : Colors.grey.shade200,
-                          width: 0.5,
+                    ),
+                    child: Row(
+                      children: [
+                        Assets.icons.clockThree.image(
+                          width: 10,
+                          height: 10,
+                          color: AppColor.primaryOrange,
                         ),
-                      ),
-                      child: Row(
-                        children: [
-                          Assets.icons.clockThree.image(
-                            width: 10,
-                            height: 10,
+                        context.gap(3),
+                        Text(
+                          book.date,
+                          style: const TextStyle(
                             color: AppColor.primaryOrange,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
                           ),
-                          context.gap(3),
-                          Text(
-                            book.date,
-                            style: const TextStyle(
-                              color: AppColor.primaryOrange,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: BlocBuilder<BookmarkCubit, BookmarkState>(
+                    builder: (context, state) {
+                      final isSaved = state.savedItems.any(
+                        (item) => item.id == book.id && item.category == 'book',
+                      );
+                      return InkWell(
+                        onTap: () {
+                          var bookmarkItem = BookmarkItem.fromBook(book);
+
+                          BlocProvider.of<BookmarkCubit>(
+                            context,
+                          ).toggleBookmark(bookmarkItem);
+                          AppSnackBar.success(
+                            context,
+                            isSaved
+                                ? 'تمت إزالته من المحفوظات'
+                                : 'تمت الإضافة إلى المحفوظات ✓',
+                          );
+                        },
+                        child: Container(
+                          width: 32,
+                          height: 32,
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: AppColor.primaryBlue,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(2.0),
+                            child: isSaved
+                                ? Assets.icons.wishlistStarFill.image(
+                                    color: AppColor.primaryOrange,
+                                  )
+                                : Assets.icons.wishlistStar.image(
+                                    color: AppColor.primaryOrange,
+                                  ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 2,
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        book.title,
+                        style: TextStyle(
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.white
+                              : const Color(0xFF1A1A2E),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          height: 1.3,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          Container(
+                            width: 4,
+                            height: 4,
+                            decoration: const BoxDecoration(
+                              color: AppColor.primaryBlue,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              book.category,
+                              style: TextStyle(
+                                color: Colors.grey.shade500,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w500,
+                              ),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
                           ),
                         ],
                       ),
-                    ),
+                    ],
                   ),
 
-                  Positioned(
-                    bottom: 10,
-                    right: 10,
-                    child: BlocBuilder<PdfCubit, PdfState>(
-                      builder: (context, state) {
-                        if (state is PdfDownloaded) {
-                          return Container(
-                            width: 32,
-                            height: 32,
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: AppColor.primaryBlue,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Assets.icons.wishlistStar.image(
-                                color: AppColor.primaryOrange,
-                              ),
-                            ),
-                          );
-                        }
-                        if (state is PdfDownloading) {
-                          double progress = state.progress;
-                          return Container(
-                            width: 32,
-                            height: 32,
-                            padding: const EdgeInsets.all(4),
-                            decoration: BoxDecoration(
-                              color: AppColor.primaryBlue,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: CircularProgressIndicator(
-                              value: progress,
-                              valueColor: const AlwaysStoppedAnimation<Color>(
-                                AppColor.primaryOrange,
-                              ),
-                              strokeWidth: 3,
-                            ),
-                          );
-                        }
-                        return InkWell(
-                          onTap: () async {
-                            print('a');
-                            await BlocProvider.of<PdfCubit>(
-                              context,
-                            ).downloadPdf(
-                              fileName: 'book_${book.id}',
-                              url: book.pdf,
-                            );
-                          },
-                          child: Container(
-                            padding: const EdgeInsets.all(6),
-                            decoration: BoxDecoration(
-                              color: AppColor.primaryBlue,
-                              borderRadius: BorderRadius.circular(10),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.1),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Assets.icons.arrowDownFromArc.image(
-                              color: AppColor.primaryOrange,
-                              width: 21,
-                              height: 21,
-                            ),
+                  InkWell(
+                    onTap: () {
+                      LunchUrlService.urlOpener(
+                        context,
+                        "${Api.baseImageUrl}${book.pdf}",
+                      );
+                    },
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 400),
+                      width: double.infinity,
+                      height: 28,
+                      decoration: BoxDecoration(
+                        color: AppColor.primaryBlue,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Center(
+                        child: Text(
+                          'مطالعة',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
                           ),
-                        );
-                      },
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          book.title,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                ? Colors.white
-                                : const Color(0xFF1A1A2E),
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                            height: 1.3,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Container(
-                              width: 4,
-                              height: 4,
-                              decoration: const BoxDecoration(
-                                color: AppColor.primaryBlue,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Expanded(
-                              child: Text(
-                                book.category ?? 'عمومی',
-                                style: TextStyle(
-                                  color: Colors.grey.shade500,
-                                  fontSize: 11,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-
-                    // دکمه مطالعه در پایین کارت
-                    BlocBuilder<PdfCubit, PdfState>(
-                      builder: (context, state) {
-                        if (state is PdfDownloaded) {
-                          return InkWell(
-                            onTap: () {
-                              context.read<PdfCubit>().openPdf();
-                            },
-                            child: AnimatedContainer(
-                              duration: const Duration(milliseconds: 400),
-                              width: double.infinity,
-                              height: 28,
-                              decoration: BoxDecoration(
-                                color: AppColor.primaryBlue,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  'مطالعة',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                        return const SizedBox.shrink();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

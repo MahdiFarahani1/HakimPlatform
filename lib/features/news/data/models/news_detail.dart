@@ -1,4 +1,3 @@
-// lib/features/news/data/models/news_detail_model.dart
 
 class NewsDetailModel {
   final int id;
@@ -6,7 +5,7 @@ class NewsDetailModel {
   final String summary;
   final String content;
   final String image;
-  final String imgTitle; // اضافه شد
+  final String imgTitle; 
   final String category;
   final String date;
   final List<String> moreImages;
@@ -37,7 +36,7 @@ class NewsDetailModel {
       summary: data['summary'] as String? ?? '',
       content: data['content'] as String,
       image: data['image'] as String,
-      imgTitle: data['img_title'] as String? ?? '', // دریافت img_title
+      imgTitle: data['img_title'] as String? ?? '', 
       category: data['category'] as String,
       date: data['date'] as String,
       moreImages: moreImagesList,

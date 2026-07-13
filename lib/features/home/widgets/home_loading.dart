@@ -21,7 +21,6 @@ class HomeLoadingWidget extends StatelessWidget {
       child: ListView(
         padding: EdgeInsets.all(20.w),
         children: [
-          // Search bar
           Row(
             children: [
               Expanded(
@@ -50,7 +49,6 @@ class HomeLoadingWidget extends StatelessWidget {
           ),
           SizedBox(height: 22.h),
 
-          // Categories
           SizedBox(
             height: 90.h,
             child: Row(
@@ -63,7 +61,6 @@ class HomeLoadingWidget extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          // Banner
           Container(
             height: 170,
             margin: const EdgeInsets.symmetric(horizontal: 6),
@@ -74,7 +71,6 @@ class HomeLoadingWidget extends StatelessWidget {
           ),
           const SizedBox(height: 25),
 
-          // Filter categories
           SizedBox(
             height: 40.h,
             child: ListView.builder(
@@ -92,7 +88,6 @@ class HomeLoadingWidget extends StatelessWidget {
           ),
           const SizedBox(height: 20),
 
-          // Book list
           SizedBox(
             height: 220,
             child: ListView.builder(
@@ -110,7 +105,6 @@ class HomeLoadingWidget extends StatelessWidget {
           ),
           SizedBox(height: 35.h),
 
-          // Audio player
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -176,7 +170,6 @@ class HomeLoadingWidget extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
 
-          // Video section
           Column(
             children: [
               Row(
@@ -210,7 +203,6 @@ class HomeLoadingWidget extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
 
-          // Articles section
           Column(
             children: [
               Container(height: 24, width: 100, color: Colors.grey.shade300),
@@ -232,7 +224,6 @@ class HomeLoadingWidget extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
 
-          // Comments section
           Column(
             children: [
               Container(height: 24, width: 120, color: Colors.grey.shade300),

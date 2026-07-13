@@ -1,6 +1,5 @@
 part of 'book_cubit.dart';
 
-// وضعیت‌های مربوط به بخش‌های مختلف را از هم جدا کردیم
 abstract class BooksUIStatus {
   const BooksUIStatus();
 }

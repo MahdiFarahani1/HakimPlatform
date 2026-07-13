@@ -16,6 +16,7 @@ import 'package:flutter_application_1/features/home/widgets/home_loading.dart';
 import 'package:flutter_application_1/features/home/widgets/video_section.dart';
 import 'package:flutter_application_1/features/search/presentation/search_view.dart';
 import 'package:flutter_application_1/features/sounds/presentation/music_list_view.dart';
+import 'package:flutter_application_1/features/sounds/widgets/home_random_player_box.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -96,7 +97,6 @@ class _HomePageState extends State<HomePage>
                 return ListView(
                   padding: EdgeInsets.all(20.w),
                   children: [
-                    /// SEARCH
                     Row(
                       children: [
                         Expanded(
@@ -199,7 +199,6 @@ class _HomePageState extends State<HomePage>
 
                     SizedBox(height: 25.h),
 
-                    /// BANNER CAROUSEL
                     CarouselSlider.builder(
                       itemCount: sliders.length,
                       options: CarouselOptions(
@@ -221,7 +220,6 @@ class _HomePageState extends State<HomePage>
 
                     const SizedBox(height: 25),
 
-                    /// CATEGORY ICONS
                     SizedBox(
                       height: 90.h,
                       child: Row(
@@ -280,7 +278,6 @@ class _HomePageState extends State<HomePage>
                     ),
                     SizedBox(height: 25.h),
 
-                    /// FILTER CATEGORIES
                     SizedBox(
                       height: 40.h,
                       child: ListView.builder(
@@ -342,7 +339,6 @@ class _HomePageState extends State<HomePage>
 
                     const SizedBox(height: 20),
 
-                    /// BOOK LIST (FIXED - NO EXPANDED!)
                     if (books.isEmpty && !isBooksLoading) ...[
                       SizedBox(
                         width: context.screenWidth,
@@ -505,137 +501,9 @@ class _HomePageState extends State<HomePage>
                         ),
                       ),
 
-                    SizedBox(height: 35),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: context.theme.colorScheme.onPrimaryContainer,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(.06),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 50.w,
-                                height: 50.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8),
-                                  color: AppColor.primaryBlue,
-                                ),
-                                child: Padding(
-                                  padding: EdgeInsets.all(12.0.w),
-                                  child: Assets.icons.headphonesRhythm.image(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(width: 14),
-
-                              const Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "سوره الرحمن",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    SizedBox(height: 4),
-                                    Text(
-                                      "عبدالباسط عبدالصمد",
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 13,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 20),
-
-                          SliderTheme(
-                            data: SliderThemeData(
-                              trackHeight: 4,
-                              thumbShape: const RoundSliderThumbShape(
-                                enabledThumbRadius: 6,
-                              ),
-                              thumbColor: AppColor.primaryBlue,
-                              activeTrackColor: AppColor.primaryBlue,
-
-                              overlayShape: SliderComponentShape.noOverlay,
-                            ),
-                            child: Slider(value: 0.35, onChanged: (_) {}),
-                          ),
-
-                          const Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "02:14",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                              Text(
-                                "08:45",
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            ],
-                          ),
-
-                          const SizedBox(height: 12),
-
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Icon(
-                                Icons.replay_10_rounded,
-                                color: AppColor.primaryBlue,
-                              ),
-                              Icon(
-                                Icons.skip_previous_rounded,
-                                size: 32,
-                                color: AppColor.primaryBlue,
-                              ),
-                              Icon(
-                                Icons.pause_circle_filled_rounded,
-                                size: 55,
-                                color: AppColor.primaryBlue,
-                              ),
-                              Icon(
-                                Icons.skip_next_rounded,
-                                size: 32,
-                                color: AppColor.primaryBlue,
-                              ),
-                              Icon(
-                                Icons.forward_10_rounded,
-                                color: AppColor.primaryBlue,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 35),
+                    HomeRandomPlayerBox(),
+                    const SizedBox(height: 20),
 
                     VideoListSection(videos: videos),
                     SizedBox(height: 20),

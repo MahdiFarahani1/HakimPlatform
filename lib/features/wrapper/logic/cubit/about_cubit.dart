@@ -11,13 +11,14 @@ class AboutCubit extends Cubit<AboutState> {
     : super(AboutState(apiState: AboutLoading(), isAr: true));
 
   Future<void> fetchAboutInfo() async {
-    try {
-      emit(state.copyWith(apiState: AboutLoading()));
-      final response = await _apiService.fetchAboutInfo();
-      emit(state.copyWith(apiState: AboutLoaded(response)));
-    } catch (e) {
-      emit(state.copyWith(apiState: AboutError(e.toString())));
-    }
+    emit(state.copyWith(apiState: AboutLoading()));
+
+    final result = await _apiService.fetchAboutInfo();
+
+    result.fold(
+      (failure) => emit(state.copyWith(apiState: AboutError(failure.message))),
+      (aboutData) => emit(state.copyWith(apiState: AboutLoaded(aboutData))),
+    );
   }
 
   void changeLanguage(bool val) {
@@ -29,14 +30,14 @@ class AboutCubit extends Cubit<AboutState> {
   }
 
   Future<void> _reloadWithNewLanguage() async {
-    try {
-      emit(state.copyWith(apiState: AboutLoading()));
+    emit(state.copyWith(apiState: AboutLoading()));
 
-      final response = await _apiService.fetchAboutInfo();
-      emit(state.copyWith(apiState: AboutLoaded(response)));
-    } catch (e) {
-      emit(state.copyWith(apiState: AboutError(e.toString())));
-    }
+    final result = await _apiService.fetchAboutInfo();
+
+    result.fold(
+      (failure) => emit(state.copyWith(apiState: AboutError(failure.message))),
+      (aboutData) => emit(state.copyWith(apiState: AboutLoaded(aboutData))),
+    );
   }
 
   Future<void> refresh() async {

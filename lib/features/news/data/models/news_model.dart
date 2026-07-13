@@ -1,4 +1,3 @@
-// lib/features/news/data/models/news_model.dart
 import 'package:flutter/material.dart';
 
 class NewsModel {
@@ -24,14 +23,14 @@ class NewsModel {
     return NewsModel(
       id: json['id'] is String
           ? int.parse(json['id'])
-          : json['id'], // جهت اطمینان از int بودن id
+          : json['id'], 
       lang: json['lang'] ?? '',
       categoryId: json['category_id'] is String
           ? int.parse(json['category_id'])
           : json['category_id'],
       title: json['title'] ?? '',
       intro: json['intro'],
-      image: json['file1'] ?? json['image'] ?? '', // جفتش رو ساپورت کنه
+      image: json['file1'] ?? json['image'] ?? '', 
       createdAt: json['created_at'] ?? '',
     );
   }

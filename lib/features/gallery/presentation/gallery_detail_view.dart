@@ -252,10 +252,8 @@ class GalleryDetailScreen extends StatelessWidget {
                                     : Colors.white.withOpacity(0.1),
                                 shape: BoxShape.circle,
                               ),
-                              // استفاده از AnimatedSwitcher برای متحرک‌سازی جابه‌جایی فرزندان
                               child: AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 300),
-                                // انیمیشن پیش‌فرض FadeTransition است، اما می‌توانید مقیاس آن را هم انیمیت کنید:
                                 transitionBuilder:
                                     (
                                       Widget child,
@@ -266,7 +264,6 @@ class GalleryDetailScreen extends StatelessWidget {
                                         child: child,
                                       );
                                     },
-                                // نکته کلیدی: هر فرزند باید یک Unique Key داشته باشد تا فلاتر بفهمد چه زمانی باید انیمیشن بزند
                                 child: isDownloading
                                     ? const SizedBox(
                                         key: ValueKey('loading'),

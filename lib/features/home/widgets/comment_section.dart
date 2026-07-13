@@ -57,7 +57,6 @@ class InterviewsSection extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// IMAGE WITH OVERLAY
             Stack(
               children: [
                 ClipRRect(
@@ -71,7 +70,6 @@ class InterviewsSection extends StatelessWidget {
                     fit: BoxFit.cover,
                   ),
                 ),
-                // Gradient Overlay
                 Positioned.fill(
                   child: Container(
                     decoration: BoxDecoration(
@@ -89,7 +87,6 @@ class InterviewsSection extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Play Button
                 Positioned(
                   bottom: 16.h,
                   left: 16.w,
@@ -132,13 +129,11 @@ class InterviewsSection extends StatelessWidget {
               ],
             ),
 
-            /// CONTENT
             Padding(
               padding: EdgeInsets.all(16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  /// TITLE
                   Text(
                     interview.title,
                     style: TextStyle(
@@ -155,10 +150,8 @@ class InterviewsSection extends StatelessWidget {
 
                   SizedBox(height: 12.h),
 
-                  /// METADATA ROW
                   Row(
                     children: [
-                      /// INTERVIEWER
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 10.w,
@@ -191,7 +184,6 @@ class InterviewsSection extends StatelessWidget {
 
                       SizedBox(width: 12.w),
 
-                      /// DATE
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 10.w,
@@ -227,7 +219,6 @@ class InterviewsSection extends StatelessWidget {
 
                   SizedBox(height: 12.h),
 
-                  /// EXCERPT (if available)
                   if (interview.excerpt.isNotEmpty) ...[
                     Text(
                       interview.excerpt,
@@ -244,7 +235,6 @@ class InterviewsSection extends StatelessWidget {
                     SizedBox(height: 12.h),
                   ],
 
-                  /// VIEW DETAILS BUTTON
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 8.h),
                     decoration: BoxDecoration(

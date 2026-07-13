@@ -11,7 +11,6 @@ class AboutSkeletonLoading extends StatelessWidget {
       physics: const BouncingScrollPhysics(),
       child: Column(
         children: [
-          // Header Skeleton
           Container(
             width: double.infinity,
             height: 280,
@@ -79,7 +78,6 @@ class AboutSkeletonLoading extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             child: Column(
               children: [
-                // Title Skeleton
                 Row(
                   children: [
                     Container(
@@ -117,7 +115,6 @@ class AboutSkeletonLoading extends StatelessWidget {
                     .animate(onPlay: (controller) => controller.repeat())
                     .shimmer(),
                 const SizedBox(height: 24),
-                // Description Card Skeleton
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
@@ -197,7 +194,6 @@ class AboutSkeletonLoading extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20),
-                // Pillars Skeleton
                 ...List.generate(
                   3,
                   (_) => Padding(

@@ -2,10 +2,8 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// ================= STATE =================
 enum InternetState { initial, connected, disconnected }
 
-// ================= CUBIT =================
 class InternetCubit extends Cubit<InternetState> {
   final Connectivity _connectivity = Connectivity();
   StreamSubscription? _connectivitySubscription;
@@ -18,7 +16,6 @@ class InternetCubit extends Cubit<InternetState> {
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen((
       List<ConnectivityResult> results,
     ) {
-      // در نسخه‌های جدید connectivity_plus خروجی یک لیست است
       if (results.contains(ConnectivityResult.none)) {
         emit(InternetState.disconnected);
       } else {

@@ -62,7 +62,6 @@ class _SettingsPageState extends State<SettingsPage>
                     padding: const EdgeInsets.all(20),
                     physics: const BouncingScrollPhysics(),
                     children: [
-                      /// Appearance Section
                       _buildSection(
                         context: context,
 
@@ -97,7 +96,6 @@ class _SettingsPageState extends State<SettingsPage>
 
                       const SizedBox(height: 20),
 
-                      /// Notifications Section
                       _buildSection(
                         context: context,
 
@@ -114,7 +112,6 @@ class _SettingsPageState extends State<SettingsPage>
 
                       const SizedBox(height: 20),
 
-                      /// Privacy Section
                       _buildSection(
                         context: context,
                         title: "الخصوصية",
@@ -130,7 +127,6 @@ class _SettingsPageState extends State<SettingsPage>
                   ),
                 ),
 
-                /// Bottom Version
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 16),
                   color: Colors.transparent,
@@ -179,7 +175,6 @@ class _SettingsPageState extends State<SettingsPage>
     );
   }
 
-  // ================= SECTION WIDGET =================
   Widget _buildSection({
     required String title,
     required List<Widget> children,
@@ -200,7 +195,6 @@ class _SettingsPageState extends State<SettingsPage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Section Header
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 16, 12, 8),
             child: Column(
@@ -223,14 +217,12 @@ class _SettingsPageState extends State<SettingsPage>
             ),
           ),
 
-          /// Section Content
           Column(children: children),
         ],
       ),
     );
   }
 
-  // ================= MODERN SWITCH =================
   Widget _buildModernSwitch({
     required String icon,
     required String title,
@@ -241,7 +233,6 @@ class _SettingsPageState extends State<SettingsPage>
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
         children: [
-          /// Icon Container
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
@@ -257,7 +248,6 @@ class _SettingsPageState extends State<SettingsPage>
           ),
           const SizedBox(width: 16),
 
-          /// Title
           Expanded(
             child: Text(
               title,
@@ -265,7 +255,6 @@ class _SettingsPageState extends State<SettingsPage>
             ),
           ),
 
-          /// Switch
           Switch(
             value: value,
             onChanged: onChanged,
@@ -278,7 +267,6 @@ class _SettingsPageState extends State<SettingsPage>
     );
   }
 
-  // ================= MODERN SLIDER =================
   Widget _buildModernSlider({
     required String icon,
     required String title,
@@ -293,7 +281,6 @@ class _SettingsPageState extends State<SettingsPage>
         children: [
           Row(
             children: [
-              /// Icon Container
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
@@ -309,7 +296,6 @@ class _SettingsPageState extends State<SettingsPage>
               ),
               const SizedBox(width: 16),
 
-              /// Title
               Expanded(
                 child: Text(
                   title,
@@ -320,7 +306,6 @@ class _SettingsPageState extends State<SettingsPage>
                 ),
               ),
 
-              /// Value Badge
               Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 10,
@@ -342,7 +327,6 @@ class _SettingsPageState extends State<SettingsPage>
             ],
           ),
 
-          /// Slider
           const SizedBox(height: 12),
           Slider(
             value: value,
@@ -357,7 +341,6 @@ class _SettingsPageState extends State<SettingsPage>
     );
   }
 
-  // ================= MODERN DROPDOWN =================
   Widget _buildModernDropdown(
     BuildContext context, {
     required String icon,
@@ -425,7 +408,6 @@ class _SettingsPageState extends State<SettingsPage>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Row(
           children: [
-            /// Icon Container
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -441,7 +423,6 @@ class _SettingsPageState extends State<SettingsPage>
             ),
             const SizedBox(width: 16),
 
-            /// Title
             Expanded(
               child: Text(
                 title,
@@ -452,7 +433,6 @@ class _SettingsPageState extends State<SettingsPage>
               ),
             ),
 
-            /// Selected Value
             Text(
               value,
               style: TextStyle(
@@ -480,7 +460,6 @@ class _SettingsPageState extends State<SettingsPage>
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         child: Row(
           children: [
-            /// Icon Container
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
@@ -496,7 +475,6 @@ class _SettingsPageState extends State<SettingsPage>
             ),
             const SizedBox(width: 16),
 
-            /// Title
             Expanded(
               child: Text(
                 title,
@@ -507,7 +485,6 @@ class _SettingsPageState extends State<SettingsPage>
               ),
             ),
 
-            /// Arrow
             Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey[400]),
           ],
         ),

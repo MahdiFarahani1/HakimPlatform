@@ -28,7 +28,6 @@ class VideoListSection extends StatelessWidget {
 
         const SizedBox(height: 16),
 
-        /// VIDEOS LIST
         SizedBox(
           height: 260.h,
           child: ListView.separated(
@@ -46,7 +45,6 @@ class VideoListSection extends StatelessWidget {
     );
   }
 
-  /// VIDEO CARD WIDGET
   Widget _buildVideoCard(BuildContext context, VideoModel video) {
     return GestureDetector(
       onTap: () => _launchYouTube(video.youtubeId),
@@ -66,7 +64,6 @@ class VideoListSection extends StatelessWidget {
           borderRadius: BorderRadius.circular(16.r),
           child: Stack(
             children: [
-              /// THUMBNAIL IMAGE
               Positioned.fill(
                 child: CustomCacheImage(
                   imageUrl: "${Api.baseUrl}${video.image}",
@@ -74,7 +71,6 @@ class VideoListSection extends StatelessWidget {
                 ),
               ),
 
-              /// OVERLAY GRADIENT
               Positioned.fill(
                 child: Container(
                   decoration: BoxDecoration(
@@ -92,7 +88,6 @@ class VideoListSection extends StatelessWidget {
                 ),
               ),
 
-              /// INFO SECTION (Bottom)
               Positioned(
                 bottom: 0,
                 left: 0,
@@ -103,7 +98,6 @@ class VideoListSection extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      /// CATEGORY CHIP
                       Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 8.w,
@@ -139,7 +133,6 @@ class VideoListSection extends StatelessWidget {
                       ),
                       SizedBox(height: 8.h),
 
-                      /// TITLE
                       Text(
                         video.title,
                         maxLines: 2,
@@ -153,7 +146,6 @@ class VideoListSection extends StatelessWidget {
                       ),
                       SizedBox(height: 6.h),
 
-                      /// METADATA (Views & Date)
                       Row(
                         children: [
                           Icon(
@@ -190,7 +182,6 @@ class VideoListSection extends StatelessWidget {
                 ),
               ),
 
-              /// PLAY BUTTON (Center)
               Center(
                 child: Container(
                   padding: EdgeInsets.all(12.w),
@@ -216,7 +207,6 @@ class VideoListSection extends StatelessWidget {
     );
   }
 
-  /// HELPER: Launch YouTube
   Future<void> _launchYouTube(String videoId) async {
     final uri = Uri.parse("https://www.youtube.com/watch?v=$videoId");
     if (await canLaunchUrl(uri)) {
@@ -224,7 +214,6 @@ class VideoListSection extends StatelessWidget {
     }
   }
 
-  /// HELPER: Get Persian/Farsi category name
   String _getCategoryText(String category) {
     switch (category) {
       case "زيارات":
@@ -238,7 +227,6 @@ class VideoListSection extends StatelessWidget {
     }
   }
 
-  /// HELPER: Format date
   String _formatDate(String date) {
     try {
       final parts = date.split('/');

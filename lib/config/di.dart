@@ -4,7 +4,6 @@ import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/features/books/data/data_source/books_datasource.dart';
 import 'package:flutter_application_1/features/books/data/repositories/books_repo.dart';
 import 'package:flutter_application_1/features/books/logic/book/book_cubit.dart';
-import 'package:flutter_application_1/features/books/logic/pdf/pdf_cubit.dart';
 import 'package:flutter_application_1/features/dialogue/data/data_source/dialogue_datasource.dart';
 import 'package:flutter_application_1/features/dialogue/data/repositories/dialogue_repository.dart';
 import 'package:flutter_application_1/features/dialogue/logic/cubit/dialouge_cubit.dart';
@@ -30,7 +29,6 @@ import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 final GetIt getIt = GetIt.instance;
 
 void setupDependencyInjection() {
-  // Services
   getIt.registerLazySingleton<GetStorage>(() => GetStorage());
   getIt.registerLazySingleton<Dio>(() {
     final dio = Dio(BaseOptions(baseUrl: Api.baseUrl));
@@ -40,14 +38,12 @@ void setupDependencyInjection() {
     return dio;
   });
 
-  // Home Feature
   getIt.registerLazySingleton<HomeRemoteDataSource>(
     () => HomeRemoteDataSource(getIt()),
   );
 
   getIt.registerLazySingleton<HomeRepository>(() => HomeRepository(getIt()));
 
-  // Videos Feature
   getIt.registerLazySingleton<VideosRemoteDataSource>(
     () => VideosRemoteDataSource(getIt()),
   );
@@ -56,20 +52,16 @@ void setupDependencyInjection() {
   );
   getIt.registerFactory<VideosCubit>(() => VideosCubit(getIt()));
 
-  // News Feature
   getIt.registerLazySingleton<NewsRemoteDataSource>(
     () => NewsRemoteDataSource(getIt()),
   );
   getIt.registerLazySingleton<NewsRepository>(() => NewsRepository(getIt()));
   getIt.registerFactory<NewsCubit>(() => NewsCubit(getIt()));
 
-  // About
   getIt.registerLazySingleton<AboutDatasourceRemote>(
     () => AboutDatasourceRemote(getIt()),
   );
   getIt.registerFactory<AboutCubit>(() => AboutCubit(getIt()));
-
-  // Gallery
 
   getIt.registerLazySingleton<GalleryLocalDataSource>(
     () => GalleryLocalDataSource(getIt<GetStorage>()),
@@ -82,7 +74,6 @@ void setupDependencyInjection() {
   );
   getIt.registerFactory<GalleryCubit>(() => GalleryCubit(getIt()));
   getIt.registerFactory<GalleryDetailCubit>(() => GalleryDetailCubit(getIt()));
-  // Books
   getIt.registerLazySingleton<BooksRemoteDataSource>(
     () => BooksRemoteDataSource(getIt<Dio>()),
   );
@@ -92,9 +83,7 @@ void setupDependencyInjection() {
   );
 
   getIt.registerFactory<BooksCubit>(() => BooksCubit(getIt<BooksRepository>()));
-  getIt.registerFactory<PdfCubit>(() => PdfCubit(dio: getIt<Dio>()));
 
-  //dialogue
   getIt.registerLazySingleton<DialogueDataSource>(
     () => DialogueDataSource(getIt()),
   );
@@ -113,7 +102,7 @@ Interceptor get _prettyLogger => PrettyDioLogger(
   error: true,
   compact: true,
   maxWidth: 90,
-  logPrint: (object) => debugPrint(object?.toString()),
+  logPrint: (object) => debugPrint(object.toString()),
 );
 
 Interceptor get _errorHandler => InterceptorsWrapper(

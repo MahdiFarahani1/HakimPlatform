@@ -12,39 +12,12 @@ class VideosCubit extends Cubit<VideosState> {
 
   Future<void> fetchVideos() async {
     emit(VideosLoading());
-    try {
-      final response = await repository.getVideosData();
-      emit(VideosSuccess(response));
-    } catch (e) {
-      emit(VideosError(e.toString()));
-    }
+
+    final result = await repository.getVideosData();
+
+    result.fold(
+      (failure) => emit(VideosError(failure.message)),
+      (videos) => emit(VideosSuccess(videos)),
+    );
   }
-
-  // void searchVideos(String query) {
-  //   final currentState = state;
-  //   if (currentState is VideosSuccess) {
-  //     if (query.isEmpty) {
-  //       emit(VideosSuccess(currentState.allVideos, searchQuery: query));
-  //     } else {
-  //       final filtered = currentState.allVideos.where((video) {
-  //         return video.title.toLowerCase().contains(query.toLowerCase()) ||
-  //             video.description.toLowerCase().contains(query.toLowerCase());
-  //       }).toList();
-  //       emit(
-  //         VideosSuccess(
-  //           currentState.allVideos,
-  //           filteredVideos: filtered,
-  //           searchQuery: query,
-  //         ),
-  //       );
-  //     }
-  //   }
-  // }
-
-  // void clearSearch() {
-  //   final currentState = state;
-  //   if (currentState is VideosSuccess) {
-  //     emit(VideosSuccess(currentState.allVideos, searchQuery: ''));
-  //   }
-  // }
 }

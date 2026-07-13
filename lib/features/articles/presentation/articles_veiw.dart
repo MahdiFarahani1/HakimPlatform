@@ -179,7 +179,6 @@ class _ArticlesPageState extends State<ArticlesPage>
         ),
         child: CustomScrollView(
         slivers: [
-          // App Bar with gradient
           SliverAppBar(
             expandedHeight: 140,
             pinned: true,
@@ -201,7 +200,6 @@ class _ArticlesPageState extends State<ArticlesPage>
             ),
           ),
 
-          // Categories Tab Bar
           SliverToBoxAdapter(
             child: Container(
               margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -278,7 +276,6 @@ class _ArticlesPageState extends State<ArticlesPage>
             ),
           ),
 
-          // Stats Row
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
@@ -356,7 +353,6 @@ class _ArticlesPageState extends State<ArticlesPage>
 
           const SliverToBoxAdapter(child: SizedBox(height: 16)),
 
-          // Articles Grid/List
           SliverPadding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
             sliver: SliverList(
@@ -396,7 +392,6 @@ class _ArticlesPageState extends State<ArticlesPage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Image/Header Section
             Container(
               height: 160,
               decoration: BoxDecoration(
@@ -415,14 +410,12 @@ class _ArticlesPageState extends State<ArticlesPage>
               ),
               child: Stack(
                 children: [
-                  // Icon emoji
                   Center(
                     child: Text(
                       article.imageAsset,
                       style: const TextStyle(fontSize: 64),
                     ),
                   ),
-                  // Category badge top right
                   Positioned(
                     top: 16,
                     right: 16,
@@ -462,7 +455,6 @@ class _ArticlesPageState extends State<ArticlesPage>
                       ),
                     ),
                   ),
-                  // Trending badge
                   if (article.trending)
                     const Positioned(
                       top: 16,
@@ -490,7 +482,6 @@ class _ArticlesPageState extends State<ArticlesPage>
               ),
             ),
 
-            // Content Section
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -524,7 +515,6 @@ class _ArticlesPageState extends State<ArticlesPage>
                   ),
                   const SizedBox(height: 16),
 
-                  // Author and stats
                   Row(
                     children: [
                       Container(
@@ -605,7 +595,6 @@ class _ArticlesPageState extends State<ArticlesPage>
                           ],
                         ),
                       ),
-                      // Like and comment counts
                       Row(
                         children: [
                           const Icon(
@@ -642,7 +631,6 @@ class _ArticlesPageState extends State<ArticlesPage>
 
                   const SizedBox(height: 12),
 
-                  // Read more link
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [

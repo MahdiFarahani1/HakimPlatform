@@ -6,7 +6,6 @@ import 'package:google_fonts/google_fonts.dart';
 class AppTheme {
   AppTheme._();
 
-  // ================= LIGHT THEME =================
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
@@ -44,7 +43,6 @@ class AppTheme {
     );
   }
 
-  // ================= DARK THEME =================
   static ThemeData get darkTheme {
     return ThemeData(
       useMaterial3: true,

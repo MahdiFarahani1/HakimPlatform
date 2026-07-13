@@ -1,4 +1,3 @@
-// lib/core/widgets/custom_search_bar.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
@@ -87,7 +86,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       child: Row(
         children: [
           const SizedBox(width: 6),
-          // آیکون سرچ
           AnimatedContainer(
             duration: const Duration(milliseconds: 220),
             padding: const EdgeInsets.all(10),
@@ -105,7 +103,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
               color: _isFocused ? AppColor.primaryBlue : Colors.grey.shade400,
             ),
           ),
-          // فیلد متنی
           Expanded(
             child: TextField(
               controller: widget.controller,

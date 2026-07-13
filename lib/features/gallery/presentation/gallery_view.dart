@@ -47,7 +47,6 @@ class _GalleryScreenState extends State<GalleryScreen>
                   ),
                   child: Column(
                     children: [
-                      // دسته‌بندی‌ها با طراحی مدرن
                       Container(
                         height: 70,
                         padding: const EdgeInsets.symmetric(vertical: 8),
@@ -154,7 +153,6 @@ class _GalleryScreenState extends State<GalleryScreen>
                           },
                         ),
                       ),
-                      // گالری‌ها با طراحی مدرن
                       Expanded(
                         child: state.filteredGalleries.isEmpty
                             ? Center(
@@ -214,7 +212,6 @@ class _GalleryScreenState extends State<GalleryScreen>
 
                                     const SizedBox(height: 8),
 
-                                    // متن فرعی
                                     Text(
                                       'ستتم إضافة صور جديدة قريباً',
                                       style: TextStyle(
@@ -275,7 +272,6 @@ class _GalleryScreenState extends State<GalleryScreen>
                                                   'http://ammaralhakeem.com${gallery.image}',
                                               fit: BoxFit.cover,
                                             ),
-                                            // گرادیانت پایین
                                             Positioned(
                                               bottom: 0,
                                               left: 0,
@@ -296,7 +292,6 @@ class _GalleryScreenState extends State<GalleryScreen>
                                                 ),
                                               ),
                                             ),
-                                            // اطلاعات گالری
                                             Positioned(
                                               bottom: 12,
                                               left: 12,
@@ -364,7 +359,6 @@ class _GalleryScreenState extends State<GalleryScreen>
                                                 ],
                                               ),
                                             ),
-                                            // آیکون پلی در صورت بزرگ بودن
                                             if (gallery.size == 'large' ||
                                                 gallery.size == 'wide')
                                               Positioned(
@@ -414,6 +408,5 @@ class _GalleryScreenState extends State<GalleryScreen>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

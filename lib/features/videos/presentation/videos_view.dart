@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_application_1/config/di.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/logic/search/search_cubit.dart';
+import 'package:flutter_application_1/core/widgets/custom_refresh_widget.dart';
 import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
 import 'package:flutter_application_1/core/widgets/empty_widget.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
@@ -64,7 +65,6 @@ class _VideoGalleryScreenState extends State<VideoGalleryScreen>
             ),
             child: Column(
               children: [
-                // Header
                 Container(
                   padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
                   decoration: BoxDecoration(
@@ -177,7 +177,6 @@ class _VideoGalleryScreenState extends State<VideoGalleryScreen>
                   ),
                 ),
 
-                // Body
                 Expanded(
                   child: BlocBuilder<VideosCubit, VideosState>(
                     builder: (context, state) {
@@ -204,36 +203,42 @@ class _VideoGalleryScreenState extends State<VideoGalleryScreen>
                                 controller: textEditingController,
                               );
                             }
-                            return AnimationLimiter(
-                              child: GridView.builder(
-                                padding: const EdgeInsets.all(16),
-                                gridDelegate:
-                                    const SliverGridDelegateWithFixedCrossAxisCount(
-                                      crossAxisCount: 2,
-                                      crossAxisSpacing: 14,
-                                      mainAxisSpacing: 16,
-                                      childAspectRatio: 0.7,
-                                    ),
-                                itemCount: displayVideos.length,
-                                itemBuilder: (context, index) {
-                                  final video = displayVideos[index];
-                                  return AnimationConfiguration.staggeredGrid(
-                                    position: index,
-                                    duration: const Duration(milliseconds: 350),
-                                    columnCount: 2,
-                                    child: ScaleAnimation(
-                                      child: FadeInAnimation(
-                                        child: VideoCard(
-                                          video: video,
-                                          onTap: () => openYouTube(
-                                            video.youtubeId,
-                                            context,
+                            return SimpleRefreshIndicator(
+                              onRefresh: () =>
+                                  context.read<VideosCubit>().fetchVideos(),
+                              child: AnimationLimiter(
+                                child: GridView.builder(
+                                  padding: const EdgeInsets.all(16),
+                                  gridDelegate:
+                                      const SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        crossAxisSpacing: 14,
+                                        mainAxisSpacing: 16,
+                                        childAspectRatio: 0.7,
+                                      ),
+                                  itemCount: displayVideos.length,
+                                  itemBuilder: (context, index) {
+                                    final video = displayVideos[index];
+                                    return AnimationConfiguration.staggeredGrid(
+                                      position: index,
+                                      duration: const Duration(
+                                        milliseconds: 350,
+                                      ),
+                                      columnCount: 2,
+                                      child: ScaleAnimation(
+                                        child: FadeInAnimation(
+                                          child: VideoCard(
+                                            video: video,
+                                            onTap: () => openYouTube(
+                                              video.youtubeId,
+                                              context,
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  );
-                                },
+                                    );
+                                  },
+                                ),
                               ),
                             );
                           },
@@ -283,7 +288,6 @@ class VideoCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Thumbnail Section
             ClipRRect(
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(20),
@@ -295,7 +299,6 @@ class VideoCard extends StatelessWidget {
                 child: Stack(
                   fit: StackFit.expand,
                   children: [
-                    // تصویر
                     video.image.isNotEmpty
                         ? Image.network(
                             video.image,
@@ -317,7 +320,6 @@ class VideoCard extends StatelessWidget {
                               color: Colors.grey,
                             ),
                           ),
-                    // آیکون پلی در مرکز
                     Center(
                       child: Container(
                         padding: const EdgeInsets.all(10),
@@ -338,7 +340,6 @@ class VideoCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // تعداد بازدید
                     Positioned(
                       bottom: 8,
                       right: 8,
@@ -370,7 +371,6 @@ class VideoCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // دکمه ذخیره
                     Positioned(
                       top: 8,
                       left: 8,
@@ -380,7 +380,6 @@ class VideoCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Info Section
             Padding(
               padding: const EdgeInsets.all(10),
               child: Column(
@@ -509,11 +508,9 @@ class _SaveButtonState extends State<_SaveButton>
     );
 
     if (!context.mounted) return;
-    AppSnackBar.show(
-      context: context,
-      message: isSaved
-          ? 'تمت إزالته من المحفوظات'
-          : 'تمت الإضافة إلى المحفوظات ✓',
+    AppSnackBar.success(
+      context,
+      isSaved ? 'تمت إزالته من المحفوظات' : 'تمت الإضافة إلى المحفوظات ✓',
     );
   }
 

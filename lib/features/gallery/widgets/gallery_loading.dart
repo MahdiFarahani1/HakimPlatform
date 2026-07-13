@@ -19,7 +19,6 @@ class GallerySkeleton extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // دسته‌بندی‌ها
           Container(
             height: 74,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -42,7 +41,6 @@ class GallerySkeleton extends StatelessWidget {
 
           const Divider(height: 1),
 
-          // گالری‌ها با کارت‌های کامل
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(12),
@@ -73,7 +71,6 @@ class GallerySkeleton extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // تصویر
                         Expanded(
                           flex: 4,
                           child: Container(
@@ -85,7 +82,6 @@ class GallerySkeleton extends StatelessWidget {
                             ),
                           ),
                         ),
-                        // عنوان
                         Expanded(
                           flex: 1,
                           child: Padding(

@@ -12,11 +12,12 @@ class DialougeCubit extends Cubit<DialougeState> {
 
   Future<void> fetchDialogues() async {
     emit(DialougeLoading());
-    try {
-      final dialogues = await repository.getDialogues();
-      emit(DialougeSuccess(dialogues));
-    } catch (e) {
-      emit(DialougeError(e.toString().replaceAll('Exception: ', '')));
-    }
+
+    final result = await repository.getDialogues();
+
+    result.fold(
+      (failure) => emit(DialougeError(failure.message)),
+      (dialogues) => emit(DialougeSuccess(dialogues)),
+    );
   }
 }

@@ -1,4 +1,3 @@
-// lib/features/news/data/models/news_response_model.dart
 import 'package:flutter_application_1/features/news/data/models/news_model.dart';
 
 class NewsResponseModel {

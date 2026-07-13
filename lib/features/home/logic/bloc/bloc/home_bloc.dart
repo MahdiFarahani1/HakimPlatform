@@ -19,42 +19,43 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     FetchHomeData event,
     Emitter<HomeState> emit,
   ) async {
-    try {
-      emit(HomeLoading());
+    emit(HomeLoading());
 
-      final data = await repository.getHomeData();
+    final result = await repository.getHomeData();
 
-      emit(HomeLoaded(data: data));
-    } catch (e) {
-      emit(HomeError(e.toString()));
-    }
+    result.fold(
+      (failure) => emit(HomeError(failure.message)),
+      (data) => emit(HomeLoaded(data: data)),
+    );
   }
 
   Future<void> _booksDataByCategory(
     FetchBooksByCategory event,
     Emitter<HomeState> emit,
   ) async {
-    try {
-      final currentState = state;
+    final currentState = state;
 
-      if (currentState is HomeLoaded) {
-        emit(HomeLoaded(
-          data: currentState.data,
-          isBooksLoading: true,
-        ));
+    if (currentState is HomeLoaded) {
+      emit(HomeLoaded(
+        data: currentState.data,
+        isBooksLoading: true,
+      ));
 
-        final books = await repository.getBooksByCategory();
-        final List<BookModel> fillterBooks = books
-            .where((element) => element.category == event.titleSelected)
-            .toList();
-        print('fillter List Books =$fillterBooks ');
-        emit(HomeLoaded(
-          data: currentState.data.copyWith(books: fillterBooks),
-          isBooksLoading: false,
-        ));
-      }
-    } catch (e) {
-      emit(HomeError(e.toString()));
+      final result = await repository.getBooksByCategory();
+
+      result.fold(
+        (failure) => emit(HomeError(failure.message)),
+        (books) {
+          final List<BookModel> filteredBooks = books
+              .where((element) => element.category == event.titleSelected)
+              .toList();
+
+          emit(HomeLoaded(
+            data: currentState.data.copyWith(books: filteredBooks),
+            isBooksLoading: false,
+          ));
+        },
+      );
     }
   }
 }

@@ -1,4 +1,3 @@
-// lib/features/news/logic/cubit/news_state.dart
 part of 'news_cubit.dart';
 
 sealed class NewsState extends Equatable {

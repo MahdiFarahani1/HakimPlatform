@@ -16,7 +16,6 @@ class Song {
   });
 }
 
-/// نمونه لیست آهنگ‌ها برای تست UI
 final List<Song> sampleSongs = [
   Song(
     id: '1',

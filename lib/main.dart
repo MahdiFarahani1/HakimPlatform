@@ -28,6 +28,7 @@ void main() async {
   HydratedBloc.storage = await HydratedStorage.build(
     storageDirectory: HydratedStorageDirectory(directory.path),
   );
+
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   runApp(const MyApp());
@@ -60,6 +61,27 @@ class MyApp extends StatelessWidget {
               return state.isDarkMode;
             },
             builder: (context, isDarkMode) {
+              SystemChrome.setSystemUIOverlayStyle(
+                SystemUiOverlayStyle(
+                  statusBarColor: isDarkMode ? Colors.black : Colors.white,
+
+                  statusBarIconBrightness: isDarkMode
+                      ? Brightness.light
+                      : Brightness.dark,
+
+                  statusBarBrightness: isDarkMode
+                      ? Brightness.dark
+                      : Brightness.light,
+
+                  systemNavigationBarColor: isDarkMode
+                      ? Colors.black
+                      : Colors.white,
+
+                  systemNavigationBarIconBrightness: isDarkMode
+                      ? Brightness.light
+                      : Brightness.dark,
+                ),
+              );
               return MaterialApp(
                 debugShowCheckedModeBanner: false,
                 title: "السيد عمار الحكيم",

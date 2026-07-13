@@ -1,4 +1,3 @@
-// lib/core/widgets/simple_refresh_indicator.dart
 
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';

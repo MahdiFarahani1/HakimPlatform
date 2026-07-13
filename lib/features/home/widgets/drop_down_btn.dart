@@ -96,7 +96,6 @@ class _SimpleDropdownState extends State<SimpleDropdown>
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Header با دکمه بستن
                           Container(
                             padding: EdgeInsets.symmetric(
                               horizontal: 16.w,
@@ -125,7 +124,9 @@ class _SimpleDropdownState extends State<SimpleDropdown>
                                   child: Container(
                                     padding: EdgeInsets.all(4.r),
                                     decoration: BoxDecoration(
-                                      color: Theme.of(context).brightness == Brightness.dark
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
                                           ? Colors.grey.shade800
                                           : Colors.grey.shade200,
                                       shape: BoxShape.circle,
@@ -133,7 +134,9 @@ class _SimpleDropdownState extends State<SimpleDropdown>
                                     child: Icon(
                                       Icons.close_rounded,
                                       size: 14.sp,
-                                      color: Theme.of(context).brightness == Brightness.dark
+                                      color:
+                                          Theme.of(context).brightness ==
+                                              Brightness.dark
                                           ? Colors.grey.shade400
                                           : Colors.grey.shade600,
                                     ),
@@ -142,7 +145,6 @@ class _SimpleDropdownState extends State<SimpleDropdown>
                               ],
                             ),
                           ),
-                          // لیست گزینه‌ها
                           ..._options.asMap().entries.map((entry) {
                             int index = entry.key;
                             String option = entry.value;
@@ -161,7 +163,9 @@ class _SimpleDropdownState extends State<SimpleDropdown>
                                   border: index != _options.length - 1
                                       ? Border(
                                           bottom: BorderSide(
-                                            color: Theme.of(context).brightness == Brightness.dark
+                                            color:
+                                                Theme.of(context).brightness ==
+                                                    Brightness.dark
                                                 ? Colors.white10
                                                 : Colors.grey.shade100,
                                           ),

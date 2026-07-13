@@ -20,27 +20,37 @@ class BooksCubit extends Cubit<BooksState> {
       );
 
   Future<void> getAllBooksData() async {
-    try {
-      emit(state.copyWith(status: const BooksLoadingStatus()));
+    emit(state.copyWith(status: const BooksLoadingStatus()));
 
-      final books = await repository.getAllBooks();
-      final categories = await repository.getAllCategories();
+    final booksResult = await repository.getAllBooks();
 
-      emit(
-        state.copyWith(
-          status: const BooksLoadedStatus(),
-          allBooks: books,
-          filteredBooks: books,
-          categories: categories,
-          categoriesSelected: 0,
-        ),
-      );
-    } catch (e) {
-      emit(state.copyWith(status: BooksErrorStatus(e.toString())));
-    }
+    await booksResult.fold(
+      (failure) async {
+        emit(state.copyWith(status: BooksErrorStatus(failure.message)));
+      },
+      (books) async {
+        final categoriesResult = await repository.getAllCategories();
+
+        categoriesResult.fold(
+          (failure) {
+            emit(state.copyWith(status: BooksErrorStatus(failure.message)));
+          },
+          (categories) {
+            emit(
+              state.copyWith(
+                status: const BooksLoadedStatus(),
+                allBooks: books,
+                filteredBooks: books,
+                categories: categories,
+                categoriesSelected: 0,
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
-  // فیلتر کردن بر اساس دسته‌بندی
   void getBooksByCategories(String catId, int categoryIndex) {
     if (state.allBooks.isEmpty) return;
 

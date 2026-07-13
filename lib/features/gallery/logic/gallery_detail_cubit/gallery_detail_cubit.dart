@@ -12,25 +12,28 @@ class GalleryDetailCubit extends Cubit<GalleryDetailState> {
 
   Future<void> downloadImage(String imageUrl) async {
     emit(GalleryDetailDownloading(downloadedImages: state.downloadedImages));
-    try {
-      final success = await repository.downloadAndSaveImage(imageUrl);
-      if (success) {
-        final updatedList = repository.getDownloadedImages();
-        emit(GalleryDetailSuccess(
-          downloadedImages: updatedList,
-          message: 'تم حفظ الصورة في المعرض بنجاح ✓',
-        ));
-      } else {
-        emit(GalleryDetailFailure(
-          downloadedImages: state.downloadedImages,
-          error: 'حدث خطأ أثناء حفظ الصورة',
-        ));
-      }
-    } catch (e) {
-      emit(GalleryDetailFailure(
+
+    final result = await repository.downloadAndSaveImage(imageUrl);
+
+    result.fold(
+      (failure) => emit(GalleryDetailFailure(
         downloadedImages: state.downloadedImages,
-        error: 'حدث خطأ أثناء تحميل الصورة',
-      ));
-    }
+        error: failure.message,
+      )),
+      (success) {
+        if (success) {
+          final updatedList = repository.getDownloadedImages();
+          emit(GalleryDetailSuccess(
+            downloadedImages: updatedList,
+            message: 'تم حفظ الصورة في المعرض بنجاح ✓',
+          ));
+        } else {
+          emit(GalleryDetailFailure(
+            downloadedImages: state.downloadedImages,
+            error: 'حدث خطأ أثناء حفظ الصورة',
+          ));
+        }
+      },
+    );
   }
 }

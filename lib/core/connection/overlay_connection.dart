@@ -8,11 +8,11 @@ class NoInternetOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false, // جلوگیری از بسته شدن با دکمه Back گوشی
+      canPop: false, 
       child: Scaffold(
         backgroundColor: Colors.black.withOpacity(
           0.7,
-        ), // پس‌زمینه نیمه شفاف روی کل اپ
+        ), 
         body: Center(
           child: Container(
             margin: EdgeInsets.all(32.w),
@@ -31,7 +31,6 @@ class NoInternetOverlay extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                /// آیکون متحرک عدم اتصال
                 Container(
                       padding: EdgeInsets.all(20.w),
                       decoration: BoxDecoration(
@@ -60,7 +59,6 @@ class NoInternetOverlay extends StatelessWidget {
 
                 SizedBox(height: 24.h),
 
-                /// متن‌ها
                 Text(
                   "لا يوجد اتصال بالإنترنت",
                   textAlign: TextAlign.center,

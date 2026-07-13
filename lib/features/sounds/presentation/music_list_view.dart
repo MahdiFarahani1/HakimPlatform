@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
-import 'package:flutter_application_1/core/logic/search/search_cubit.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
 import 'package:flutter_application_1/core/widgets/empty_widget.dart';
@@ -8,6 +7,7 @@ import 'package:flutter_application_1/features/sounds/data/models/song.dart';
 import 'package:flutter_application_1/features/sounds/logic/cubit/player_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/logic/search/search_cubit.dart';
 import '../widgets/mini_player.dart';
 import '../widgets/song_tile.dart';
 

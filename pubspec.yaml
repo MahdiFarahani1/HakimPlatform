@@ -69,6 +69,7 @@ dependencies:
   image_gallery_saver_plus: ^5.0.0
   just_audio: ^0.10.6
   zoom_tap_animation: ^1.1.0
+  dartz: ^0.10.1
 dev_dependencies:
   flutter_test:
     sdk: flutter

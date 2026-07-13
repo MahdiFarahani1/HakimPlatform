@@ -7,7 +7,7 @@ class BookmarkItem {
   final String title;
   final String? intro;
   final String image;
-  final String category; // 'news' | 'video' | 'book'
+  final String category;
   final String createdAt;
 
   final Map<String, dynamic> extraData;
@@ -42,7 +42,7 @@ class BookmarkItem {
       image: book.image,
       category: 'book',
       createdAt: book.date,
-      extraData: {},
+      extraData: {'pdfUrl': book.pdf},
     );
   }
 

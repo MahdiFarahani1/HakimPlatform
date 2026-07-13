@@ -1,4 +1,3 @@
-// lib/features/wrapper/data/models/about_model.dart
 class AboutModel {
   final int id;
   final String aboutTitleAr;

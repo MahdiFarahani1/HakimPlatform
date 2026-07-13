@@ -1,4 +1,3 @@
-// lib/features/dialogue/presentation/screens/dialogue_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config/di.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
@@ -8,27 +7,42 @@ import 'package:flutter_application_1/core/widgets/empty_widget.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/features/dialogue/data/models/dialogue_model.dart';
 import 'package:flutter_application_1/features/dialogue/logic/cubit/dialouge_cubit.dart';
-import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 
-class DialogueScreen extends StatelessWidget {
+class DialogueScreen extends StatefulWidget {
   const DialogueScreen({super.key});
 
   @override
+  State<DialogueScreen> createState() => _DialogueScreenState();
+}
+
+class _DialogueScreenState extends State<DialogueScreen> {
+  late final TextEditingController _searchController;
+
+  @override
+  void initState() {
+    super.initState();
+    _searchController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final TextEditingController controller = TextEditingController();
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => SearchCubit<DialogueModel>()),
-
         BlocProvider(
           create: (context) => getIt<DialougeCubit>()..fetchDialogues(),
         ),
       ],
-
       child: Scaffold(
         body: Container(
           decoration: BoxDecoration(
@@ -36,7 +50,7 @@ class DialogueScreen extends StatelessWidget {
           ),
           child: Column(
             children: [
-              SafeArea(child: _buildHeader(context)),
+              _buildHeader(context),
               Expanded(
                 child: BlocConsumer<DialougeCubit, DialougeState>(
                   listener: (context, state) {
@@ -49,78 +63,84 @@ class DialogueScreen extends StatelessWidget {
                   builder: (context, state) {
                     if (state is DialougeLoading || state is DialougeInitial) {
                       return _buildSkeletonLoader(context);
-                    } else if (state is DialougeError) {
-                      return CustomErrorWidget(
-                        onRetry: () {
-                          context.read<DialougeCubit>().fetchDialogues();
-                        },
+                    }
+                    if (state is DialougeError) {
+                      return Center(
+                        child: CustomErrorWidget(
+                          onRetry: () =>
+                              context.read<DialougeCubit>().fetchDialogues(),
+                        ),
                       );
-                    } else if (state is DialougeSuccess) {
+                    }
+                    if (state is DialougeSuccess) {
                       if (state.dialogues.isEmpty) {
                         return _buildEmptyWidget();
                       }
-                      return RefreshIndicator(
-                        color: AppColor.primaryOrange,
-                        onRefresh: () async {
-                          context.read<DialougeCubit>().fetchDialogues();
-                        },
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: CustomSearchBar(
-                                controller: controller,
-                                onChanged: (value) {
-                                  context
-                                      .read<SearchCubit<DialogueModel>>()
-                                      .search(
-                                        query: value,
-                                        source: state.dialogues,
-                                        title: (d) => d.title,
-                                      );
-                                },
-                                onClear: () {
-                                  context
-                                      .read<SearchCubit<DialogueModel>>()
-                                      .clear(state.dialogues);
-                                },
-                              ),
+                      return Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                            child: CustomSearchBar(
+                              controller: _searchController,
+                              onChanged: (value) {
+                                context
+                                    .read<SearchCubit<DialogueModel>>()
+                                    .search(
+                                      query: value,
+                                      source: state.dialogues,
+                                      title: (d) => d.title,
+                                    );
+                              },
+                              onClear: () {
+                                _searchController.clear();
+                                context
+                                    .read<SearchCubit<DialogueModel>>()
+                                    .clear(state.dialogues);
+                              },
                             ),
+                          ),
+                          Expanded(
+                            child:
+                                BlocBuilder<
+                                  SearchCubit<DialogueModel>,
+                                  SearchState<DialogueModel>
+                                >(
+                                  builder: (context, stateSearch) {
+                                    final dialogues =
+                                        _searchController.text.isEmpty
+                                        ? state.dialogues
+                                        : stateSearch.results;
 
-                            Expanded(
-                              child:
-                                  BlocBuilder<
-                                    SearchCubit<DialogueModel>,
-                                    SearchState<DialogueModel>
-                                  >(
-                                    builder: (context, stateSearch) {
-                                      final dialogue = controller.text.isEmpty
-                                          ? state.dialogues
-                                          : stateSearch.results;
-                                      if (dialogue.isEmpty) {
-                                        return EmptySearchWidget(
-                                          controller: controller,
-                                        );
-                                      }
-                                      return AnimationLimiter(
+                                    if (dialogues.isEmpty) {
+                                      return EmptySearchWidget(
+                                        controller: _searchController,
+                                      );
+                                    }
+
+                                    return RefreshIndicator(
+                                      color: AppColor.primaryOrange,
+                                      onRefresh: () async {
+                                        context
+                                            .read<DialougeCubit>()
+                                            .fetchDialogues();
+                                      },
+                                      child: AnimationLimiter(
                                         child: ListView.builder(
                                           padding: const EdgeInsets.fromLTRB(
                                             16,
-                                            16,
+                                            8,
                                             16,
                                             24,
                                           ),
-                                          itemCount: controller.text.isEmpty
-                                              ? state.dialogues.length
-                                              : stateSearch.results.length,
+                                          itemCount: dialogues.length,
                                           itemBuilder: (context, index) {
                                             return AnimationConfiguration.staggeredList(
                                               position: index,
                                               duration: const Duration(
-                                                milliseconds: 400,
+                                                milliseconds: 450,
                                               ),
                                               child: SlideAnimation(
-                                                verticalOffset: 40,
+                                                verticalOffset: 30.0,
                                                 child: FadeInAnimation(
                                                   child: Padding(
                                                     padding:
@@ -128,9 +148,9 @@ class DialogueScreen extends StatelessWidget {
                                                           bottom: 16,
                                                         ),
                                                     child: _DialogueCard(
-                                                      dialogue: dialogue[index],
+                                                      dialogue:
+                                                          dialogues[index],
                                                       onTap: () {
-                                                        // TODO: هدایت به صفحه جزئیات گفتگو
                                                       },
                                                     ),
                                                   ),
@@ -139,12 +159,12 @@ class DialogueScreen extends StatelessWidget {
                                             );
                                           },
                                         ),
-                                      );
-                                    },
-                                  ),
-                            ),
-                          ],
-                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                          ),
+                        ],
                       );
                     }
                     return const SizedBox.shrink();
@@ -159,14 +179,30 @@ class DialogueScreen extends StatelessWidget {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
+      padding: EdgeInsets.only(
+        top: MediaQuery.paddingOf(context).top + 12,
+        bottom: 16,
+        left: 20,
+        right: 20,
+      ),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
+        color: Theme.of(
+          context,
+        ).colorScheme.onPrimaryContainer.withOpacity(0.85),
         borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
+          bottomLeft: Radius.circular(32),
+          bottomRight: Radius.circular(32),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.06),
+            blurRadius: 20,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: BlocBuilder<DialougeCubit, DialougeState>(
         builder: (context, state) {
@@ -182,38 +218,57 @@ class DialogueScreen extends StatelessWidget {
                   gradient: LinearGradient(
                     colors: [
                       AppColor.primaryBlue,
-                      AppColor.primaryBlue.withOpacity(0.7),
+                      AppColor.primaryBlue.withOpacity(0.8),
                     ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
                   ),
                   borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.primaryBlue.withOpacity(0.3),
+                      blurRadius: 8,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
                 ),
                 child: Icon(
                   Icons.forum_rounded,
-                  size: 28,
+                  size: 26,
                   color: AppColor.primaryOrange,
                 ),
               ),
-              const SizedBox(width: 14),
+              const SizedBox(width: 16),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     'الحوارات',
                     style: TextStyle(
-                      fontSize: 26,
+                      fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : const Color(0xFF1E293B),
+                      letterSpacing: -0.5,
+                      color: isDark ? Colors.white : const Color(0xFF0F172A),
                     ),
                   ),
-                  const SizedBox(height: 2),
-                  Text(
-                    total > 0 ? '$total حوار' : 'تحميل...',
-                    style: TextStyle(
-                      color: AppColor.primaryBlue,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                  const SizedBox(height: 4),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: Text(
+                      state is DialougeLoading
+                          ? 'جاري التحميل...'
+                          : total > 0
+                          ? '$total حوار متاح'
+                          : 'لا توجد حوارات',
+                      key: ValueKey(
+                        total + (state is DialougeLoading ? 1000 : 0),
+                      ),
+                      style: TextStyle(
+                        color: AppColor.primaryBlue.withOpacity(0.9),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -228,62 +283,23 @@ class DialogueScreen extends StatelessWidget {
   Widget _buildSkeletonLoader(BuildContext context) {
     return Skeletonizer(
       enabled: true,
-      effect: ShimmerEffect(
-        duration: const Duration(milliseconds: 1500),
-        highlightColor: Theme.of(context).brightness == Brightness.dark
-            ? Colors.white12
-            : Colors.white,
-        baseColor: Theme.of(context).brightness == Brightness.dark
-            ? Colors.grey.shade800
-            : Colors.grey.shade300,
-      ),
       child: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: 5,
+        padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+        itemCount: 3,
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 16),
-            child: Container(
-              height: 260,
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                borderRadius: BorderRadius.circular(22),
+            child: _DialogueCard(
+              dialogue: DialogueModel(
+                id: 0,
+                title: 'هذا النص هو مثال لنص تجريبي طويل جداً',
+                excerpt:
+                    'هذا النص هو مثال لنص تجريبي طويل جداً لتوضيح شكل وتناسق الخطوط والفقرات داخل الكارت الذكي الخاص بالتطبيق الحالي.',
+                image: '',
+                date: '2026/07/11',
+                interviewer: 'اسم المحاور هنا',
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    height: 160,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade300,
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(22),
-                        topRight: Radius.circular(22),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(14),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 16,
-                          width: double.infinity,
-                          color: Colors.grey.shade300,
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                          height: 12,
-                          width: 200,
-                          color: Colors.grey.shade300,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+              onTap: () {},
             ),
           );
         },
@@ -293,24 +309,33 @@ class DialogueScreen extends StatelessWidget {
 
   Widget _buildEmptyWidget() {
     return Center(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.chat_bubble_outline,
-            size: 70,
-            color: Colors.grey.shade400,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'لا توجد حوارات',
-            style: TextStyle(
-              color: Colors.grey.shade500,
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+      child: FadeInAnimation(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(24),
+              decoration: BoxDecoration(
+                color: Colors.grey.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.chat_bubble_outline_rounded,
+                size: 64,
+                color: Colors.grey.shade400,
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            Text(
+              'لا توجد حوارات متاحة حالياً',
+              style: TextStyle(
+                color: Colors.grey.shade600,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -326,76 +351,52 @@ class _DialogueCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        borderRadius: BorderRadius.circular(22),
-        onTap: onTap,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onPrimaryContainer,
-            borderRadius: BorderRadius.circular(22),
-            boxShadow: [
-              BoxShadow(
-                color: isDark
-                    ? Colors.black26
-                    : Colors.grey.shade200.withOpacity(0.8),
-                blurRadius: 12,
-                offset: const Offset(0, 4),
-              ),
-            ],
+    return Container(
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black38
+                : Colors.grey.shade300.withOpacity(0.4),
+            blurRadius: 16,
+            offset: const Offset(0, 6),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // تصویر با گرادیانت روی پایین برای خوانایی تاریخ
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(22),
-                  topRight: Radius.circular(22),
-                ),
-                child: Stack(
+        ],
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(24),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
                   children: [
                     SizedBox(
-                      height: 170,
+                      height: 180,
                       width: double.infinity,
-                      child: Image.network(
-                        dialogue.image,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, progress) {
-                          if (progress == null) return child;
-                          return Container(
-                            color: Colors.grey.shade200,
-                            child: const Center(
-                              child: CircularProgressIndicator(strokeWidth: 2),
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey.shade200,
-                            child: Assets.icons.imageSlash.image(
-                              width: 60,
-                              height: 60,
-                              color: Colors.grey,
-                            ),
-                          );
-                        },
-                      ),
+                      child: dialogue.image.isNotEmpty
+                          ? Image.network(
+                              dialogue.image,
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  _buildPlaceholder(),
+                            )
+                          : _buildPlaceholder(),
                     ),
-                    Positioned(
-                      bottom: 0,
-                      left: 0,
-                      right: 0,
+                    Positioned.fill(
                       child: Container(
-                        height: 60,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black.withOpacity(0),
-                              Colors.black.withOpacity(0.55),
+                              Colors.black.withOpacity(0.0),
+                              Colors.black.withOpacity(0.7),
                             ],
                           ),
                         ),
@@ -403,100 +404,139 @@ class _DialogueCard extends StatelessWidget {
                     ),
                     if (dialogue.date.isNotEmpty)
                       Positioned(
-                        bottom: 10,
-                        right: 12,
-                        child: Row(
-                          children: [
-                            Assets.icons.calendar.image(
-                              width: 14,
-                              height: 14,
-                              color: Colors.white,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              dialogue.date,
-                              style: const TextStyle(
+                        bottom: 12,
+                        right: 16,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white24,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.calendar_month_rounded,
+                                size: 13,
                                 color: Colors.white,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
                               ),
-                            ),
-                          ],
+                              const SizedBox(width: 6),
+                              Text(
+                                dialogue.date,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                   ],
                 ),
-              ),
-
-              // محتوای متنی
-              Padding(
-                padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dialogue.title,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 15.5,
-                        fontWeight: FontWeight.bold,
-                        height: 1.4,
-                        color: isDark ? Colors.white : const Color(0xFF1E293B),
-                      ),
-                    ),
-                    const SizedBox(height: 6),
-                    Text(
-                      dialogue.excerpt,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 13,
-                        height: 1.4,
-                        color: Colors.grey.shade500,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: AppColor.primaryBlue.withOpacity(0.1),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Assets.icons.user.image(
-                            width: 16,
-                            height: 16,
-                            color: AppColor.primaryBlue,
-                          ),
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        dialogue.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          height: 1.4,
+                          color: isDark
+                              ? Colors.white
+                              : const Color(0xFF1E293B),
                         ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            dialogue.interviewer,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 12.5,
-                              fontWeight: FontWeight.w600,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        dialogue.excerpt,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
+                          fontSize: 13,
+                          height: 1.5,
+                          color: isDark
+                              ? Colors.grey.shade400
+                              : Colors.grey.shade600,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Divider(
+                        height: 1,
+                        color: isDark ? Colors.white10 : Colors.grey.shade200,
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: AppColor.primaryBlue.withOpacity(0.08),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.person_rounded,
+                              size: 16,
                               color: AppColor.primaryBlue,
                             ),
                           ),
-                        ),
-                        Assets.icons.angleSmallLeft.image(
-                          width: 16,
-                          height: 16,
-                          color: Colors.grey,
-                        ),
-                      ],
-                    ),
-                  ],
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Text(
+                              dialogue.interviewer,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.primaryBlue,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(4),
+                            decoration: BoxDecoration(
+                              color: isDark
+                                  ? Colors.white
+                                  : Colors.grey.shade100,
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: 12,
+                              color: Colors.grey.shade500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      color: const Color(0xFFE2E8F0),
+      alignment: Alignment.center,
+      child: const Icon(
+        Icons.image_not_supported_rounded,
+        size: 40,
+        color: Color(0xFF94A3B8),
       ),
     );
   }

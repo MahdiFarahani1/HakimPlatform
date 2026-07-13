@@ -1,4 +1,3 @@
-// lib/features/news/presentation/screens/news_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config/di.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
@@ -118,7 +117,6 @@ class _NewsScreenState extends State<NewsScreen>
                                             child: NewsCard(
                                               news: news,
                                               onTap: () {
-                                                // در صفحه لیست اخبار
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -145,7 +143,6 @@ class _NewsScreenState extends State<NewsScreen>
                                       ),
                                     ),
                                   ),
-                                // فاصله پایین برای اینکه لودینگ به لبه پایین نچسبه
                                 const SliverToBoxAdapter(
                                   child: SizedBox(height: 8),
                                 ),

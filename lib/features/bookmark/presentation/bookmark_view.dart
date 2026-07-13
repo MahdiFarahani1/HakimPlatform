@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_state.dart';
+import 'package:flutter_application_1/features/news/data/models/news_model.dart';
+import 'package:flutter_application_1/features/news/presentation/detail_news_view.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../core/utils/url_luncher.dart';
 
 class BookmarkScreen extends StatefulWidget {
   const BookmarkScreen({super.key});
@@ -20,14 +25,11 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
   String _searchQuery = '';
   final TextEditingController _searchController = TextEditingController();
 
-  // فیلتر کردن هوشمند و داینامیک آیتم‌ها بر اساس مدل جدید
   List<BookmarkItem> _getFilteredBookmarks(List<BookmarkItem> savedItems) {
     return savedItems.where((item) {
-      // فیلتر دسته بندی
       final matchesCategory =
           _selectedCategory == 'all' || item.category == _selectedCategory;
 
-      // فیلتر سرچ بر اساس عنوان یا توضیحات کوتاه
       final matchesSearch =
           _searchQuery.isEmpty ||
           item.title.toLowerCase().contains(_searchQuery.toLowerCase()) ||
@@ -61,7 +63,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     }
   }
 
-  // محاسبه پویای تعداد بوکمارک‌های هر دسته بندی برای کارت‌های آماری بالای صفحه
   int _getCategoryCount(List<BookmarkItem> savedItems, String category) {
     if (category == 'all') return savedItems.length;
     return savedItems.where((item) => item.category == category).length;
@@ -80,7 +81,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
 
               return CustomScrollView(
                 slivers: [
-                  // Header
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(24, 32, 24, 16),
@@ -142,7 +142,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                     ),
                   ),
 
-                  // Stats Cards
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -156,9 +155,9 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                           ),
                           const SizedBox(width: 12),
                           _buildCategoryStatCard(
-                            'الأصوات',
+                            'فيديو',
                             _getCategoryCount(savedItems, 'video'),
-                            Assets.icons.headphonesRhythm.path,
+                            Assets.icons.video.path,
                             const Color(0xFF8400FF),
                           ),
                           const SizedBox(width: 12),
@@ -180,7 +179,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                     ),
                   ),
 
-                  // Category Chips
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(24, 32, 16, 16),
@@ -233,7 +231,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                     ),
                   ),
 
-                  // Search Bar
                   SliverToBoxAdapter(
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
@@ -267,7 +264,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                             });
                           },
                           decoration: InputDecoration(
-                            hintText: 'جستجو در بوکمارک‌ها...',
+                            hintText: 'البحث في المفضلة...',
                             hintStyle: const TextStyle(
                               color: Color(0xFF9CA3AF),
                             ),
@@ -304,7 +301,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                     ),
                   ),
 
-                  // Bookmarks List
                   SliverPadding(
                     padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
                     sliver: filteredItems.isEmpty
@@ -502,7 +498,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
     final (categoryColor, categoryIcon, categoryText) = _getCategoryInfo(item);
     final imageEmoji = _getImageEmoji(item);
 
-    // استخراج زبان دیتای اختصاصی از مپ در صورت وجود (برای اخبار)
     final String languageLabel = item.extraData['lan'] ?? '';
 
     return Padding(
@@ -524,15 +519,38 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
         child: Material(
           color: Colors.transparent,
           child: InkWell(
-            onTap: () {
-              // TODO: براساس item.category کاربر را به پلیر ویدیو، نمایش کتاب یا متن خبر هدایت کنید
+            onTap: () async {
+              switch (item.category) {
+                case 'video':
+                  LunchUrlService.videoOpener(
+                    context,
+                    item.extraData['youtubeId'],
+                  );
+                case 'book':
+                  print("${Api.baseImageUrl}${item.extraData['pdfUrl']}");
+
+                  LunchUrlService.urlOpener(
+                    context,
+                    "${Api.baseImageUrl}${item.extraData['pdfUrl']}",
+                  );
+
+                case 'news':
+                  var data = NewsModel.fromJson({});
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => NewsDetailScreen(newsModel: data),
+                    ),
+                  );
+
+                default:
+              }
             },
             borderRadius: BorderRadius.circular(24),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
                 children: [
-                  // Image or Emoji
                   Container(
                     width: 70,
                     height: 70,
@@ -572,7 +590,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                   ),
                   const SizedBox(width: 16),
 
-                  // Info
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -611,7 +628,6 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                             ),
                             const Spacer(),
 
-                            // Language badge
                             languageLabel != ''
                                 ? Container(
                                     padding: const EdgeInsets.symmetric(
@@ -619,9 +635,7 @@ class _BookmarkScreenState extends State<BookmarkScreen> {
                                       vertical: 2,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: categoryColor.withOpacity(
-                                        0.1,
-                                      ), // اختصاص رنگ دسته بندی به بج زبان جهت پایداری گرافیک
+                                      color: categoryColor.withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(6),
                                     ),
                                     child: Text(

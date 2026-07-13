@@ -1,6 +1,5 @@
 class BookModel {
   final int id;
-  //  final int? catId;
 
   final String title;
   final String image;
@@ -19,7 +18,6 @@ class BookModel {
     required this.date,
     required this.code,
     required this.number,
-    // required this.catId,
   });
 
   factory BookModel.fromJson(Map<String, dynamic> json) {
@@ -32,7 +30,6 @@ class BookModel {
       date: json['date'] ?? '',
       code: json['code'] ?? '',
       number: json['number'] ?? '',
-      //  catId: json['category_id'] ?? '',
     );
   }
 }

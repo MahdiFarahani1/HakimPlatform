@@ -9,15 +9,26 @@ class GalleryCubit extends Cubit<GalleryState> {
   final GalleryRepository repository;
 
   GalleryCubit(this.repository) : super(GalleryInitial());
+
   Future<void> loadData() async {
     emit(GalleryLoading());
-    try {
-      final categories = await repository.getCategories();
-      final galleries = await repository.getGalleries();
-      emit(GalleryLoaded(categories: categories, galleries: galleries));
-    } catch (e) {
-      emit(GalleryError(e.toString()));
-    }
+
+    final categoriesResult = await repository.getCategories();
+
+    await categoriesResult.fold(
+      (failure) async => emit(GalleryError(failure.message)),
+      (categories) async {
+        final galleriesResult = await repository.getGalleries();
+
+        galleriesResult.fold(
+          (failure) => emit(GalleryError(failure.message)),
+          (galleries) => emit(GalleryLoaded(
+            categories: categories,
+            galleries: galleries,
+          )),
+        );
+      },
+    );
   }
 
   void filterByCategory(int categoryId) {

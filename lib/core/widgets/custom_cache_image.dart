@@ -30,14 +30,12 @@ class CustomCacheImage extends StatelessWidget {
         height: height,
         fit: fit,
         color: color,
-        // زمانی که تصویر در حال دانلود است، این ویجت نمایش داده می‌شود
         placeholder: (context, url) => Container(
           width: width,
           height: height,
           color: Colors.grey[200],
           child: const Center(child: CustomLoading()),
         ),
-        // زمانی که دانلود عکس با خطا مواجه شود (مثلا اینترنت قطع باشد)
         errorWidget: (context, url, error) => Container(
           width: width,
           height: height,

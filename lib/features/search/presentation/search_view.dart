@@ -20,7 +20,6 @@ class _SearchPageState extends State<SearchPage>
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
-  // Sample data - می‌توانید با API واقعی جایگزین کنید
   final List<Map<String, dynamic>> _allItems = [
     {
       'id': 1,
@@ -153,7 +152,7 @@ class _SearchPageState extends State<SearchPage>
 
     await Future.delayed(
       const Duration(milliseconds: 150),
-    ); // تأخیر برای UX بهتر
+    ); 
 
     setState(() {
       if (_searchQuery.isEmpty) {
@@ -192,7 +191,6 @@ class _SearchPageState extends State<SearchPage>
 
           child: Column(
             children: [
-              // Header
               Container(
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
                 child: Column(
@@ -246,7 +244,6 @@ class _SearchPageState extends State<SearchPage>
                     ),
                     const SizedBox(height: 20),
 
-                    // Search Bar
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       decoration: BoxDecoration(
@@ -315,7 +312,6 @@ class _SearchPageState extends State<SearchPage>
                 ),
               ),
 
-              // Recent & Trending Section (only when no search)
               if (_searchQuery.isEmpty)
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -385,7 +381,6 @@ class _SearchPageState extends State<SearchPage>
                   ),
                 ),
 
-              // Results Section
               Expanded(
                 child: _isLoading
                     ? const Center(child: CustomLoading())
@@ -492,7 +487,6 @@ class _SearchPageState extends State<SearchPage>
     return GestureDetector(
       onTap: () {
         HapticFeedback.selectionClick();
-        // ناوبری به صفحه جزئیات
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Selected: ${item['title']}'),
@@ -519,7 +513,6 @@ class _SearchPageState extends State<SearchPage>
         ),
         child: Row(
           children: [
-            // Emoji/Icon as image placeholder
             Container(
               width: 60,
               height: 60,
