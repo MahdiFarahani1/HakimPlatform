@@ -4,9 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_application_1/core/error/failure.dart';
 
-Future<Either<Failure, T>> safeApiCall<T>(
-  Future<T> Function() call,
-) async {
+Future<Either<Failure, T>> safeApiCall<T>(Future<T> Function() call) async {
   try {
     final result = await call();
     return Right(result);

@@ -6,8 +6,13 @@ import 'package:flutter_application_1/gen/assets.gen.dart';
 
 class CustomErrorWidget extends StatelessWidget {
   final VoidCallback onRetry;
+  final String message;
 
-  const CustomErrorWidget({super.key, required this.onRetry});
+  const CustomErrorWidget({
+    super.key,
+    required this.onRetry,
+    required this.message,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +70,7 @@ class CustomErrorWidget extends StatelessWidget {
             context.gap(12),
 
             Text(
-                  'حدث خطأ أثناء تحميل البيانات',
+                  message,
                   style: TextStyle(
                     fontSize: 15,
                     color: context.theme.brightness == Brightness.dark

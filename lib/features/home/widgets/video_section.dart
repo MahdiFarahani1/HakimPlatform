@@ -21,8 +21,8 @@ class VideoListSection extends StatelessWidget {
         HomeHeader(
           title: "أحدث المرئيات",
           onTap: () {
-            BlocProvider.of<NavigationCubit>(context).changeNavState(4);
-            context.read<NavigationCubit>().pageController.jumpToPage(4);
+            BlocProvider.of<NavigationCubit>(context).changeNavState(3);
+            context.read<NavigationCubit>().pageController.jumpToPage(3);
           },
         ),
 

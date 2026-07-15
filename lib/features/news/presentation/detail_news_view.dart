@@ -8,8 +8,9 @@ import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_state.dart';
+import 'package:flutter_application_1/features/history/data/models/history_item.dart';
+import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
 import 'package:flutter_application_1/features/news/data/models/news_detail.dart';
-import 'package:flutter_application_1/features/news/data/models/news_model.dart';
 import 'package:flutter_application_1/features/news/logic/detail-news/detail_news_cubit.dart';
 import 'package:flutter_application_1/features/news/widgets/loading_news.dart';
 import 'package:flutter_application_1/features/settings/logic/cubit/settings_cubit.dart';
@@ -18,42 +19,48 @@ import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import '../../../core/constans/app_color.dart';
 import '../../../config/di.dart';
 
 class NewsDetailScreen extends StatelessWidget {
-  final NewsModel newsModel;
+  final int newsId;
 
-  const NewsDetailScreen({super.key, required this.newsModel});
+  const NewsDetailScreen({super.key, required this.newsId});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) =>
-          NewsDetailCubit(getIt())..fetchNewsDetail(postId: newsModel.id),
+          NewsDetailCubit(getIt())..fetchNewsDetail(postId: newsId),
       child: Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: BlocBuilder<NewsDetailCubit, NewsDetailState>(
-          builder: (context, state) {
-            if (state is NewsDetailLoading) {
-              return const SkeletonLoadingWidget();
-            } else if (state is NewsDetailSuccess) {
-              return NewsDetailsContent(
-                news: state.newsDetail,
-                newsModel: newsModel,
-              );
-            } else if (state is NewsDetailError) {
-              return CustomErrorWidget(
-                onRetry: () {
-                  context.read<NewsDetailCubit>().fetchNewsDetail(
-                    postId: newsModel.id,
-                  );
-                },
+        body: BlocListener<NewsDetailCubit, NewsDetailState>(
+          listener: (context, state) {
+            if (state is NewsDetailSuccess) {
+              context.read<HistoryCubit>().addItem(
+                HistoryItem.fromNewsDetail(state.newsDetail),
               );
             }
-            return const SizedBox.shrink();
           },
+          child: BlocBuilder<NewsDetailCubit, NewsDetailState>(
+            builder: (context, state) {
+              if (state is NewsDetailLoading) {
+                return const SkeletonLoadingWidget();
+              } else if (state is NewsDetailSuccess) {
+                return NewsDetailsContent(news: state.newsDetail);
+              } else if (state is NewsDetailError) {
+                return CustomErrorWidget(
+                  message: state.message,
+                  onRetry: () {
+                    context.read<NewsDetailCubit>().fetchNewsDetail(
+                      postId: newsId,
+                    );
+                  },
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
         ),
       ),
     );
@@ -62,12 +69,7 @@ class NewsDetailScreen extends StatelessWidget {
 
 class NewsDetailsContent extends StatelessWidget {
   final NewsDetailModel news;
-  final NewsModel newsModel;
-  const NewsDetailsContent({
-    super.key,
-    required this.news,
-    required this.newsModel,
-  });
+  const NewsDetailsContent({super.key, required this.news});
 
   @override
   Widget build(BuildContext context) {
@@ -387,11 +389,7 @@ class NewsDetailsContent extends StatelessWidget {
                         const SizedBox(height: 24),
 
                         if (hasMoreImages) ...[
-                          const Divider(
-                            height: 32,
-                            color: Colors
-                                .transparent, 
-                          ),
+                          const Divider(height: 32, color: Colors.transparent),
                           Text(
                             "صور إضافية",
                             style: TextStyle(
@@ -486,7 +484,14 @@ class NewsDetailsContent extends StatelessWidget {
                   );
                 },
                 onBookmarkTap: () {
-                  final newsbookmark = BookmarkItem.fromNews(newsModel);
+                  final newsbookmark = BookmarkItem.fromMap({
+                    'id': news.id,
+                    'title': news.title,
+                    'description': news.summary,
+                    'image': news.image,
+                    'content': news.content,
+                    'createdAt': news.date,
+                  });
 
                   context.read<BookmarkCubit>().toggleBookmark(newsbookmark);
                   AppSnackBar.success(context, 'تم حفظ التغييرات بنجاح');
@@ -541,7 +546,6 @@ class NewsDetailsContent extends StatelessWidget {
     );
   }
 }
-
 
 Widget _modernBottomBar({
   required BuildContext context,
@@ -633,7 +637,6 @@ Widget _bottomActionItem({
   );
 }
 
-
 Widget _modernGlassButton({required IconData icon, VoidCallback? onTap}) {
   return GestureDetector(
     onTap: onTap,
@@ -665,7 +668,6 @@ Widget _modernGlassButton({required IconData icon, VoidCallback? onTap}) {
     ),
   );
 }
-
 
 class _ModernTag extends StatelessWidget {
   final String text;

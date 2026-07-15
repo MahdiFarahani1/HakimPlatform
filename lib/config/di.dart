@@ -22,6 +22,9 @@ import 'package:flutter_application_1/features/videos/data/repositories/repo_vid
 import 'package:flutter_application_1/features/videos/logic/cubit/videos_cubit.dart';
 import 'package:flutter_application_1/features/wrapper/data/data_source/about_datasource.dart';
 import 'package:flutter_application_1/features/wrapper/logic/cubit/about_cubit.dart';
+import 'package:flutter_application_1/features/history/data/datasource/history_local_datasource.dart';
+import 'package:flutter_application_1/features/history/data/repository/history_repository_impl.dart';
+import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -91,6 +94,17 @@ void setupDependencyInjection() {
     () => DialogueRepository(getIt()),
   );
   getIt.registerFactory<DialougeCubit>(() => DialougeCubit(getIt()));
+
+  // History
+  getIt.registerLazySingleton<HistoryLocalDatasource>(
+    () => HistoryLocalDatasource(getIt<GetStorage>()),
+  );
+  getIt.registerLazySingleton<HistoryRepository>(
+    () => HistoryRepository(getIt<HistoryLocalDatasource>()),
+  );
+  getIt.registerFactory<HistoryCubit>(
+    () => HistoryCubit(getIt<HistoryRepository>()),
+  );
 }
 
 Interceptor get _prettyLogger => PrettyDioLogger(

@@ -7,6 +7,7 @@ import 'package:flutter_application_1/core/widgets/empty_widget.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/features/dialogue/data/models/dialogue_model.dart';
 import 'package:flutter_application_1/features/dialogue/logic/cubit/dialouge_cubit.dart';
+import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:skeletonizer/skeletonizer.dart';
@@ -67,6 +68,7 @@ class _DialogueScreenState extends State<DialogueScreen> {
                     if (state is DialougeError) {
                       return Center(
                         child: CustomErrorWidget(
+                          message: state.message,
                           onRetry: () =>
                               context.read<DialougeCubit>().fetchDialogues(),
                         ),
@@ -150,8 +152,7 @@ class _DialogueScreenState extends State<DialogueScreen> {
                                                     child: _DialogueCard(
                                                       dialogue:
                                                           dialogues[index],
-                                                      onTap: () {
-                                                      },
+                                                      onTap: () {},
                                                     ),
                                                   ),
                                                 ),
@@ -232,9 +233,9 @@ class _DialogueScreenState extends State<DialogueScreen> {
                     ),
                   ],
                 ),
-                child: Icon(
-                  Icons.forum_rounded,
-                  size: 26,
+                child: Assets.icons.comments.image(
+                  width: 26,
+                  height: 26,
                   color: AppColor.primaryOrange,
                 ),
               ),
@@ -418,9 +419,9 @@ class _DialogueCard extends StatelessWidget {
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(
-                                Icons.calendar_month_rounded,
-                                size: 13,
+                              Assets.icons.calendar.image(
+                                width: 13,
+                                height: 13,
                                 color: Colors.white,
                               ),
                               const SizedBox(width: 6),
@@ -483,9 +484,9 @@ class _DialogueCard extends StatelessWidget {
                               color: AppColor.primaryBlue.withOpacity(0.08),
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
-                              Icons.person_rounded,
-                              size: 16,
+                            child: Assets.icons.user.image(
+                              width: 16,
+                              height: 16,
                               color: AppColor.primaryBlue,
                             ),
                           ),
@@ -510,9 +511,9 @@ class _DialogueCard extends StatelessWidget {
                                   : Colors.grey.shade100,
                               shape: BoxShape.circle,
                             ),
-                            child: Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: 12,
+                            child: Assets.icons.angleSmallLeft.image(
+                              width: 12,
+                              height: 12,
                               color: Colors.grey.shade500,
                             ),
                           ),
@@ -533,9 +534,9 @@ class _DialogueCard extends StatelessWidget {
     return Container(
       color: const Color(0xFFE2E8F0),
       alignment: Alignment.center,
-      child: const Icon(
-        Icons.image_not_supported_rounded,
-        size: 40,
+      child: Assets.icons.imageSlash.image(
+        width: 40,
+        height: 40,
         color: Color(0xFF94A3B8),
       ),
     );

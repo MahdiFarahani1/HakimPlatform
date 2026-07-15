@@ -12,6 +12,8 @@ import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_state.dart';
+import 'package:flutter_application_1/features/history/data/models/history_item.dart';
+import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
 import 'package:flutter_application_1/features/books/data/models/book_model.dart';
 import 'package:flutter_application_1/features/books/data/models/category_book.dart';
 import 'package:flutter_application_1/features/books/logic/book/book_cubit.dart';
@@ -37,7 +39,9 @@ class BooksPage extends StatelessWidget {
             builder: (context, state) {
               final isLoading = state.status is BooksLoadingStatus;
               if (state.status is BooksErrorStatus) {
+                final error = (state.status as BooksErrorStatus).message;
                 return CustomErrorWidget(
+                  message: error,
                   onRetry: () {
                     context.read<BooksCubit>().getAllBooksData();
                   },
@@ -501,6 +505,9 @@ class BookCardItem extends StatelessWidget {
 
                   InkWell(
                     onTap: () {
+                      context.read<HistoryCubit>().addItem(
+                        HistoryItem.fromBook(book),
+                      );
                       LunchUrlService.urlOpener(
                         context,
                         "${Api.baseImageUrl}${book.pdf}",

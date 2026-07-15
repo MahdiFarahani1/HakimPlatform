@@ -7,6 +7,7 @@ import 'package:flutter_application_1/core/connection/cubit/internet_cubit.dart'
 import 'package:flutter_application_1/core/connection/overlay_connection.dart';
 import 'package:flutter_application_1/core/widgets/splah.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
+import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
 import 'package:flutter_application_1/features/home/data/repositories/home_repository.dart';
 import 'package:flutter_application_1/features/home/logic/bloc/bloc/home_bloc.dart';
 import 'package:flutter_application_1/features/settings/logic/cubit/settings_cubit.dart';
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
             ),
 
             BlocProvider(create: (context) => BookmarkCubit()),
+            BlocProvider(create: (context) => getIt<HistoryCubit>()),
             BlocProvider(create: (context) => SettingsCubit()),
             BlocProvider(create: (context) => InternetCubit()),
             BlocProvider(create: (context) => PlayerCubit()),

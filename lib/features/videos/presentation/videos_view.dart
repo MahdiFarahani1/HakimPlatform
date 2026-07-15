@@ -20,6 +20,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/features/history/data/models/history_item.dart';
+import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
 
 class VideoGalleryScreen extends StatefulWidget {
   const VideoGalleryScreen({super.key});
@@ -184,6 +186,7 @@ class _VideoGalleryScreenState extends State<VideoGalleryScreen>
                         return SkeletonLoaderVideos();
                       } else if (state is VideosError) {
                         return CustomErrorWidget(
+                          message: state.message,
                           onRetry: () =>
                               context.read<VideosCubit>().fetchVideos(),
                         );
@@ -229,10 +232,15 @@ class _VideoGalleryScreenState extends State<VideoGalleryScreen>
                                         child: FadeInAnimation(
                                           child: VideoCard(
                                             video: video,
-                                            onTap: () => openYouTube(
-                                              video.youtubeId,
-                                              context,
-                                            ),
+                                            onTap: () {
+                                              context.read<HistoryCubit>().addItem(
+                                                HistoryItem.fromVideo(video),
+                                              );
+                                              openYouTube(
+                                                video.youtubeId,
+                                                context,
+                                              );
+                                            },
                                           ),
                                         ),
                                       ),

@@ -34,6 +34,7 @@ class _GalleryScreenState extends State<GalleryScreen>
               return const GallerySkeleton();
             } else if (state is GalleryError) {
               return CustomErrorWidget(
+                message: state.message,
                 onRetry: () {
                   context.read<GalleryCubit>().loadData();
                 },

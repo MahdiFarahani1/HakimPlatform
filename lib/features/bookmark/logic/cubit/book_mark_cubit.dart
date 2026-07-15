@@ -25,6 +25,41 @@ class BookmarkCubit extends HydratedCubit<BookmarkState> {
     }
 
     emit(state.copyWith(savedItems: updatedList));
+    _applyFilters();
+  }
+
+  void selectCategory(String category) {
+    emit(state.copyWith(selectedCategory: category));
+    _applyFilters();
+  }
+
+  void updateSearchQuery(String query) {
+    emit(state.copyWith(searchQuery: query));
+    _applyFilters();
+  }
+
+  void clearSearch() {
+    emit(state.copyWith(searchQuery: ''));
+    _applyFilters();
+  }
+
+  void _applyFilters() {
+    final selectedCategory = state.selectedCategory;
+    final searchQuery = state.searchQuery;
+
+    final filtered = state.savedItems.where((item) {
+      final matchesCategory =
+          selectedCategory == 'all' || item.category == selectedCategory;
+
+      final matchesSearch = searchQuery.isEmpty ||
+          item.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
+          (item.intro?.toLowerCase().contains(searchQuery.toLowerCase()) ??
+              false);
+
+      return matchesCategory && matchesSearch;
+    }).toList();
+
+    emit(state.copyWith(filteredItems: filtered));
   }
 
   @override
@@ -39,7 +74,7 @@ class BookmarkCubit extends HydratedCubit<BookmarkState> {
       final items =
           itemsJson?.map((e) => BookmarkItem.fromMap(e)).toList() ?? [];
 
-      return BookmarkState(savedItems: items);
+      return BookmarkState(savedItems: items, filteredItems: items);
     } catch (_) {
       return BookmarkState.initial();
     }

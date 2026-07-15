@@ -5,6 +5,8 @@ import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
 import 'package:flutter_application_1/core/widgets/empty_widget.dart';
 import 'package:flutter_application_1/features/sounds/data/models/song.dart';
 import 'package:flutter_application_1/features/sounds/logic/cubit/player_cubit.dart';
+import 'package:flutter_application_1/features/history/data/models/history_item.dart';
+import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/logic/search/search_cubit.dart';
@@ -99,7 +101,12 @@ class _MusicListView extends StatelessWidget {
                         final song = songs[index];
                         return SongTile(
                           song: song,
-                          onTap: () => cubit.playSong(song),
+                          onTap: () {
+                            context.read<HistoryCubit>().addItem(
+                              HistoryItem.fromSong(song),
+                            );
+                            cubit.playSong(song);
+                          },
                         );
                       },
                     );

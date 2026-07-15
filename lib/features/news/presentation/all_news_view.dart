@@ -70,6 +70,7 @@ class _NewsScreenState extends State<NewsScreen>
                         return _buildSkeletonLoader();
                       } else if (state is NewsError) {
                         return CustomErrorWidget(
+                          message: state.message,
                           onRetry: () =>
                               BlocProvider.of<NewsCubit>(context).fetchNews(),
                         );
@@ -122,7 +123,7 @@ class _NewsScreenState extends State<NewsScreen>
                                                   MaterialPageRoute(
                                                     builder: (_) =>
                                                         NewsDetailScreen(
-                                                          newsModel: news,
+                                                          newsId: news.id,
                                                         ),
                                                   ),
                                                 );
@@ -325,46 +326,50 @@ class _NewsScreenState extends State<NewsScreen>
               final isSelected = _selectedLanguage == lang;
               return Padding(
                 padding: const EdgeInsets.only(left: 10),
-                child: FilterChip(
-                  label: Text(lang),
-                  selected: isSelected,
-                  onSelected: (_) {
-                    setState(() {
-                      _selectedLanguage = isSelected ? null : lang;
-                    });
-                    final langCode = lang == 'العربية'
-                        ? 'ar'
-                        : lang == 'English'
-                        ? 'en'
-                        : lang == 'كوردی'
-                        ? 'ku'
-                        : null;
-                    context.read<NewsCubit>().filterByLanguage(langCode);
+                child: StatefulBuilder(
+                  builder: (context, setStatee) {
+                    return FilterChip(
+                      label: Text(lang),
+                      selected: isSelected,
+                      onSelected: (_) {
+                        setStatee(() {
+                          _selectedLanguage = isSelected ? null : lang;
+                        });
+                        final langCode = lang == 'العربية'
+                            ? 'ar'
+                            : lang == 'English'
+                            ? 'en'
+                            : lang == 'كوردی'
+                            ? 'ku'
+                            : null;
+                        context.read<NewsCubit>().filterByLanguage(langCode);
+                      },
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.onPrimaryContainer,
+                      selectedColor: AppColor.primaryBlue.withOpacity(0.1),
+                      checkmarkColor: AppColor.primaryBlue,
+                      labelStyle: TextStyle(
+                        color: isSelected
+                            ? AppColor.primaryBlue
+                            : (Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.grey.shade300
+                                  : Colors.grey.shade700),
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
+                        fontSize: 13,
+                      ),
+                      side: BorderSide(
+                        color: isSelected
+                            ? AppColor.primaryBlue
+                            : (Theme.of(context).brightness == Brightness.dark
+                                  ? Colors.white12
+                                  : Colors.grey.shade300),
+                      ),
+                      shape: StadiumBorder(),
+                    );
                   },
-                  backgroundColor: Theme.of(
-                    context,
-                  ).colorScheme.onPrimaryContainer,
-                  selectedColor: AppColor.primaryBlue.withOpacity(0.1),
-                  checkmarkColor: AppColor.primaryBlue,
-                  labelStyle: TextStyle(
-                    color: isSelected
-                        ? AppColor.primaryBlue
-                        : (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.grey.shade300
-                              : Colors.grey.shade700),
-                    fontWeight: isSelected
-                        ? FontWeight.w600
-                        : FontWeight.normal,
-                    fontSize: 13,
-                  ),
-                  side: BorderSide(
-                    color: isSelected
-                        ? AppColor.primaryBlue
-                        : (Theme.of(context).brightness == Brightness.dark
-                              ? Colors.white12
-                              : Colors.grey.shade300),
-                  ),
-                  shape: StadiumBorder(),
                 ),
               );
             },

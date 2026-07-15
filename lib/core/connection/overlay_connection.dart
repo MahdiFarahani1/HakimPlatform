@@ -8,11 +8,9 @@ class NoInternetOverlay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false, 
+      canPop: false,
       child: Scaffold(
-        backgroundColor: Colors.black.withOpacity(
-          0.7,
-        ), 
+        backgroundColor: Colors.black.withOpacity(0.7),
         body: Center(
           child: Container(
             margin: EdgeInsets.all(32.w),

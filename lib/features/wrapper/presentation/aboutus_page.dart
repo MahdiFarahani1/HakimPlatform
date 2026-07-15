@@ -14,19 +14,29 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({super.key});
+  final bool isSocialMediaNav;
+  const AboutPage({super.key, this.isSocialMediaNav = false});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AboutCubit(getIt())..fetchAboutInfo(),
-      child: const _AboutView(),
+      child: _AboutView(isSocialMediaNav: isSocialMediaNav),
     );
   }
 }
 
-class _AboutView extends StatelessWidget {
-  const _AboutView();
+class _AboutView extends StatefulWidget {
+  final bool isSocialMediaNav;
+
+  const _AboutView({required this.isSocialMediaNav});
+
+  @override
+  State<_AboutView> createState() => _AboutViewState();
+}
+
+class _AboutViewState extends State<_AboutView> {
+  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +69,20 @@ class _AboutView extends StatelessWidget {
         elevation: 0,
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
         actions: [
-          BlocBuilder<AboutCubit, AboutState>(
+          BlocConsumer<AboutCubit, AboutState>(
+            listener: (context, state) {
+              if (state.apiState is AboutLoaded && widget.isSocialMediaNav) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  if (scrollController.hasClients) {
+                    scrollController.animateTo(
+                      scrollController.position.maxScrollExtent,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
+                    );
+                  }
+                });
+              }
+            },
             builder: (context, state) {
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
@@ -102,12 +125,16 @@ class _AboutView extends StatelessWidget {
           if (state.apiState is AboutLoading) {
             return const AboutSkeletonLoading();
           } else if (state.apiState is AboutError) {
+            final error = (state.apiState as AboutError).message;
+
             return CustomErrorWidget(
+              message: error,
               onRetry: () => context.read<AboutCubit>().refresh(),
             );
           } else if (state.apiState is AboutLoaded) {
             final loadedState = state.apiState as AboutLoaded;
             return _AboutContent(
+              scrollController: scrollController,
               aboutData: loadedState.aboutData,
               isArabic: state.isAr,
             );
@@ -122,12 +149,18 @@ class _AboutView extends StatelessWidget {
 class _AboutContent extends StatelessWidget {
   final AboutModel aboutData;
   final bool isArabic;
+  final ScrollController scrollController;
 
-  const _AboutContent({required this.aboutData, required this.isArabic});
+  const _AboutContent({
+    required this.aboutData,
+    required this.isArabic,
+    required this.scrollController,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: scrollController,
       physics: const BouncingScrollPhysics(),
       child: Container(
         decoration: BoxDecoration(gradient: context.appTheme.scaffoldGradient),

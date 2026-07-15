@@ -113,12 +113,11 @@ class NewsInfoDialog extends StatelessWidget {
                         label: news.createdAt.toRelativeTime(),
                       ),
                       const SizedBox(width: 12),
-                      if (news.categoryId != null)
-                        _buildInfoChip(
-                          context: context,
-                          icon: Assets.icons.category.path,
-                          label: news.categoryId!.toString(),
-                        ),
+                      _buildInfoChip(
+                        context: context,
+                        icon: Assets.icons.category.path,
+                        label: news.categoryId.toString(),
+                      ),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -166,8 +165,7 @@ class NewsInfoDialog extends StatelessWidget {
                           icon: Assets.icons.browser.path,
                           label: 'نسخ الرابط',
                           color: AppColor.primaryOrange,
-                          onTap: () {
-                          },
+                          onTap: () {},
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -222,7 +220,7 @@ class NewsInfoDialog extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: context!.theme.brightness == Brightness.dark
+        color: context.theme.brightness == Brightness.dark
             ? Colors.grey.shade800
             : Colors.grey.shade100,
         borderRadius: BorderRadius.circular(20),

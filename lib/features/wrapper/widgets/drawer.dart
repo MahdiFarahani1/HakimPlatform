@@ -2,177 +2,209 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_1/config/app_version.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
+import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/core/utils/review.dart';
+import 'package:flutter_application_1/core/utils/share.dart';
+import 'package:flutter_application_1/features/settings/logic/cubit/settings_cubit.dart';
+import 'package:flutter_application_1/features/wrapper/presentation/aboutus_page.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void drawerApp(BuildContext context) {
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,
+    isDismissible: true,
+    enableDrag: true,
     backgroundColor: Colors.transparent,
-
     builder: (context) {
-      return DraggableScrollableSheet(
-        initialChildSize: 0.9,
-        minChildSize: 0.5,
-        maxChildSize: 0.95,
-        builder: (_, controller) =>
-            Container(
-                  height: MediaQuery.of(context).size.height * .72,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: Theme.of(context).brightness == Brightness.dark
-                          ? [
-                              const Color(0xff1A1C20),
-                              const Color(0xff15161A),
-                              const Color(0xff121212),
-                            ]
-                          : [
-                              Colors.white,
-                              const Color(0xffF8F9FF),
-                              const Color(0xffF0F2FF),
-                            ],
-                    ),
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(32),
-                      topRight: Radius.circular(32),
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 30,
-                        color: Colors.black.withOpacity(0.15),
-                        offset: const Offset(0, -5),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 12),
-
-                      Container(
-                            height: 5,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              color: AppColor.primaryBlue,
-                              borderRadius: BorderRadius.circular(50),
-                            ),
-                          )
-                          .animate()
-                          .fadeIn(duration: 300.ms)
-                          .scale(begin: const Offset(.8, .8)),
-
-                      const SizedBox(height: 30),
-
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Row(children: [const Spacer()]),
-                      ).animate().fadeIn(duration: 400.ms).slideX(begin: 0.2),
-
-                      Expanded(
-                        child: ListView(
-                          controller: controller,
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          children: [
-                            _buildMenuItem(
-                              context,
-                              Assets.icons.home.path,
-                              "الصفحة الرئيسية",
-                              0,
-                              Icons.home_outlined,
-                            ),
-                            _buildMenuItem(
-                              context,
-                              Assets.icons.search.path,
-                              "جستجو",
-                              1,
-                              Icons.search_outlined,
-                            ),
-                            _buildMenuItem(
-                              context,
-                              Assets.icons.bookmark.path,
-                              "ذخیره شده",
-                              2,
-                              Icons.bookmark_border_outlined,
-                            ),
-                            _buildMenuItem(
-                              context,
-                              Assets.icons.video.path,
-                              "ویدئوها",
-                              3,
-                              Icons.play_circle_outline,
-                            ),
-
-                            const SizedBox(height: 12),
-
-                            Container(
-                              height: 1,
-                              margin: const EdgeInsets.symmetric(vertical: 8),
-                              color:
-                                  Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white10
-                                  : Colors.grey[200],
-                            ),
-
-                            const SizedBox(height: 4),
-
-                            _buildMenuItem(
-                              context,
-                              Assets.icons.user.path,
-                              "تنظیمات",
-                              4,
-                              Icons.settings_outlined,
-                            ),
-
-                            const SizedBox(height: 20),
-
-                            _buildAppInfoCard(context),
-                          ],
-                        ),
-                      ),
-
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          vertical: 16.w,
-                          horizontal: 20.w,
-                        ),
-                        decoration: BoxDecoration(
-                          border: Border(
-                            top: BorderSide(
-                              color:
-                                  Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white10
-                                  : Colors.grey[200]!,
-                              width: 1,
-                            ),
-                          ),
-                        ),
-                        child: Text(
-                          AppVersion.instance.fullVersion,
-                          style: TextStyle(
-                            color:
-                                Theme.of(context).brightness == Brightness.dark
-                                ? Colors.grey.shade500
-                                : Colors.grey[400],
-                            fontSize: 12.sp,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-                .animate()
-                .fadeIn(duration: 250.ms)
-                .slideY(begin: 1, duration: 500.ms, curve: Curves.easeOutCubic)
-                .scale(
-                  begin: const Offset(.98, .98),
-                  duration: 450.ms,
-                  curve: Curves.easeOut,
+      return SizedBox(
+        height: context.screenHeight * 0.8,
+        child: BlocSelector<SettingsCubit, SettingsState, bool>(
+          selector: (state) {
+            return state.isDarkMode;
+          },
+          builder: (context, isDark) {
+            return Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [
+                          const Color(0xff1A1C20),
+                          const Color(0xff15161A),
+                          const Color(0xff121212),
+                        ]
+                      : [
+                          Colors.white,
+                          const Color(0xffF8F9FF),
+                          const Color(0xffF0F2FF),
+                        ],
                 ),
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(32),
+                  topRight: Radius.circular(32),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 30,
+                    color: Colors.black.withOpacity(0.15),
+                    offset: const Offset(0, -5),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+                  const SizedBox(height: 12),
+                  Container(
+                        height: 5,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          color: AppColor.primaryBlue,
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                      )
+                      .animate()
+                      .fadeIn(duration: 300.ms)
+                      .scale(begin: const Offset(.8, .8)),
+
+                  const SizedBox(height: 30),
+
+                  Expanded(
+                    child: ListView(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      children: [
+                        _buildMenuItem(
+                          context,
+                          '',
+                          "دعوة الأصدقاء",
+                          0,
+                          Assets.icons.share.path,
+                          onTap: () {
+                            ShareHelper.shareApp(context);
+                          },
+                        ),
+
+                        _buildMenuItem(
+                          context,
+                          '',
+                          "تقييم التطبيق",
+                          1,
+                          Assets.icons.starCommentAlt.path,
+                          onTap: () {
+                            ReviewService.requestReview();
+                          },
+                        ),
+
+                        _buildMenuItem(
+                          context,
+                          '',
+                          "تابعنا على وسائل التواصل",
+                          2,
+                          Assets.icons.socialMediaHand.path,
+                          onTap: () {
+                            Navigator.pop(context);
+
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    const AboutPage(isSocialMediaNav: true),
+                              ),
+                            );
+                          },
+                        ),
+
+                        Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onPrimaryContainer,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ListTile(
+                                  contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 4,
+                                  ),
+                                  leading: Container(
+                                    padding: const EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        colors: [
+                                          AppColor.primaryBlue.withOpacity(0.1),
+                                          const Color(
+                                            0xff6B4EFF,
+                                          ).withOpacity(0.05),
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Assets.icons.nightDay.image(
+                                      color: AppColor.primaryBlue,
+                                      width: 22,
+                                      height: 22,
+                                    ),
+                                  ),
+                                  title: const Text(
+                                    "الوضع الداكن",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15,
+                                    ),
+                                  ),
+                                  trailing: Switch(
+                                    value: isDark,
+                                    activeColor: AppColor.primaryBlue,
+                                    onChanged: (value) => context
+                                        .read<SettingsCubit>()
+                                        .toggleDarkMode(value),
+                                  ),
+                                ),
+                              ),
+                            )
+                            .animate(delay: 280.ms)
+                            .fadeIn(duration: 400.ms)
+                            .slideX(begin: 0.2, curve: Curves.easeOutCubic),
+
+                        const SizedBox(height: 20),
+
+                        _buildAppInfoCard(context),
+                      ],
+                    ),
+                  ),
+
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: 16.w,
+                      horizontal: 20.w,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border(
+                        top: BorderSide(
+                          color: isDark ? Colors.white10 : Colors.grey[200]!,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      AppVersion.instance.fullVersion,
+                      style: TextStyle(
+                        color: isDark ? Colors.grey.shade500 : Colors.grey[400],
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
       );
     },
   );
@@ -183,8 +215,9 @@ Widget _buildMenuItem(
   String icon,
   String title,
   int index,
-  IconData materialIcon,
-) {
+  String materialIcon, {
+  required VoidCallback onTap,
+}) {
   return Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Container(
@@ -205,7 +238,7 @@ Widget _buildMenuItem(
             color: Colors.transparent,
             child: InkWell(
               borderRadius: BorderRadius.circular(20),
-              onTap: () {},
+              onTap: onTap,
               child: ListTile(
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -215,8 +248,6 @@ Widget _buildMenuItem(
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
                       colors: [
                         AppColor.primaryBlue.withOpacity(0.1),
                         const Color(0xff6B4EFF).withOpacity(0.05),
@@ -224,10 +255,11 @@ Widget _buildMenuItem(
                     ),
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Icon(
+                  child: Image.asset(
                     materialIcon,
                     color: AppColor.primaryBlue,
-                    size: 22,
+                    height: 22,
+                    width: 22,
                   ),
                 ),
                 title: Text(
@@ -248,12 +280,12 @@ Widget _buildMenuItem(
                         : Colors.grey[100],
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 12,
+                  child: Assets.icons.angleSmallLeft.image(
                     color: Theme.of(context).brightness == Brightness.dark
                         ? Colors.grey.shade500
                         : Colors.grey[400],
+                    width: 12,
+                    height: 12,
                   ),
                 ),
               ),
@@ -294,10 +326,10 @@ Widget _buildAppInfoCard(BuildContext context) {
                 color: AppColor.primaryBlue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(18),
               ),
-              child: Icon(
-                Icons.info_outline,
+              child: Assets.icons.info.image(
                 color: AppColor.primaryBlue,
-                size: 22,
+                width: 22,
+                height: 22,
               ),
             ),
             const SizedBox(width: 12),
@@ -306,12 +338,12 @@ Widget _buildAppInfoCard(BuildContext context) {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'درباره برنامه',
+                    'عن التطبيق', // درباره برنامه به عربی
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'کتابخانه دیجیتال با بیش از ۱۰۰۰ کتاب و محتوای صوتی',
+                    'المكتبة الرقمية التي تضم أكثر من ۱۰۰۰ كتاب ومحتوى صوتي', // توضیحات به عربی
                     style: TextStyle(
                       color: Theme.of(context).brightness == Brightness.dark
                           ? Colors.grey[400]
@@ -337,16 +369,16 @@ Widget _buildAppInfoCard(BuildContext context) {
                   ),
                 ],
               ),
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 12,
+              child: Assets.icons.angleSmallLeft.image(
                 color: AppColor.primaryBlue,
+                width: 12,
+                height: 12,
               ),
             ),
           ],
         ),
       )
-      .animate(delay: 500.ms)
+      .animate(delay: 350.ms)
       .fadeIn(duration: 400.ms)
       .slideX(begin: 0.2, curve: Curves.easeOutCubic);
 }

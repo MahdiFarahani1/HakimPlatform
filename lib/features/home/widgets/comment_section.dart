@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
-import 'package:flutter_application_1/core/widgets/custom_loading.dart';
 import 'package:flutter_application_1/features/dialogue/data/models/dialogue_model.dart';
+import 'package:flutter_application_1/features/dialogue/presentation/dialouge_view.dart';
 import 'package:flutter_application_1/features/home/widgets/header.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 
 class InterviewsSection extends StatelessWidget {
@@ -20,7 +19,15 @@ class InterviewsSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        HomeHeader(title: "آخر المقابلات", onTap: () {}),
+        HomeHeader(
+          title: "آخر المقابلات",
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => DialogueScreen()),
+            );
+          },
+        ),
         SizedBox(height: 20.h),
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),

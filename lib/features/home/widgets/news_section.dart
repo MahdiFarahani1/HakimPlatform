@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
-import 'package:flutter_application_1/core/widgets/custom_loading.dart';
 import 'package:flutter_application_1/features/home/widgets/header.dart';
 import 'package:flutter_application_1/features/news/data/models/news_home_model.dart';
 import 'package:flutter_application_1/features/news/presentation/all_news_view.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 
 class NewsListSection extends StatelessWidget {
@@ -64,7 +62,7 @@ class NewsListSection extends StatelessWidget {
           ],
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center, 
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.only(
@@ -84,7 +82,7 @@ class NewsListSection extends StatelessWidget {
                 padding: EdgeInsets.all(12.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min, 
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
                       children: [
@@ -177,7 +175,7 @@ class NewsListSection extends StatelessWidget {
 
             Container(
               width: 40.w,
-              height: 110.h, 
+              height: 110.h,
               alignment: Alignment.center,
               child: Assets.icons.angleSmallLeft.image(
                 width: 15.w,

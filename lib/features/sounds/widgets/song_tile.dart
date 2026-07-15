@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
+import 'package:flutter_application_1/core/widgets/custom_loading.dart';
 import 'package:flutter_application_1/features/sounds/data/models/song.dart';
 import 'package:flutter_application_1/features/sounds/logic/cubit/player_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,12 +67,13 @@ class SongTile extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(14),
-                      child: Image.network(
-                        song.coverUrl,
+                      child: CachedNetworkImage(
+                        imageUrl: song.coverUrl,
                         width: 56,
                         height: 56,
                         fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => Container(
+                        placeholder: (context, url) => const CustomLoading(),
+                        errorWidget: (_, __, ___) => Container(
                           width: 56,
                           height: 56,
                           color: AppColor.bgColor,
