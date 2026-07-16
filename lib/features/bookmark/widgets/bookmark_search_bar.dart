@@ -46,7 +46,7 @@ class _BookmarkSearchBarState extends State<BookmarkSearchBar> {
       child: Container(
         decoration: BoxDecoration(
           color: context.theme.colorScheme.onPrimaryContainer,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: isDark ? Colors.transparent : Colors.black.withOpacity(0.04),

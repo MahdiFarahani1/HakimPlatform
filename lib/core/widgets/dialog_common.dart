@@ -13,7 +13,7 @@ class AppDialog {
       context: context,
       barrierDismissible: true,
       builder: (_) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: theme.cardColor,
         child: Padding(
           padding: const EdgeInsets.all(24),
@@ -51,7 +51,7 @@ class AppDialog {
                       elevation: 0,
                       shape: RoundedRectangleBorder(
                         side: BorderSide(color: theme.primaryColor),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
                     child: Text("موافق"),
@@ -79,7 +79,7 @@ class AppDialog {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
           backgroundColor: context.theme.colorScheme.onPrimary,
           title: Row(
@@ -158,7 +158,7 @@ class AppDialog {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
           ),
           backgroundColor: Colors.white,
           title: Row(
@@ -217,7 +217,7 @@ class AppDialog {
       context: context,
       barrierDismissible: false,
       builder: (_) => Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: theme.cardColor,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),

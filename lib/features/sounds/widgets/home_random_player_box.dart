@@ -32,7 +32,7 @@ class HomeRandomPlayerBox extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onPrimaryContainer,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
                 color: AppColor.primaryBlue.withOpacity(0.08),
@@ -47,7 +47,7 @@ class HomeRandomPlayerBox extends StatelessWidget {
               Row(
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                     child: Image.network(
                       _song.coverUrl,
                       width: 52,
@@ -58,7 +58,7 @@ class HomeRandomPlayerBox extends StatelessWidget {
                         height: 52,
                         decoration: BoxDecoration(
                           color: AppColor.primaryBlue,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
                           Icons.music_note_rounded,
@@ -80,7 +80,9 @@ class HomeRandomPlayerBox extends StatelessWidget {
                           style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
-                            color: AppColor.primaryBlue,
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white
+                                : AppColor.primaryBlue,
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -90,7 +92,9 @@ class HomeRandomPlayerBox extends StatelessWidget {
                           _song.artist,
                           style: TextStyle(
                             fontSize: 12,
-                            color: AppColor.primaryBlue.withOpacity(0.55),
+                            color: Theme.of(context).brightness == Brightness.dark
+                                ? Colors.white.withOpacity(0.55)
+                                : AppColor.primaryBlue.withOpacity(0.55),
                           ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -163,8 +167,9 @@ class HomeRandomPlayerBox extends StatelessWidget {
                               data: SliderTheme.of(context).copyWith(
                                 trackHeight: 3,
                                 activeTrackColor: AppColor.primaryOrange,
-                                inactiveTrackColor: AppColor.primaryBlue
-                                    .withOpacity(0.12),
+                                inactiveTrackColor: Theme.of(context).brightness == Brightness.dark
+                                    ? Colors.white.withOpacity(0.12)
+                                    : AppColor.primaryBlue.withOpacity(0.12),
                                 thumbColor: AppColor.primaryOrange,
                                 overlayColor: AppColor.primaryOrange
                                     .withOpacity(0.18),
@@ -199,14 +204,18 @@ class HomeRandomPlayerBox extends StatelessWidget {
                                 _fmt(state.position),
                                 style: TextStyle(
                                   fontSize: 11,
-                                  color: AppColor.primaryBlue.withOpacity(0.5),
+                                  color: Theme.of(context).brightness == Brightness.dark
+                                      ? Colors.white.withOpacity(0.5)
+                                      : AppColor.primaryBlue.withOpacity(0.5),
                                 ),
                               ),
                               Text(
                                 _fmt(state.duration),
                                 style: TextStyle(
                                   fontSize: 11,
-                                  color: AppColor.primaryBlue.withOpacity(0.5),
+                                  color: Theme.of(context).brightness == Brightness.dark
+                                      ? Colors.white.withOpacity(0.5)
+                                      : AppColor.primaryBlue.withOpacity(0.5),
                                 ),
                               ),
                             ],

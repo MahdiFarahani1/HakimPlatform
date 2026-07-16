@@ -57,7 +57,7 @@ class GallerySkeleton extends StatelessWidget {
                   return Container(
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      borderRadius: BorderRadius.circular(16),
+                      borderRadius: BorderRadius.circular(8),
                       boxShadow: [
                         BoxShadow(
                           color: Theme.of(context).brightness == Brightness.dark
@@ -77,7 +77,7 @@ class GallerySkeleton extends StatelessWidget {
                             decoration: BoxDecoration(
                               color: Colors.grey.shade300,
                               borderRadius: const BorderRadius.vertical(
-                                top: Radius.circular(16),
+                                top: Radius.circular(8),
                               ),
                             ),
                           ),
@@ -95,7 +95,7 @@ class GallerySkeleton extends StatelessWidget {
                                   width: double.infinity,
                                   decoration: BoxDecoration(
                                     color: Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                                 const SizedBox(height: 4),
@@ -104,7 +104,7 @@ class GallerySkeleton extends StatelessWidget {
                                   width: 60,
                                   decoration: BoxDecoration(
                                     color: Colors.grey.shade200,
-                                    borderRadius: BorderRadius.circular(4),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
                                 ),
                               ],

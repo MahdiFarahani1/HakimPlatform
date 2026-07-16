@@ -34,7 +34,7 @@ class _HistoryBottomSheetContent extends StatelessWidget {
       constraints: BoxConstraints(maxHeight: context.screenHeight * 0.75),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1C1C1E) : Colors.white,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.15),
@@ -53,7 +53,7 @@ class _HistoryBottomSheetContent extends StatelessWidget {
             height: 4,
             decoration: BoxDecoration(
               color: isDark ? Colors.grey.shade700 : Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
 
@@ -66,7 +66,7 @@ class _HistoryBottomSheetContent extends StatelessWidget {
                   padding: const EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: AppColor.primaryBlue,
-                    borderRadius: BorderRadius.circular(14),
+                    borderRadius: BorderRadius.circular(8),
                     boxShadow: [
                       BoxShadow(
                         color: AppColor.primaryBlue.withValues(alpha: 0.3),
@@ -262,7 +262,7 @@ class _ClearHistoryButton extends StatelessWidget {
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 14),
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(8),
                 side: BorderSide(color: Colors.red.withValues(alpha: 0.2)),
               ),
               backgroundColor: Colors.red.withValues(alpha: 0.05),
@@ -290,7 +290,7 @@ class _ClearHistoryButton extends StatelessWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         backgroundColor: isDark ? const Color(0xFF2C2C2E) : Colors.white,
         title: Text(
           'مسح السجل',

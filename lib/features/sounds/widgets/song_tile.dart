@@ -6,6 +6,7 @@ import 'package:flutter_application_1/features/sounds/data/models/song.dart';
 import 'package:flutter_application_1/features/sounds/logic/cubit/player_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+import 'package:flutter_application_1/core/utils/extension.dart';
 
 class SongTile extends StatelessWidget {
   final Song song;
@@ -43,8 +44,8 @@ class SongTile extends StatelessWidget {
             decoration: BoxDecoration(
               color: isCurrent
                   ? AppColor.primaryOrange.withOpacity(0.12)
-                  : Colors.white.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(18),
+                  : context.appTheme.cardBackgroundColor.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: isCurrent
                     ? AppColor.primaryOrange.withOpacity(0.4)
@@ -66,7 +67,7 @@ class SongTile extends StatelessWidget {
                   alignment: Alignment.center,
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(14),
+                      borderRadius: BorderRadius.circular(8),
                       child: CachedNetworkImage(
                         imageUrl: song.coverUrl,
                         width: 56,
@@ -76,10 +77,14 @@ class SongTile extends StatelessWidget {
                         errorWidget: (_, __, ___) => Container(
                           width: 56,
                           height: 56,
-                          color: AppColor.bgColor,
+                          color: context.theme.brightness == Brightness.dark
+                              ? Colors.grey[800]
+                              : AppColor.bgColor,
                           child: Icon(
                             Icons.music_note,
-                            color: AppColor.primaryBlue.withOpacity(0.5),
+                            color: context.theme.brightness == Brightness.dark
+                                ? Colors.white.withOpacity(0.5)
+                                : AppColor.primaryBlue.withOpacity(0.5),
                           ),
                         ),
                       ),
@@ -91,7 +96,7 @@ class SongTile extends StatelessWidget {
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(8),
                           color: AppColor.primaryBlue.withOpacity(0.45),
                         ),
                         child: Center(
@@ -140,7 +145,9 @@ class SongTile extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                           color: isCurrent
                               ? AppColor.primaryOrange
-                              : AppColor.primaryBlue,
+                              : (context.theme.brightness == Brightness.dark
+                                  ? Colors.white.withOpacity(0.9)
+                                  : AppColor.primaryBlue),
                         ),
                         child: Text(
                           song.title,
@@ -153,7 +160,9 @@ class SongTile extends StatelessWidget {
                         song.artist,
                         style: TextStyle(
                           fontSize: 13,
-                          color: AppColor.primaryBlue.withOpacity(0.55),
+                          color: context.theme.brightness == Brightness.dark
+                              ? Colors.white.withOpacity(0.55)
+                              : AppColor.primaryBlue.withOpacity(0.55),
                         ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -166,7 +175,9 @@ class SongTile extends StatelessWidget {
                   _formatDuration(song.duration),
                   style: TextStyle(
                     fontSize: 12,
-                    color: AppColor.primaryBlue.withOpacity(0.5),
+                    color: context.theme.brightness == Brightness.dark
+                        ? Colors.white.withOpacity(0.5)
+                        : AppColor.primaryBlue.withOpacity(0.5),
                   ),
                 ),
               ],

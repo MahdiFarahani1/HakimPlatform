@@ -31,15 +31,15 @@ class SkeletonLoaderVideos extends StatelessWidget {
             return Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                     child: Container(
                       width: double.infinity,

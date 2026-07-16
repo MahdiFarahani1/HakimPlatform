@@ -4,6 +4,7 @@ import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/features/sounds/logic/cubit/player_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zoom_tap_animation/zoom_tap_animation.dart';
+import 'package:flutter_application_1/core/utils/extension.dart';
 
 class MiniPlayer extends StatelessWidget {
   const MiniPlayer({super.key});
@@ -68,7 +69,7 @@ class _PlayerCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.fromLTRB(14, 0, 14, 14),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
             color: AppColor.primaryBlue.withOpacity(0.16),
@@ -78,14 +79,20 @@ class _PlayerCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(8),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 18, sigmaY: 18),
           child: Container(
             padding: const EdgeInsets.fromLTRB(14, 14, 14, 6),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.72),
-              border: Border.all(color: Colors.white.withOpacity(0.6)),
+              color: context.theme.brightness == Brightness.dark
+                  ? context.appTheme.cardBackgroundColor.withOpacity(0.72)
+                  : Colors.white.withOpacity(0.72),
+              border: Border.all(
+                color: context.theme.brightness == Brightness.dark
+                    ? Colors.white.withOpacity(0.12)
+                    : Colors.white.withOpacity(0.6),
+              ),
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -117,7 +124,9 @@ class _PlayerCard extends StatelessWidget {
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 fontSize: 14.5,
-                                color: AppColor.primaryBlue,
+                                color: context.theme.brightness == Brightness.dark
+                                    ? Colors.white
+                                    : AppColor.primaryBlue,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -127,7 +136,9 @@ class _PlayerCard extends StatelessWidget {
                               song.artist,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: AppColor.primaryBlue.withOpacity(0.55),
+                                color: context.theme.brightness == Brightness.dark
+                                    ? Colors.white.withOpacity(0.55)
+                                    : AppColor.primaryBlue.withOpacity(0.55),
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -144,7 +155,9 @@ class _PlayerCard extends StatelessWidget {
                   data: SliderTheme.of(context).copyWith(
                     trackHeight: 2.5,
                     activeTrackColor: AppColor.primaryOrange,
-                    inactiveTrackColor: AppColor.primaryBlue.withOpacity(0.12),
+                    inactiveTrackColor: context.theme.brightness == Brightness.dark
+                        ? Colors.white.withOpacity(0.12)
+                        : AppColor.primaryBlue.withOpacity(0.12),
                     thumbColor: AppColor.primaryOrange,
                     overlayColor: AppColor.primaryOrange.withOpacity(0.2),
                     thumbShape: const RoundSliderThumbShape(
@@ -178,14 +191,18 @@ class _PlayerCard extends StatelessWidget {
                         formatDuration(state.position),
                         style: TextStyle(
                           fontSize: 11,
-                          color: AppColor.primaryBlue.withOpacity(0.5),
+                          color: context.theme.brightness == Brightness.dark
+                              ? Colors.white.withOpacity(0.5)
+                              : AppColor.primaryBlue.withOpacity(0.5),
                         ),
                       ),
                       Text(
                         formatDuration(state.duration),
                         style: TextStyle(
                           fontSize: 11,
-                          color: AppColor.primaryBlue.withOpacity(0.5),
+                          color: context.theme.brightness == Brightness.dark
+                              ? Colors.white.withOpacity(0.5)
+                              : AppColor.primaryBlue.withOpacity(0.5),
                         ),
                       ),
                     ],
@@ -237,7 +254,7 @@ class _AnimatedCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(14),
+      borderRadius: BorderRadius.circular(8),
       child: AnimatedSwitcher(
         duration: const Duration(milliseconds: 350),
         transitionBuilder: (child, anim) => FadeTransition(
@@ -256,11 +273,15 @@ class _AnimatedCover extends StatelessWidget {
           errorBuilder: (_, __, ___) => Container(
             width: 48,
             height: 48,
-            color: AppColor.bgColor,
+            color: context.theme.brightness == Brightness.dark
+                ? Colors.grey[800]
+                : AppColor.bgColor,
             child: Icon(
               Icons.music_note,
               size: 18,
-              color: AppColor.primaryBlue.withOpacity(0.5),
+              color: context.theme.brightness == Brightness.dark
+                  ? Colors.white.withOpacity(0.5)
+                  : AppColor.primaryBlue.withOpacity(0.5),
             ),
           ),
         ),
@@ -352,7 +373,13 @@ class _ControlButton extends StatelessWidget {
       enableLongTapRepeatEvent: false,
       child: Padding(
         padding: const EdgeInsets.all(6),
-        child: Icon(icon, size: size, color: AppColor.primaryBlue),
+        child: Icon(
+          icon,
+          size: size,
+          color: context.theme.brightness == Brightness.dark
+              ? Colors.white
+              : AppColor.primaryBlue,
+        ),
       ),
     );
   }
@@ -376,8 +403,10 @@ class _SpeedChip extends StatelessWidget {
         decoration: BoxDecoration(
           color: isFast
               ? AppColor.primaryOrange.withOpacity(0.18)
-              : AppColor.bgColor,
-          borderRadius: BorderRadius.circular(20),
+              : (context.theme.brightness == Brightness.dark
+                  ? context.appTheme.cardBackgroundColor
+                  : AppColor.bgColor),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isFast ? AppColor.primaryOrange : Colors.transparent,
           ),
@@ -394,7 +423,9 @@ class _SpeedChip extends StatelessWidget {
               fontWeight: FontWeight.w700,
               color: isFast
                   ? AppColor.primaryOrange
-                  : AppColor.primaryBlue.withOpacity(0.5),
+                  : (context.theme.brightness == Brightness.dark
+                      ? Colors.white.withOpacity(0.5)
+                      : AppColor.primaryBlue.withOpacity(0.5)),
             ),
           ),
         ),

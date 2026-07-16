@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/core/utils/url_luncher.dart';
+import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/features/bookmark/data/bookmark_helpers.dart';
 import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
 import 'package:flutter_application_1/features/books/data/models/book_model.dart';
@@ -29,7 +30,7 @@ class BookmarkCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: context.theme.colorScheme.onPrimaryContainer,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: isDark
@@ -44,7 +45,7 @@ class BookmarkCard extends StatelessWidget {
           color: Colors.transparent,
           child: InkWell(
             onTap: () => _onItemTap(context),
-            borderRadius: BorderRadius.circular(24),
+            borderRadius: BorderRadius.circular(8),
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Row(
@@ -128,23 +129,12 @@ class BookmarkCard extends StatelessWidget {
             categoryColor.withOpacity(0.05),
           ],
         ),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(8),
         child: item.image.isNotEmpty
-            ? Image.network(
-                item.image,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Center(
-                    child: Text(
-                      imageEmoji,
-                      style: const TextStyle(fontSize: 32),
-                    ),
-                  );
-                },
-              )
+            ? CustomCacheImage(imageUrl: "${Api.baseImageUrl}${item.image}")
             : Center(
                 child: Text(imageEmoji, style: const TextStyle(fontSize: 32)),
               ),
@@ -246,7 +236,7 @@ class BookmarkCard extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(6),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Text(
         label,

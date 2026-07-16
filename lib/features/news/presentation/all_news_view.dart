@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config/di.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
+import 'package:flutter_application_1/core/widgets/custom_header.dart';
 import 'package:flutter_application_1/core/widgets/custom_loading.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/features/news/logic/all-news/news_cubit.dart';
@@ -53,14 +54,14 @@ class _NewsScreenState extends State<NewsScreen>
     return BlocProvider(
       create: (context) => getIt<NewsCubit>()..fetchNews(isRefresh: true),
       child: Scaffold(
-        body: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: context.appTheme.scaffoldGradient,
-            ),
-            child: Column(
-              children: [
-                _buildHeader(),
+        backgroundColor: Theme.of(context).colorScheme.onPrimaryContainer,
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: context.appTheme.scaffoldGradient,
+          ),
+          child: Column(
+            children: [
+              _buildHeader(),
                 _buildSearchBar(),
                 _buildLanguageFilter(),
                 Expanded(
@@ -160,74 +161,30 @@ class _NewsScreenState extends State<NewsScreen>
             ),
           ),
         ),
-      ),
     );
   }
 
   Widget _buildHeader() {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.onPrimaryContainer,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(28),
-          bottomRight: Radius.circular(28),
-        ),
-      ),
-      child: BlocBuilder<NewsCubit, NewsState>(
-        builder: (context, state) {
-          int total = 0;
-          if (state is NewsSuccess) {
-            total = state.total;
-          }
-          return Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColor.primaryBlue,
-                      AppColor.primaryBlue.withOpacity(0.7),
-                    ],
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Assets.icons.newspaper.image(
-                  width: 28.w,
-                  height: 28.h,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(width: 14),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'الأخبار',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.white
-                          : const Color(0xFF1E293B),
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    total > 0 ? '$total خبر' : 'تحميل...',
-                    style: TextStyle(
-                      color: AppColor.primaryBlue,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        },
-      ),
+    return BlocBuilder<NewsCubit, NewsState>(
+      builder: (context, state) {
+        int total = 0;
+        if (state is NewsSuccess) {
+          total = state.total;
+        }
+        return CustomHeader(
+          title: 'الأخبار',
+          subtitle: state is NewsLoading
+              ? 'جاري التحميل...'
+              : total > 0
+                  ? '$total خبر'
+                  : 'لا توجد أخبار',
+          icon: Assets.icons.newspaper.image(
+            width: 28.w,
+            height: 28.h,
+            color: Colors.white,
+          ),
+        );
+      },
     );
   }
 
@@ -243,7 +200,7 @@ class _NewsScreenState extends State<NewsScreen>
           return Container(
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.onPrimaryContainer,
-              borderRadius: BorderRadius.circular(24),
+              borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: Theme.of(context).brightness == Brightness.dark
                     ? Colors.white12
@@ -405,15 +362,15 @@ class _NewsScreenState extends State<NewsScreen>
             return Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
                     borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(20),
-                      topRight: Radius.circular(20),
+                      topLeft: Radius.circular(8),
+                      topRight: Radius.circular(8),
                     ),
                     child: Container(
                       width: double.infinity,

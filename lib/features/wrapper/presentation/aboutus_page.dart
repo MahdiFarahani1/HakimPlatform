@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config/di.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/url_luncher.dart';
+import 'package:flutter_application_1/core/widgets/back_btn.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/features/wrapper/data/models/about_model.dart';
 import 'package:flutter_application_1/features/wrapper/logic/cubit/about_cubit.dart';
@@ -42,15 +43,22 @@ class _AboutViewState extends State<_AboutView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         title: BlocBuilder<AboutCubit, AboutState>(
           builder: (context, state) {
             if (state.apiState is AboutLoaded) {
-              return Text(
-                state.isAr ? 'عني' : 'About Me',
-                style: TextStyle(
-                  color: AppColor.primaryBlue,
-                  fontWeight: FontWeight.bold,
-                ),
+              return Row(
+                children: [
+                  AppBackButton(),
+                  context.gap(18),
+                  Text(
+                    state.isAr ? 'عني' : 'About Me',
+                    style: TextStyle(
+                      color: AppColor.primaryBlue,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               );
             }
             if (state.apiState is AboutLoading) {
@@ -87,10 +95,8 @@ class _AboutViewState extends State<_AboutView> {
               return Container(
                 padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).brightness == Brightness.dark
-                      ? Colors.white.withOpacity(0.1)
-                      : AppColor.primaryBlue.withOpacity(0.05),
-                  borderRadius: BorderRadius.circular(30.r),
+                  color: Colors.transparent,
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
@@ -176,8 +182,8 @@ class _AboutContent extends StatelessWidget {
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(40),
-                  bottomRight: Radius.circular(40),
+                  bottomLeft: Radius.circular(8),
+                  bottomRight: Radius.circular(8),
                 ),
               ),
               padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 20.w),
@@ -188,7 +194,7 @@ class _AboutContent extends StatelessWidget {
                         height: 120.h,
                         decoration: BoxDecoration(
                           color: Colors.white,
-                          borderRadius: BorderRadius.circular(40.r),
+                          borderRadius: BorderRadius.circular(8.r),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(.2),
@@ -198,7 +204,7 @@ class _AboutContent extends StatelessWidget {
                           ],
                         ),
                         child: ClipRRect(
-                          borderRadius: BorderRadius.circular(40.r),
+                          borderRadius: BorderRadius.circular(8.r),
                           child: aboutData.aboutImageUrl.isNotEmpty
                               ? Image.network(
                                   aboutData.aboutImageUrl,
@@ -243,7 +249,7 @@ class _AboutContent extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(.2),
-                      borderRadius: BorderRadius.circular(20.r),
+                      borderRadius: BorderRadius.circular(8.r),
                     ),
                     child: Text(
                       aboutData.getAboutBirthInfo(isArabic),
@@ -297,7 +303,7 @@ class _AboutContent extends StatelessWidget {
                     padding: EdgeInsets.all(24.w),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      borderRadius: BorderRadius.circular(28.r),
+                      borderRadius: BorderRadius.circular(8.r),
                       boxShadow: [
                         BoxShadow(
                           color: Theme.of(context).brightness == Brightness.dark
@@ -371,7 +377,7 @@ class _AboutContent extends StatelessWidget {
                             AppColor.primaryOrange.withOpacity(.15),
                           ],
                         ),
-                        borderRadius: BorderRadius.circular(28.r),
+                        borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Column(
                         children: [
@@ -431,7 +437,7 @@ class _AboutContent extends StatelessWidget {
                     padding: EdgeInsets.all(24.w),
                     decoration: BoxDecoration(
                       color: AppColor.primaryBlue,
-                      borderRadius: BorderRadius.circular(28.r),
+                      borderRadius: BorderRadius.circular(8.r),
                       boxShadow: [
                         BoxShadow(
                           color: AppColor.primaryBlue.withOpacity(.3),
@@ -506,7 +512,7 @@ class _AboutContent extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(20.r),
+        borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: color.withOpacity(.2)),
       ),
       child: Column(
@@ -539,7 +545,7 @@ class _AboutContent extends StatelessWidget {
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onPrimaryContainer,
-            borderRadius: BorderRadius.circular(20.r),
+            borderRadius: BorderRadius.circular(8.r),
             boxShadow: [
               BoxShadow(
                 color: Theme.of(context).brightness == Brightness.dark
@@ -557,7 +563,7 @@ class _AboutContent extends StatelessWidget {
                 height: 54.h,
                 decoration: BoxDecoration(
                   color: AppColor.primaryBlue,
-                  borderRadius: BorderRadius.circular(18.r),
+                  borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Center(
                   child: Text(
@@ -647,7 +653,7 @@ class _AboutContent extends StatelessWidget {
       onTap: () {
         LunchUrlService.urlOpener(context, link.url);
       },
-      borderRadius: BorderRadius.circular(40.r),
+      borderRadius: BorderRadius.circular(8.r),
       child: Container(
         padding: EdgeInsets.all(12.w),
         decoration: BoxDecoration(
@@ -656,7 +662,7 @@ class _AboutContent extends StatelessWidget {
                   context,
                 ).colorScheme.onPrimaryContainer.withOpacity(.95)
               : Colors.white.withOpacity(.95),
-          borderRadius: BorderRadius.circular(40.r),
+          borderRadius: BorderRadius.circular(8.r),
           boxShadow: [
             BoxShadow(
               color: Theme.of(context).brightness == Brightness.dark

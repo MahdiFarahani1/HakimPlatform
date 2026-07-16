@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/api.dart';
+import 'package:flutter_application_1/core/utils/url_luncher.dart';
 import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
+import 'package:flutter_application_1/features/history/data/models/history_item.dart';
+import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
 import 'package:flutter_application_1/features/home/logic/cubit/navigation_cubit.dart';
 import 'package:flutter_application_1/features/home/widgets/header.dart';
 import 'package:flutter_application_1/features/videos/data/models/video_model.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class VideoListSection extends StatelessWidget {
   final List<VideoModel> videos;
@@ -47,11 +49,14 @@ class VideoListSection extends StatelessWidget {
 
   Widget _buildVideoCard(BuildContext context, VideoModel video) {
     return GestureDetector(
-      onTap: () => _launchYouTube(video.youtubeId),
+      onTap: () {
+        context.read<HistoryCubit>().addItem(HistoryItem.fromVideo(video));
+        LunchUrlService.videoOpener(context, video.youtubeId);
+      },
       child: Container(
         width: 300.w,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(8.r),
           boxShadow: [
             BoxShadow(
               blurRadius: 16.r,
@@ -61,12 +66,12 @@ class VideoListSection extends StatelessWidget {
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(8.r),
           child: Stack(
             children: [
               Positioned.fill(
                 child: CustomCacheImage(
-                  imageUrl: "${Api.baseUrl}${video.image}",
+                  imageUrl: "${Api.baseImageUrl}${video.image}",
                   fit: BoxFit.cover,
                 ),
               ),
@@ -105,7 +110,7 @@ class VideoListSection extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(12.r),
+                          borderRadius: BorderRadius.circular(8.r),
                           border: Border.all(
                             color: Colors.white.withOpacity(0.3),
                             width: 0.5,
@@ -205,13 +210,6 @@ class VideoListSection extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _launchYouTube(String videoId) async {
-    final uri = Uri.parse("https://www.youtube.com/watch?v=$videoId");
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    }
   }
 
   String _getCategoryText(String category) {

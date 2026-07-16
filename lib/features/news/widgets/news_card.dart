@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/features/news/data/models/news_model.dart';
 import 'package:flutter_application_1/features/news/widgets/info_news_dialog.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
@@ -20,7 +22,7 @@ class NewsCard extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
             color: context.theme.colorScheme.onPrimaryContainer,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
                 color: context.theme.brightness == Brightness.dark
@@ -36,8 +38,8 @@ class NewsCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20),
-                  topRight: Radius.circular(20),
+                  topLeft: Radius.circular(8),
+                  topRight: Radius.circular(8),
                 ),
                 child: SizedBox(
                   width: double.infinity,
@@ -46,11 +48,10 @@ class NewsCard extends StatelessWidget {
                     fit: StackFit.expand,
                     children: [
                       news.image.isNotEmpty
-                          ? Image.network(
-                              news.image,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) =>
-                                  _buildImagePlaceholder(),
+                          ? CustomCacheImage(
+                              imageUrl: '${Api.baseImageUrl}${news.image}',
+                              height: 120,
+                              width: double.infinity,
                             )
                           : _buildImagePlaceholder(),
                       Positioned(
@@ -63,7 +64,7 @@ class NewsCard extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color: news.languageColor,
-                            borderRadius: BorderRadius.circular(12),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             news.languageName,

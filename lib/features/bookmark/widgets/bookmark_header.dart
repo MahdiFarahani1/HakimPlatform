@@ -21,7 +21,7 @@ class BookmarkHeader extends StatelessWidget {
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: AppColor.primaryBlue,
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
                       color: const Color(0xFF667EEA).withOpacity(0.3),

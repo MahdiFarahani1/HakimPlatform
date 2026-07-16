@@ -252,7 +252,7 @@ class AppSnackBar {
                   padding: const EdgeInsets.all(6),
                   decoration: BoxDecoration(
                     color: Colors.white.withOpacity(0.2),
-                    borderRadius: BorderRadius.circular(10),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Icon(icon, color: Colors.white, size: 20),
                 ),
@@ -371,7 +371,7 @@ class _AnimatedSnackBarContentState extends State<_AnimatedSnackBarContent>
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Icon(widget.icon, color: Colors.white, size: 22),
             ),

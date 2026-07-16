@@ -94,7 +94,7 @@ class _CategoryChip extends StatelessWidget {
           color: isSelected
               ? AppColor.primaryBlue
               : context.theme.colorScheme.onPrimaryContainer,
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: isSelected
                 ? Colors.transparent

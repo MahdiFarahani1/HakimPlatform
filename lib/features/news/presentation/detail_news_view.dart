@@ -1,8 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/core/utils/html_parser.dart';
 import 'package:flutter_application_1/core/utils/share.dart';
+import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
@@ -105,17 +108,10 @@ class NewsDetailsContent extends StatelessWidget {
                         children: [
                           Hero(
                             tag: "news_${news.id}",
-                            child: Image.network(
-                              news.fullImageUrl,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => Container(
-                                color: AppColor.primaryBlue.withOpacity(0.1),
-                                child: Assets.icons.imageSlash.image(
-                                  width: 80.w,
-                                  height: 80.h,
-                                  color: Colors.grey.shade400,
-                                ),
-                              ),
+                            child: CustomCacheImage(
+                              imageUrl: '${Api.baseImageUrl}${news.image}',
+                              width: double.infinity,
+                              height: 200,
                             ),
                           ),
 
@@ -148,7 +144,7 @@ class NewsDetailsContent extends StatelessWidget {
                                   ),
                                   decoration: BoxDecoration(
                                     color: Colors.black.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(30),
+                                    borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
                                       color: Colors.white.withOpacity(0.3),
                                     ),
@@ -272,7 +268,7 @@ class NewsDetailsContent extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: context.theme.colorScheme.onPrimaryContainer,
                       borderRadius: const BorderRadius.vertical(
-                        top: Radius.circular(30),
+                        top: Radius.circular(8),
                       ),
                       boxShadow: [
                         BoxShadow(
@@ -293,7 +289,7 @@ class NewsDetailsContent extends StatelessWidget {
                             padding: const EdgeInsets.all(16),
                             decoration: BoxDecoration(
                               color: AppColor.primaryOrange.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(20),
+                              borderRadius: BorderRadius.circular(8),
                               border: Border.all(
                                 color: const Color(0xff4F8CFF).withOpacity(0.1),
                               ),
@@ -413,38 +409,16 @@ class NewsDetailsContent extends StatelessWidget {
                                 return GestureDetector(
                                       onTap: () => _showFullImage(
                                         context,
-                                        news.getFullImageUrl(imageUrl),
+                                        '${Api.baseImageUrl}$imageUrl',
                                       ),
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(16),
-                                        child: Image.network(
-                                          news.getFullImageUrl(imageUrl),
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: CustomCacheImage(
+                                          imageUrl:
+                                              '${Api.baseImageUrl}$imageUrl',
                                           width: 140,
                                           height: 120,
                                           fit: BoxFit.cover,
-                                          errorBuilder: (_, __, ___) =>
-                                              Container(
-                                                width: 140,
-                                                height: 120,
-                                                color:
-                                                    context.theme.brightness ==
-                                                        Brightness.dark
-                                                    ? Colors.grey.shade800
-                                                    : Colors.grey.shade200,
-                                                child: Padding(
-                                                  padding: const EdgeInsets.all(
-                                                    12.0,
-                                                  ),
-                                                  child: Assets.icons.imageSlash
-                                                      .image(
-                                                        width: 48.w,
-                                                        height: 48.h,
-                                                        color: Colors
-                                                            .grey
-                                                            .shade400,
-                                                      ),
-                                                ),
-                                              ),
                                         ),
                                       ),
                                     )
@@ -499,7 +473,7 @@ class NewsDetailsContent extends StatelessWidget {
                 onShareTap: () {
                   ShareHelper.shareContent(
                     title: news.title,
-                    content: news.content,
+                    content: htmlToText(news.content),
                   );
                 },
                 onBackToListTap: () {
@@ -561,7 +535,7 @@ Widget _modernBottomBar({
       color: Theme.of(context).brightness == Brightness.dark
           ? const Color(0xff1A1C20).withOpacity(0.95)
           : Colors.white.withOpacity(0.95),
-      borderRadius: BorderRadius.circular(35),
+      borderRadius: BorderRadius.circular(32),
       boxShadow: [
         BoxShadow(
           blurRadius: 25,
@@ -641,7 +615,7 @@ Widget _modernGlassButton({required IconData icon, VoidCallback? onTap}) {
   return GestureDetector(
     onTap: onTap,
     child: ClipRRect(
-      borderRadius: BorderRadius.circular(50),
+      borderRadius: BorderRadius.circular(8),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
@@ -681,7 +655,7 @@ class _ModernTag extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(25),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: Colors.white.withOpacity(0.3), width: 1),
       ),
       child: Row(

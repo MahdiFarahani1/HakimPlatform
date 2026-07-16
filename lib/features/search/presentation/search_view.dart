@@ -213,7 +213,7 @@ class _SearchPageState extends State<SearchPage>
                         Container(
                           decoration: BoxDecoration(
                             color: context.theme.colorScheme.onPrimaryContainer,
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(8),
                             boxShadow: [
                               BoxShadow(
                                 color: context.theme.brightness == Brightness.dark
@@ -248,7 +248,7 @@ class _SearchPageState extends State<SearchPage>
                       duration: const Duration(milliseconds: 250),
                       decoration: BoxDecoration(
                         color: context.theme.colorScheme.onPrimaryContainer,
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
                             color: context.theme.brightness == Brightness.dark
@@ -297,7 +297,7 @@ class _SearchPageState extends State<SearchPage>
                                 )
                               : null,
                           border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(8),
                             borderSide: BorderSide.none,
                           ),
                           filled: true,
@@ -326,7 +326,7 @@ class _SearchPageState extends State<SearchPage>
                             height: 20,
                             decoration: BoxDecoration(
                               color: AppColor.primaryBlue,
-                              borderRadius: BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -361,7 +361,7 @@ class _SearchPageState extends State<SearchPage>
                             height: 20,
                             decoration: BoxDecoration(
                               color: const Color(0xFFF59E0B),
-                              borderRadius: BorderRadius.circular(2),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -454,7 +454,7 @@ class _SearchPageState extends State<SearchPage>
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
         decoration: BoxDecoration(
           color: context.theme.colorScheme.onPrimaryContainer,
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(8),
           border: Border.all(
             color: context.theme.brightness == Brightness.dark
                 ? Colors.white12
@@ -500,7 +500,7 @@ class _SearchPageState extends State<SearchPage>
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: context.theme.colorScheme.onPrimaryContainer,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: context.theme.brightness == Brightness.dark
@@ -518,7 +518,7 @@ class _SearchPageState extends State<SearchPage>
               height: 60,
               decoration: BoxDecoration(
                 color: Color(item['color']).withOpacity(0.2),
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
                 child: Text(
@@ -555,7 +555,7 @@ class _SearchPageState extends State<SearchPage>
                         ),
                         decoration: BoxDecoration(
                           color: const Color(0xFFFEF3C7),
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,

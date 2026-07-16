@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/core/utils/share.dart';
+import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:flutter_application_1/features/bookmark/data/models/bookmark_model.dart';
 import 'package:flutter_application_1/features/bookmark/logic/cubit/book_mark_cubit.dart';
@@ -30,8 +32,8 @@ class NewsInfoDialog extends StatelessWidget {
       decoration: BoxDecoration(
         color: context.theme.colorScheme.onPrimaryContainer,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(30),
-          topRight: Radius.circular(30),
+          topLeft: Radius.circular(16),
+          topRight: Radius.circular(16),
         ),
       ),
       child: Column(
@@ -43,7 +45,7 @@ class NewsInfoDialog extends StatelessWidget {
             height: 4,
             decoration: BoxDecoration(
               color: Colors.grey.shade300,
-              borderRadius: BorderRadius.circular(2),
+              borderRadius: BorderRadius.circular(8),
             ),
           ),
           const SizedBox(height: 20),
@@ -54,15 +56,15 @@ class NewsInfoDialog extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
+                    borderRadius: BorderRadius.circular(8),
                     child: SizedBox(
                       width: double.infinity,
                       height: 200,
                       child: news.image.isNotEmpty
-                          ? Image.network(
-                              news.image,
-                              fit: BoxFit.cover,
-                              errorBuilder: (_, __, ___) => _buildPlaceholder(),
+                          ? CustomCacheImage(
+                              imageUrl: '${Api.baseImageUrl}${news.image}',
+                              width: double.infinity,
+                              height: 200,
                             )
                           : _buildPlaceholder(),
                     ),
@@ -91,7 +93,7 @@ class NewsInfoDialog extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: news.languageColor,
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           news.languageName,
@@ -126,7 +128,7 @@ class NewsInfoDialog extends StatelessWidget {
                     width: 50,
                     decoration: BoxDecoration(
                       color: AppColor.primaryBlue.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   const SizedBox(height: 20),
@@ -153,7 +155,7 @@ class NewsInfoDialog extends StatelessWidget {
                           onTap: () {
                             ShareHelper.shareContent(
                               title: news.title,
-                              content: news.intro ?? "no intro",
+                              content: news.intro ?? "لا يوجد وصف لهذا الخبر",
                             );
                           },
                         ),
@@ -223,7 +225,7 @@ class NewsInfoDialog extends StatelessWidget {
         color: context.theme.brightness == Brightness.dark
             ? Colors.grey.shade800
             : Colors.grey.shade100,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -260,12 +262,12 @@ class NewsInfoDialog extends StatelessWidget {
   }) {
     return InkWell(
       onTap: onTap,
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(8),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
           color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
           children: [

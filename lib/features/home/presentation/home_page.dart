@@ -1,13 +1,17 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/url_luncher.dart';
+import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/core/widgets/custom_refresh_widget.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:flutter_application_1/features/books/presentation/all_books_view.dart';
 import 'package:flutter_application_1/features/dialogue/presentation/dialouge_view.dart';
+import 'package:flutter_application_1/features/history/data/models/history_item.dart';
+import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
 
 import 'package:flutter_application_1/features/home/logic/bloc/bloc/home_bloc.dart';
 import 'package:flutter_application_1/features/home/widgets/news_section.dart';
@@ -69,6 +73,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Container(
           decoration: BoxDecoration(
@@ -101,386 +106,388 @@ class _HomePageState extends State<HomePage>
                   onRefresh: () async {
                     BlocProvider.of<HomeBloc>(context).add(FetchHomeData());
                   },
-                  child: ListView(
+                  child: SingleChildScrollView(
                     padding: EdgeInsets.all(20.w),
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 50.h,
-                              decoration: BoxDecoration(
-                                color: context
-                                    .theme
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(16.0.w),
-                                child: Form(
-                                  child: TextField(
-                                    controller: searchController,
-                                    style: TextStyle(
-                                      color:
-                                          context.theme.brightness ==
-                                              Brightness.dark
-                                          ? Colors.white
-                                          : Colors.black,
-                                    ),
-                                    onSubmitted: (value) {
-                                      if (value.isEmpty) {
-                                        AppSnackBar.error(
-                                          context,
 
-                                          "البحث لا يمكن أن يكون فارغ",
-                                        );
-                                        return;
-                                      }
-                                      if (value.length < 3) {
-                                        AppSnackBar.error(
-                                          context,
-                                          "البحث يجب أن يكون أطول من 3 أحرف",
-                                        );
-                                        return;
-                                      }
-
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SearchPage(),
-                                        ),
-                                      );
-                                    },
-                                    textDirection: TextDirection.rtl,
-                                    textAlign: TextAlign.right,
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      prefixIcon: GestureDetector(
-                                        onTap: () {
-                                          if (searchController.text.isEmpty) {
-                                            AppSnackBar.error(
-                                              context,
-                                              "البحث لا يمكن أن يكون فارغ",
-                                            );
-                                            return;
-                                          }
-                                          if (searchController.text.length <
-                                              3) {
-                                            AppSnackBar.error(
-                                              context,
-                                              "البحث يجب أن يكون أطول من 3 أحرف",
-                                            );
-                                            return;
-                                          }
-
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const SearchPage(),
-                                            ),
-                                          );
-                                        },
-                                        child: Assets.icons.search.image(
-                                          color: AppColor.primaryBlue,
-                                        ),
-                                      ),
-                                      hintStyle: TextStyle(
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                height: 50.h,
+                                decoration: BoxDecoration(
+                                  color: context
+                                      .theme
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Padding(
+                                  padding: EdgeInsets.all(16.0.w),
+                                  child: Form(
+                                    child: TextField(
+                                      controller: searchController,
+                                      style: TextStyle(
                                         color:
                                             context.theme.brightness ==
                                                 Brightness.dark
-                                            ? Colors.grey.shade400
-                                            : Colors.grey,
-                                        fontSize: 12.sp,
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
-                                      hintText: "ابحث هنا...",
+                                      onSubmitted: (value) {
+                                        if (value.isEmpty) {
+                                          AppSnackBar.error(
+                                            context,
+
+                                            "البحث لا يمكن أن يكون فارغ",
+                                          );
+                                          return;
+                                        }
+                                        if (value.length < 3) {
+                                          AppSnackBar.error(
+                                            context,
+                                            "البحث يجب أن يكون أطول من 3 أحرف",
+                                          );
+                                          return;
+                                        }
+
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const SearchPage(),
+                                          ),
+                                        );
+                                      },
+                                      textDirection: TextDirection.rtl,
+                                      textAlign: TextAlign.right,
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                        prefixIcon: GestureDetector(
+                                          onTap: () {
+                                            if (searchController.text.isEmpty) {
+                                              AppSnackBar.error(
+                                                context,
+                                                "البحث لا يمكن أن يكون فارغ",
+                                              );
+                                              return;
+                                            }
+                                            if (searchController.text.length <
+                                                3) {
+                                              AppSnackBar.error(
+                                                context,
+                                                "البحث يجب أن يكون أطول من 3 أحرف",
+                                              );
+                                              return;
+                                            }
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SearchPage(),
+                                              ),
+                                            );
+                                          },
+                                          child: Assets.icons.search.image(
+                                            color: AppColor.primaryBlue,
+                                          ),
+                                        ),
+                                        hintStyle: TextStyle(
+                                          color:
+                                              context.theme.brightness ==
+                                                  Brightness.dark
+                                              ? Colors.grey.shade400
+                                              : Colors.grey,
+                                          fontSize: 12.sp,
+                                        ),
+                                        hintText: "ابحث هنا...",
+                                      ),
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                          SizedBox(width: 14.w),
-                          GestureDetector(
-                            onTap: () => showHistoryBottomSheet(context),
-                            child: Container(
-                              width: 55.w,
-                              height: 50.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(8),
-                                color: AppColor.primaryBlue,
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(16.0),
-                                  child: Assets.icons.timePast.image(
-                                    color: AppColor.primaryOrange,
+                            SizedBox(width: 14.w),
+                            GestureDetector(
+                              onTap: () => showHistoryBottomSheet(context),
+                              child: Container(
+                                width: 55.w,
+                                height: 50.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  color: AppColor.primaryBlue,
+                                ),
+                                child: Center(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(16.0),
+                                    child: Assets.icons.timePast.image(
+                                      color: AppColor.primaryOrange,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 25.h),
-
-                      CarouselSlider.builder(
-                        itemCount: sliders.length,
-                        options: CarouselOptions(
-                          height: 170,
-                          autoPlay: true,
-                          enlargeCenterPage: true,
-                          viewportFraction: 1,
-                        ),
-                        itemBuilder: (context, index, realIndex) {
-                          final slider = sliders[index];
-
-                          return InkWell(
-                            onTap: () => LunchUrlService.urlOpener(
-                              context,
-                              slider.linkUrl,
-                            ),
-                            child: _bannerCard(
-                              title: slider.title,
-                              subtitle: slider.subtitle,
-                              img: slider.img,
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 25),
-
-                      SizedBox(
-                        height: 90.h,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            CategoryItem(
-                              onTab: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const BooksPage(),
-                                  ),
-                                );
-                              },
-                              icon: Assets.icons.bookOpenCover.path,
-                              title: "الكتب",
-                            ),
-                            CategoryItem(
-                              onTab: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MusicListScreen(),
-                                  ),
-                                );
-                              },
-                              icon: Assets.icons.waveformPath.path,
-                              title: "الصوتيات",
-                            ),
-                            CategoryItem(
-                              onTab: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const DialogueScreen(),
-                                  ),
-                                );
-                              },
-                              icon: Assets.icons.comments.path,
-                              title: "التعليقات",
-                            ),
-                            CategoryItem(
-                              onTab: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const NewsScreen(),
-                                  ),
-                                );
-                              },
-                              icon: Assets.icons.newspaper.path,
-                              title: "الأخبار",
                             ),
                           ],
                         ),
-                      ),
-                      SizedBox(height: 25.h),
 
-                      SizedBox(
-                        height: 40.h,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemCount: categoryBook.length,
-                          itemBuilder: (_, i) {
-                            return ValueListenableBuilder<int>(
-                              valueListenable: selectedIndex,
-                              builder: (context, value, child) {
-                                final isSelected = i == value;
+                        SizedBox(height: 25.h),
 
-                                return GestureDetector(
-                                  onTap: () {
-                                    selectedIndex.value = i;
+                        CarouselSlider.builder(
+                          itemCount: sliders.length,
+                          options: CarouselOptions(
+                            height: 170,
+                            autoPlay: true,
+                            enlargeCenterPage: true,
+                            viewportFraction: 1,
+                          ),
+                          itemBuilder: (context, index, realIndex) {
+                            final slider = sliders[index];
 
-                                    BlocProvider.of<HomeBloc>(context).add(
-                                      FetchBooksByCategory(
-                                        titleSelected: categoryBook[i].title,
-                                      ),
-                                    );
-                                  },
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 500),
-                                    margin: EdgeInsets.symmetric(
-                                      horizontal: 6.w,
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 16.w,
-                                      vertical: 0,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: isSelected
-                                          ? AppColor.primaryBlue
-                                          : context
-                                                .theme
-                                                .colorScheme
-                                                .onPrimaryContainer,
-                                      borderRadius: BorderRadius.circular(8),
-                                    ),
-                                    alignment: Alignment.center,
-                                    child: AnimatedDefaultTextStyle(
-                                      duration: const Duration(
-                                        milliseconds: 500,
-                                      ),
-                                      style: TextStyle(
-                                        fontSize: isSelected ? 14 : 12,
-                                        color: isSelected
-                                            ? AppColor.primaryOrange
-                                            : (context.theme.brightness ==
-                                                      Brightness.dark
-                                                  ? Colors.white
-                                                  : Colors.black),
-                                      ),
-                                      child: Text(categoryBook[i].title),
-                                    ),
-                                  ),
-                                );
-                              },
+                            return InkWell(
+                              onTap: () => LunchUrlService.urlOpener(
+                                context,
+                                slider.linkUrl,
+                              ),
+                              child: _bannerCard(
+                                title: slider.title,
+                                subtitle: slider.subtitle,
+                                img: slider.img,
+                              ),
                             );
                           },
                         ),
-                      ),
 
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 25),
 
-                      if (books.isEmpty && !isBooksLoading) ...[
                         SizedBox(
-                          width: context.screenWidth,
-                          height: context.screenHeight * 0.3,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                          height: 90.h,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(28),
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  gradient: LinearGradient(
-                                    colors: [
-                                      Colors.grey.shade50,
-                                      Colors.grey.shade100,
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.grey.shade300.withOpacity(
-                                        0.3,
-                                      ),
-                                      blurRadius: 20,
-                                      offset: const Offset(0, 8),
+                              CategoryItem(
+                                onTab: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const BooksPage(),
                                     ),
-                                    BoxShadow(
-                                      color: Colors.white.withOpacity(0.8),
-                                      blurRadius: 10,
-                                      offset: const Offset(-4, -4),
+                                  );
+                                },
+                                icon: Assets.icons.bookOpenCover.path,
+                                title: "الكتب",
+                              ),
+                              CategoryItem(
+                                onTab: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const MusicListScreen(),
                                     ),
-                                  ],
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.6),
-                                    width: 2,
-                                  ),
-                                ),
-                                child: Assets.icons.bookOpenCover.image(
-                                  width: 70,
-                                  height: 70,
-                                  color: Colors.grey,
-                                ),
+                                  );
+                                },
+                                icon: Assets.icons.waveformPath.path,
+                                title: "الصوتيات",
                               ),
-
-                              const SizedBox(height: 24),
-
-                              Text(
-                                "لا توجد أي كتب في هذا التصنيف",
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.grey.shade700,
-                                  letterSpacing: 0.5,
-                                ),
+                              CategoryItem(
+                                onTab: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const DialogueScreen(),
+                                    ),
+                                  );
+                                },
+                                icon: Assets.icons.comments.path,
+                                title: "التعليقات",
                               ),
-
-                              const SizedBox(height: 8),
-
-                              Text(
-                                'ستتم إضافة كتب جديدة قريباً',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.grey.shade500,
-                                  fontWeight: FontWeight.w400,
-                                ),
+                              CategoryItem(
+                                onTab: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const NewsScreen(),
+                                    ),
+                                  );
+                                },
+                                icon: Assets.icons.newspaper.path,
+                                title: "الأخبار",
                               ),
                             ],
-                          ).animate().scale(),
+                          ),
                         ),
-                      ] else
-                        Skeletonizer(
-                          enabled: isBooksLoading,
-                          child: SizedBox(
-                            height: 220,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: isBooksLoading ? 4 : books.length,
-                              physics: isBooksLoading
-                                  ? const NeverScrollableScrollPhysics()
-                                  : const BouncingScrollPhysics(),
-                              itemBuilder: (_, i) {
-                                final book = isBooksLoading
-                                    ? _dummyBooks[i]
-                                    : books[i];
-                                return GestureDetector(
-                                  onTap: isBooksLoading
-                                      ? null
-                                      : () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const BooksPage(),
-                                            ),
-                                          );
-                                        },
+                        SizedBox(height: 25.h),
 
-                                  child: Hero(
-                                    tag: isBooksLoading
-                                        ? 'dummy_tag_$i'
-                                        : book.title,
+                        SizedBox(
+                          height: 40.h,
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            itemCount: categoryBook.length,
+                            itemBuilder: (_, i) {
+                              return ValueListenableBuilder<int>(
+                                valueListenable: selectedIndex,
+                                builder: (context, value, child) {
+                                  final isSelected = i == value;
+
+                                  return GestureDetector(
+                                    onTap: () {
+                                      selectedIndex.value = i;
+
+                                      BlocProvider.of<HomeBloc>(context).add(
+                                        FetchBooksByCategory(
+                                          titleSelected: categoryBook[i].title,
+                                        ),
+                                      );
+                                    },
+                                    child: AnimatedContainer(
+                                      duration: const Duration(
+                                        milliseconds: 500,
+                                      ),
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 6.w,
+                                      ),
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 16.w,
+                                        vertical: 0,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: isSelected
+                                            ? AppColor.primaryBlue
+                                            : context
+                                                  .theme
+                                                  .colorScheme
+                                                  .onPrimaryContainer,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      alignment: Alignment.center,
+                                      child: AnimatedDefaultTextStyle(
+                                        duration: const Duration(
+                                          milliseconds: 500,
+                                        ),
+                                        style: TextStyle(
+                                          fontSize: isSelected ? 14 : 12,
+                                          color: isSelected
+                                              ? AppColor.primaryOrange
+                                              : (context.theme.brightness ==
+                                                        Brightness.dark
+                                                    ? Colors.white
+                                                    : Colors.black),
+                                        ),
+                                        child: Text(categoryBook[i].title),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
+                        if (books.isEmpty && !isBooksLoading) ...[
+                          SizedBox(
+                            width: context.screenWidth,
+                            height: context.screenHeight * 0.3,
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(28),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    gradient: LinearGradient(
+                                      colors: [
+                                        Colors.grey.shade50,
+                                        Colors.grey.shade100,
+                                      ],
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.shade300.withOpacity(
+                                          0.3,
+                                        ),
+                                        blurRadius: 20,
+                                        offset: const Offset(0, 8),
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.white.withOpacity(0.8),
+                                        blurRadius: 10,
+                                        offset: const Offset(-4, -4),
+                                      ),
+                                    ],
+                                    border: Border.all(
+                                      color: Colors.white.withOpacity(0.6),
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: Assets.icons.bookOpenCover.image(
+                                    width: 70,
+                                    height: 70,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 24),
+
+                                Text(
+                                  "لا توجد أي كتب في هذا التصنيف",
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey.shade700,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 8),
+
+                                Text(
+                                  'ستتم إضافة كتب جديدة قريباً',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.grey.shade500,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ),
+                              ],
+                            ).animate().scale(),
+                          ),
+                        ] else
+                          Skeletonizer(
+                            enabled: isBooksLoading,
+                            child: SizedBox(
+                              height: 220,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: isBooksLoading ? 4 : books.length,
+                                physics: isBooksLoading
+                                    ? const NeverScrollableScrollPhysics()
+                                    : const BouncingScrollPhysics(),
+                                itemBuilder: (_, i) {
+                                  final book = isBooksLoading
+                                      ? _dummyBooks[i]
+                                      : books[i];
+                                  return GestureDetector(
+                                    onTap: isBooksLoading
+                                        ? null
+                                        : () {
+                                            context
+                                                .read<HistoryCubit>()
+                                                .addItem(
+                                                  HistoryItem.fromBook(book),
+                                                );
+                                            LunchUrlService.urlOpener(
+                                              context,
+                                              "${Api.baseImageUrl}${book.pdf}",
+                                            );
+                                          },
+
                                     child: Container(
                                       width: 150,
                                       margin: const EdgeInsets.only(right: 16),
@@ -495,15 +502,21 @@ class _HomePageState extends State<HomePage>
                                             offset: const Offset(0, 8),
                                           ),
                                         ],
-                                        image: book.image.isNotEmpty
-                                            ? DecorationImage(
-                                                image: NetworkImage(book.image),
-                                                fit: BoxFit.cover,
-                                              )
-                                            : null,
                                       ),
                                       child: Stack(
                                         children: [
+                                          Positioned.fill(
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadiusGeometry.circular(
+                                                    8,
+                                                  ),
+                                              child: CustomCacheImage(
+                                                imageUrl:
+                                                    "${Api.baseImageUrl}${book.image}",
+                                              ),
+                                            ),
+                                          ),
                                           Container(
                                             decoration: BoxDecoration(
                                               borderRadius:
@@ -537,26 +550,26 @@ class _HomePageState extends State<HomePage>
                                         ],
                                       ),
                                     ),
-                                  ),
-                                );
-                              },
+                                  );
+                                },
+                              ),
                             ),
                           ),
-                        ),
 
-                      const SizedBox(height: 35),
-                      HomeRandomPlayerBox(),
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 35),
+                        HomeRandomPlayerBox(),
+                        const SizedBox(height: 20),
 
-                      VideoListSection(videos: videos),
-                      SizedBox(height: 20),
+                        VideoListSection(videos: videos),
+                        SizedBox(height: 20),
 
-                      NewsListSection(news: news),
-                      SizedBox(height: 20),
+                        NewsListSection(news: news),
+                        SizedBox(height: 20),
 
-                      InterviewsSection(interviews: dialogues),
-                      SizedBox(height: 120),
-                    ],
+                        InterviewsSection(interviews: dialogues),
+                        SizedBox(height: 120),
+                      ],
+                    ),
                   ),
                 );
               }
@@ -577,7 +590,7 @@ class _HomePageState extends State<HomePage>
       margin: const EdgeInsets.symmetric(horizontal: 6),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
-        image: DecorationImage(image: NetworkImage(img), fit: BoxFit.cover),
+
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.12),
@@ -586,80 +599,93 @@ class _HomePageState extends State<HomePage>
           ),
         ],
       ),
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8),
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              Colors.black.withOpacity(0.3),
-              Colors.black.withOpacity(0.7),
-            ],
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8),
+              child: CustomCacheImage(imageUrl: img),
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                title,
-                textAlign: TextAlign.right,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  height: 1.3,
-                ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.3),
+                  Colors.black.withOpacity(0.7),
+                ],
               ),
-              const SizedBox(height: 6),
-              Align(
-                alignment: Alignment.bottomRight,
-
-                child: Text(
-                  subtitle,
-                  textAlign: TextAlign.right,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white70, fontSize: 12),
-                ),
-              ),
-              SizedBox(height: 43.h),
-              Align(
-                alignment: Alignment.bottomLeft,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 14,
-                    vertical: 6,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.9),
-                    borderRadius: BorderRadius.circular(8),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: const Text(
-                    "استكشف",
-                    style: TextStyle(
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    textAlign: TextAlign.right,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                      fontSize: 12,
+                      height: 1.3,
                     ),
                   ),
-                ),
+                  const SizedBox(height: 6),
+                  Align(
+                    alignment: Alignment.bottomRight,
+
+                    child: Text(
+                      subtitle,
+                      textAlign: TextAlign.right,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 43.h),
+                  Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Text(
+                        "استكشف",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

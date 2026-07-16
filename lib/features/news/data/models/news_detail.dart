@@ -1,11 +1,10 @@
-
 class NewsDetailModel {
   final int id;
   final String title;
   final String summary;
   final String content;
   final String image;
-  final String imgTitle; 
+  final String imgTitle;
   final String category;
   final String date;
   final List<String> moreImages;
@@ -36,21 +35,11 @@ class NewsDetailModel {
       summary: data['summary'] as String? ?? '',
       content: data['content'] as String,
       image: data['image'] as String,
-      imgTitle: data['img_title'] as String? ?? '', 
+      imgTitle: data['img_title'] as String? ?? '',
       category: data['category'] as String,
       date: data['date'] as String,
       moreImages: moreImagesList,
     );
-  }
-
-  String get fullImageUrl {
-    if (image.startsWith('http')) return image;
-    return 'http://ammaralhakeem.com/new2$image';
-  }
-
-  String getFullImageUrl(String imagePath) {
-    if (imagePath.startsWith('http')) return imagePath;
-    return 'http://ammaralhakeem.com/new2$imagePath';
   }
 
   bool get hasMoreImages => moreImages.isNotEmpty;

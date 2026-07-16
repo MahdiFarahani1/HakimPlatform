@@ -2,10 +2,12 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_1/config/di.dart';
+import 'package:flutter_application_1/core/widgets/custom_header.dart';
 import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/core/utils/url_luncher.dart';
+import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/core/widgets/custom_refresh_widget.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
@@ -29,115 +31,78 @@ class BooksPage extends StatelessWidget {
     return BlocProvider(
       create: (context) => getIt<BooksCubit>()..getAllBooksData(),
       child: Scaffold(
-        appBar: _buildAppBar(context),
         body: Container(
           decoration: BoxDecoration(
             gradient: context.appTheme.scaffoldGradient,
           ),
-
           child: BlocBuilder<BooksCubit, BooksState>(
             builder: (context, state) {
               final isLoading = state.status is BooksLoadingStatus;
               if (state.status is BooksErrorStatus) {
                 final error = (state.status as BooksErrorStatus).message;
-                return CustomErrorWidget(
-                  message: error,
-                  onRetry: () {
-                    context.read<BooksCubit>().getAllBooksData();
-                  },
-                );
-              }
-
-              return Skeletonizer(
-                enabled: isLoading,
-                child: Column(
+                return Column(
                   children: [
-                    _buildCategoriesSection(
-                      context,
-                      isLoading ? _dummyCategories : state.categories,
-                      state.categoriesSelected,
+                    CustomHeader(
+                      title: 'مكتبتي',
+                      subtitle: 'لا توجد كتب',
+                      icon: Assets.icons.books.image(
+                        width: 24,
+                        height: 24,
+                        color: Colors.white,
+                      ),
                     ),
                     Expanded(
-                      child: _buildBooksGrid(
-                        context,
-                        isLoading ? _dummyBooks : state.filteredBooks,
+                      child: CustomErrorWidget(
+                        message: error,
+                        onRetry: () {
+                          context.read<BooksCubit>().getAllBooksData();
+                        },
                       ),
                     ),
                   ],
-                ),
-              );
-            },
-          ),
-        ),
-      ),
-    );
-  }
+                );
+              }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: BlocBuilder<BooksCubit, BooksState>(
-        builder: (context, state) {
-          int bookCount = 0;
-          if (state.status is BooksLoadedStatus) {
-            bookCount = state.filteredBooks.length;
-          }
+              int bookCount = 0;
+              if (state.status is BooksLoadedStatus) {
+                bookCount = state.filteredBooks.length;
+              }
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+              return Column(
                 children: [
-                  Assets.icons.books.image(
-                    width: 24,
-                    height: 24,
-                    color: AppColor.primaryBlue,
+                  CustomHeader(
+                    title: 'مكتبتي',
+                    subtitle: isLoading ? 'جاري التحميل...' : '$bookCount كتاب',
+                    icon: Assets.icons.books.image(
+                      width: 24,
+                      height: 24,
+                      color: Colors.white,
+                    ),
                   ),
-                  const SizedBox(width: 10),
-                  const Text(
-                    "مكتبتي",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
-                      color: AppColor.primaryBlue,
+                  Expanded(
+                    child: Skeletonizer(
+                      enabled: isLoading,
+                      child: Column(
+                        children: [
+                          _buildCategoriesSection(
+                            context,
+                            isLoading ? _dummyCategories : state.categories,
+                            state.categoriesSelected,
+                          ),
+                          Expanded(
+                            child: _buildBooksGrid(
+                              context,
+                              isLoading ? _dummyBooks : state.filteredBooks,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
-              ),
-              const Divider(),
-              Text(
-                '$bookCount كتاب',
-                style: TextStyle(
-                  color: Colors.grey.shade500,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          );
-        },
-      ),
-      backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-      foregroundColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.white
-          : const Color(0xFF1A1A2E),
-      elevation: 0,
-      actions: [
-        Padding(
-          padding: const EdgeInsets.only(left: 12),
-          child: Assets.icons.bookArrowRight.image(
-            width: 24,
-            height: 24,
-            color: AppColor.primaryBlue,
+              );
+            },
           ),
-        ),
-      ],
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1),
-        child: Container(
-          height: 1,
-          color: Theme.of(context).brightness == Brightness.dark
-              ? Colors.white10
-              : Colors.grey.shade100,
         ),
       ),
     );
@@ -194,7 +159,7 @@ class BooksPage extends StatelessWidget {
             color: isSelected
                 ? AppColor.primaryBlue
                 : Theme.of(context).colorScheme.onPrimaryContainer,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(8),
             boxShadow: isSelected
                 ? [
                     BoxShadow(
@@ -328,7 +293,7 @@ class BookCardItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(8),
         color: Theme.of(context).colorScheme.onPrimaryContainer,
         boxShadow: [
           BoxShadow(
@@ -349,19 +314,9 @@ class BookCardItem extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Image.network(
-                  book.image,
+                CustomCacheImage(
+                  imageUrl: "${Api.baseImageUrl}${book.image}",
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.grey.shade800
-                        : Colors.grey.shade100,
-                    child: Assets.icons.bookOpenCover.image(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.grey.shade400
-                          : Colors.grey,
-                    ),
-                  ),
                 ),
                 Positioned(
                   top: 10,
@@ -430,7 +385,7 @@ class BookCardItem extends StatelessWidget {
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
                             color: AppColor.primaryBlue,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(2.0),

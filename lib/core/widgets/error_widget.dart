@@ -88,11 +88,11 @@ class CustomErrorWidget extends StatelessWidget {
 
             Material(
                   elevation: 0,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(8),
                   color: AppColor.primaryBlue,
                   child: InkWell(
                     onTap: onRetry,
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(8),
                     child: Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 32,

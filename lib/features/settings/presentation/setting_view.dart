@@ -3,11 +3,13 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_application_1/config/app_version.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/core/widgets/back_btn.dart';
 import 'package:flutter_application_1/features/settings/logic/cubit/settings_cubit.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_application_1/features/settings/presentation/privacy_policy_view.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -119,7 +121,15 @@ class _SettingsPageState extends State<SettingsPage>
                           _buildModernTile(
                             icon: Assets.icons.privacySettings.path,
                             title: "سياسة الخصوصية",
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const PrivacyPolicyPage(),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ).animate().fadeIn(duration: 600.ms).slideY(begin: 0.1),
@@ -153,13 +163,22 @@ class _SettingsPageState extends State<SettingsPage>
 
   PreferredSizeWidget _buildModernAppBar() {
     return AppBar(
-      title: const Text(
-        "الإعدادات",
-        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-      ),
-      centerTitle: true,
+      automaticallyImplyLeading: false,
       elevation: 0,
       backgroundColor: Colors.transparent,
+      title: Stack(
+        alignment: Alignment.center,
+        children: [
+          const Center(
+            child: Text(
+              "الإعدادات",
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+            ),
+          ),
+
+          Align(alignment: Alignment.centerRight, child: AppBackButton()),
+        ],
+      ),
       flexibleSpace: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -183,7 +202,7 @@ class _SettingsPageState extends State<SettingsPage>
     return Container(
       decoration: BoxDecoration(
         color: context.appTheme.cardBackgroundColor,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
             blurRadius: 15,
@@ -237,7 +256,7 @@ class _SettingsPageState extends State<SettingsPage>
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               color: AppColor.primaryBlue.withOpacity(0.08),
-              borderRadius: BorderRadius.circular(14),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Image.asset(
               icon,
@@ -285,7 +304,7 @@ class _SettingsPageState extends State<SettingsPage>
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: AppColor.primaryBlue.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Image.asset(
                   icon,
@@ -313,7 +332,7 @@ class _SettingsPageState extends State<SettingsPage>
                 ),
                 decoration: BoxDecoration(
                   color: AppColor.primaryBlue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   value.toInt().toString(),
@@ -354,7 +373,7 @@ class _SettingsPageState extends State<SettingsPage>
         showModalBottomSheet(
           context: context,
           shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
           ),
           backgroundColor: Theme.of(context).cardColor,
           builder: (_) {
@@ -369,7 +388,7 @@ class _SettingsPageState extends State<SettingsPage>
                     width: 40,
                     decoration: BoxDecoration(
                       color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(2),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                   ...items.map((item) {
@@ -412,7 +431,7 @@ class _SettingsPageState extends State<SettingsPage>
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: AppColor.primaryBlue.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
                 icon,
@@ -464,7 +483,7 @@ class _SettingsPageState extends State<SettingsPage>
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: AppColor.primaryBlue.withOpacity(0.08),
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Image.asset(
                 icon,

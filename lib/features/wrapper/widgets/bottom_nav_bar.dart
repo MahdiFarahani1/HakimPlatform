@@ -32,8 +32,8 @@ class _PremiumBottomNavState extends State<PremiumBottomNav> {
       margin: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
-        color: context.theme.scaffoldBackgroundColor.withOpacity(0.85),
-        borderRadius: BorderRadius.circular(28),
+        color: context.theme.scaffoldBackgroundColor.withOpacity(0.95),
+        borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.08),
@@ -56,7 +56,7 @@ class _PremiumBottomNavState extends State<PremiumBottomNav> {
                 color: isActive
                     ? AppColor.primaryBlue.withOpacity(0.12)
                     : Colors.transparent,
-                borderRadius: BorderRadius.circular(16),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -78,7 +78,7 @@ class _PremiumBottomNavState extends State<PremiumBottomNav> {
                     width: isActive ? 8 : 0,
                     decoration: BoxDecoration(
                       color: AppColor.primaryBlue,
-                      borderRadius: BorderRadius.circular(10),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                   ),
                 ],

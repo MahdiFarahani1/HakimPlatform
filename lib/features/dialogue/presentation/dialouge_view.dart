@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/config/di.dart';
+import 'package:flutter_application_1/core/constans/api.dart';
+import 'package:flutter_application_1/core/widgets/custom_header.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/logic/search/search_cubit.dart';
+import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
 import 'package:flutter_application_1/core/widgets/empty_widget.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
 import 'package:flutter_application_1/features/dialogue/data/models/dialogue_model.dart';
 import 'package:flutter_application_1/features/dialogue/logic/cubit/dialouge_cubit.dart';
+import 'package:flutter_application_1/features/dialogue/widgets/content_modal.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -152,7 +156,12 @@ class _DialogueScreenState extends State<DialogueScreen> {
                                                     child: _DialogueCard(
                                                       dialogue:
                                                           dialogues[index],
-                                                      onTap: () {},
+                                                      onTap: () {
+                                                        showInterviewInfoDialog(
+                                                          context,
+                                                          dialogues[index],
+                                                        );
+                                                      },
                                                     ),
                                                   ),
                                                 ),
@@ -180,104 +189,26 @@ class _DialogueScreenState extends State<DialogueScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return Container(
-      padding: EdgeInsets.only(
-        top: MediaQuery.paddingOf(context).top + 12,
-        bottom: 16,
-        left: 20,
-        right: 20,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.onPrimaryContainer.withOpacity(0.85),
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(32),
-          bottomRight: Radius.circular(32),
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(isDark ? 0.3 : 0.06),
-            blurRadius: 20,
-            offset: const Offset(0, 4),
+    return BlocBuilder<DialougeCubit, DialougeState>(
+      builder: (context, state) {
+        int total = 0;
+        if (state is DialougeSuccess) {
+          total = state.dialogues.length;
+        }
+        return CustomHeader(
+          title: 'الحوارات',
+          subtitle: state is DialougeLoading
+              ? 'جاري التحميل...'
+              : total > 0
+                  ? '$total حوار متاح'
+                  : 'لا توجد حوارات',
+          icon: Assets.icons.comments.image(
+            width: 26,
+            height: 26,
+            color: AppColor.primaryOrange,
           ),
-        ],
-      ),
-      child: BlocBuilder<DialougeCubit, DialougeState>(
-        builder: (context, state) {
-          int total = 0;
-          if (state is DialougeSuccess) {
-            total = state.dialogues.length;
-          }
-          return Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      AppColor.primaryBlue,
-                      AppColor.primaryBlue.withOpacity(0.8),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColor.primaryBlue.withOpacity(0.3),
-                      blurRadius: 8,
-                      offset: const Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Assets.icons.comments.image(
-                  width: 26,
-                  height: 26,
-                  color: AppColor.primaryOrange,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'الحوارات',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: -0.5,
-                      color: isDark ? Colors.white : const Color(0xFF0F172A),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: Text(
-                      state is DialougeLoading
-                          ? 'جاري التحميل...'
-                          : total > 0
-                          ? '$total حوار متاح'
-                          : 'لا توجد حوارات',
-                      key: ValueKey(
-                        total + (state is DialougeLoading ? 1000 : 0),
-                      ),
-                      style: TextStyle(
-                        color: AppColor.primaryBlue.withOpacity(0.9),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        },
-      ),
+        );
+      },
     );
   }
 
@@ -355,7 +286,7 @@ class _DialogueCard extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimaryContainer,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(8),
         boxShadow: [
           BoxShadow(
             color: isDark
@@ -367,7 +298,7 @@ class _DialogueCard extends StatelessWidget {
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: BorderRadius.circular(8),
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -381,11 +312,8 @@ class _DialogueCard extends StatelessWidget {
                       height: 180,
                       width: double.infinity,
                       child: dialogue.image.isNotEmpty
-                          ? Image.network(
-                              dialogue.image,
-                              fit: BoxFit.cover,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  _buildPlaceholder(),
+                          ? CustomCacheImage(
+                              imageUrl: "${Api.baseImageUrl}${dialogue.image}",
                             )
                           : _buildPlaceholder(),
                     ),
@@ -414,7 +342,7 @@ class _DialogueCard extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color: Colors.white24,
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,

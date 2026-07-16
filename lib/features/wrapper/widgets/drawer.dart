@@ -7,6 +7,7 @@ import 'package:flutter_application_1/core/utils/review.dart';
 import 'package:flutter_application_1/core/utils/share.dart';
 import 'package:flutter_application_1/features/settings/logic/cubit/settings_cubit.dart';
 import 'package:flutter_application_1/features/wrapper/presentation/aboutus_page.dart';
+import 'package:flutter_application_1/features/wrapper/presentation/app_features_view.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -44,8 +45,8 @@ void drawerApp(BuildContext context) {
                         ],
                 ),
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(32),
-                  topRight: Radius.circular(32),
+                  topLeft: Radius.circular(16),
+                  topRight: Radius.circular(16),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -63,7 +64,7 @@ void drawerApp(BuildContext context) {
                         width: 60,
                         decoration: BoxDecoration(
                           color: AppColor.primaryBlue,
-                          borderRadius: BorderRadius.circular(50),
+                          borderRadius: BorderRadius.circular(8),
                         ),
                       )
                       .animate()
@@ -124,7 +125,7 @@ void drawerApp(BuildContext context) {
                                   color: Theme.of(
                                     context,
                                   ).colorScheme.onPrimaryContainer,
-                                  borderRadius: BorderRadius.circular(20),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: ListTile(
                                   contentPadding: const EdgeInsets.symmetric(
@@ -142,7 +143,7 @@ void drawerApp(BuildContext context) {
                                           ).withOpacity(0.05),
                                         ],
                                       ),
-                                      borderRadius: BorderRadius.circular(15),
+                                      borderRadius: BorderRadius.circular(8),
                                     ),
                                     child: Assets.icons.nightDay.image(
                                       color: AppColor.primaryBlue,
@@ -223,7 +224,7 @@ Widget _buildMenuItem(
         child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.onPrimaryContainer,
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
                 blurRadius: 10,
@@ -237,7 +238,7 @@ Widget _buildMenuItem(
           child: Material(
             color: Colors.transparent,
             child: InkWell(
-              borderRadius: BorderRadius.circular(20),
+              borderRadius: BorderRadius.circular(8),
               onTap: onTap,
               child: ListTile(
                 contentPadding: const EdgeInsets.symmetric(
@@ -253,7 +254,7 @@ Widget _buildMenuItem(
                         const Color(0xff6B4EFF).withOpacity(0.05),
                       ],
                     ),
-                    borderRadius: BorderRadius.circular(15),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Image.asset(
                     materialIcon,
@@ -278,7 +279,7 @@ Widget _buildMenuItem(
                     color: Theme.of(context).brightness == Brightness.dark
                         ? Colors.grey.shade800
                         : Colors.grey[100],
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Assets.icons.angleSmallLeft.image(
                     color: Theme.of(context).brightness == Brightness.dark
@@ -300,82 +301,103 @@ Widget _buildMenuItem(
 }
 
 Widget _buildAppInfoCard(BuildContext context) {
-  return Container(
-        margin: const EdgeInsets.symmetric(vertical: 8),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              AppColor.primaryBlue.withOpacity(0.08),
-              const Color(0xff6B4EFF).withOpacity(0.04),
-            ],
-          ),
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(
-            color: AppColor.primaryBlue.withOpacity(0.1),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
+  return Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const AppFeaturesPage(),
+                ),
+              );
+            },
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppColor.primaryBlue.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(18),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    AppColor.primaryBlue.withOpacity(0.08),
+                    const Color(0xff6B4EFF).withOpacity(0.04),
+                  ],
+                ),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: AppColor.primaryBlue.withOpacity(0.1),
+                  width: 1,
+                ),
               ),
-              child: Assets.icons.info.image(
-                color: AppColor.primaryBlue,
-                width: 22,
-                height: 22,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: Row(
                 children: [
-                  const Text(
-                    'عن التطبيق', // درباره برنامه به عربی
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: AppColor.primaryBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Assets.icons.info.image(
+                      color: AppColor.primaryBlue,
+                      width: 22,
+                      height: 22,
+                    ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'المكتبة الرقمية التي تضم أكثر من ۱۰۰۰ كتاب ومحتوى صوتي', // توضیحات به عربی
-                    style: TextStyle(
-                      color: Theme.of(context).brightness == Brightness.dark
-                          ? Colors.grey[400]
-                          : Colors.grey[600],
-                      fontSize: 11,
-                      height: 1.4,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'عن التطبيق', // درباره برنامه به عربی
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'المكتبة الرقمية التي تضم أكثر من ۱۰۰۰ كتاب ومحتوى صوتي', // توضیحات به عربی
+                          style: TextStyle(
+                            color:
+                                Theme.of(context).brightness == Brightness.dark
+                                ? Colors.grey[400]
+                                : Colors.grey[600],
+                            fontSize: 11,
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                      borderRadius: BorderRadius.circular(8),
+                      boxShadow: [
+                        BoxShadow(
+                          blurRadius: 8,
+                          color: Theme.of(context).brightness == Brightness.dark
+                              ? Colors.transparent
+                              : Colors.black.withOpacity(0.05),
+                        ),
+                      ],
+                    ),
+                    child: Assets.icons.angleSmallLeft.image(
+                      color: AppColor.primaryBlue,
+                      width: 12,
+                      height: 12,
                     ),
                   ),
                 ],
               ),
             ),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.onPrimaryContainer,
-                borderRadius: BorderRadius.circular(15),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 8,
-                    color: Theme.of(context).brightness == Brightness.dark
-                        ? Colors.transparent
-                        : Colors.black.withOpacity(0.05),
-                  ),
-                ],
-              ),
-              child: Assets.icons.angleSmallLeft.image(
-                color: AppColor.primaryBlue,
-                width: 12,
-                height: 12,
-              ),
-            ),
-          ],
+          ),
         ),
       )
       .animate(delay: 350.ms)

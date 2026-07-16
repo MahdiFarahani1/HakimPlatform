@@ -17,7 +17,7 @@ class NoInternetOverlay extends StatelessWidget {
             padding: EdgeInsets.all(24.w),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius: BorderRadius.circular(28.r),
+              borderRadius: BorderRadius.circular(8.r),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withOpacity(0.15),
@@ -38,7 +38,7 @@ class NoInternetOverlay extends StatelessWidget {
                           240,
                           239,
                         ).withOpacity(0.7),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
                         Icons.wifi_off_rounded,

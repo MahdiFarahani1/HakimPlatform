@@ -3,6 +3,7 @@ import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
 import 'package:flutter_application_1/core/utils/url_luncher.dart';
+import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/features/history/data/models/history_item.dart';
 import 'package:flutter_application_1/features/history/data/models/history_type.dart';
 import 'package:flutter_application_1/features/news/presentation/detail_news_view.dart';
@@ -20,13 +21,13 @@ class HistoryItemTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.theme.brightness == Brightness.dark;
-    final typeColor = _getTypeColor(item.type);
+    final typeColor = AppColor.primaryBlue;
 
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: () => _onTap(context),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
           child: Row(
@@ -35,7 +36,7 @@ class HistoryItemTile extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(8),
                   gradient: LinearGradient(
                     colors: [
                       typeColor.withValues(alpha: 0.15),
@@ -44,13 +45,13 @@ class HistoryItemTile extends StatelessWidget {
                   ),
                 ),
                 child: ClipRRect(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(8),
                   child: item.image.isNotEmpty
-                      ? Image.network(
-                          item.image,
+                      ? CustomCacheImage(
+                          imageUrl: item.type == HistoryType.audio
+                              ? item.image
+                              : "${Api.baseImageUrl}${item.image}",
                           fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) =>
-                              _buildEmojiPlaceholder(),
                         )
                       : _buildEmojiPlaceholder(),
                 ),
@@ -84,7 +85,7 @@ class HistoryItemTile extends StatelessWidget {
                           ),
                           decoration: BoxDecoration(
                             color: typeColor.withValues(alpha: 0.1),
-                            borderRadius: BorderRadius.circular(6),
+                            borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
                             item.type.label,
@@ -127,19 +128,6 @@ class HistoryItemTile extends StatelessWidget {
     return Center(
       child: Text(item.type.emoji, style: const TextStyle(fontSize: 24)),
     );
-  }
-
-  Color _getTypeColor(HistoryType type) {
-    switch (type) {
-      case HistoryType.news:
-        return const Color(0xFF0062FF);
-      case HistoryType.book:
-        return const Color(0xFF59C5A1);
-      case HistoryType.video:
-        return const Color(0xFF8400FF);
-      case HistoryType.audio:
-        return AppColor.primaryOrange;
-    }
   }
 
   void _onTap(BuildContext context) {

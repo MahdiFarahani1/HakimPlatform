@@ -5,6 +5,7 @@ import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/features/home/widgets/header.dart';
 import 'package:flutter_application_1/features/news/data/models/news_home_model.dart';
 import 'package:flutter_application_1/features/news/presentation/all_news_view.dart';
+import 'package:flutter_application_1/features/news/presentation/detail_news_view.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart';
@@ -48,10 +49,17 @@ class NewsListSection extends StatelessWidget {
 
   Widget _buildNewsCard(BuildContext context, NewsHomeModel newsItem) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => NewsDetailScreen(newsId: newsItem.id),
+          ),
+        );
+      },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(8.r),
           color: Theme.of(context).colorScheme.onPrimaryContainer,
           boxShadow: [
             BoxShadow(
@@ -66,11 +74,11 @@ class NewsListSection extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: BorderRadius.only(
-                topRight: Radius.circular(16.r),
-                bottomRight: Radius.circular(16.r),
+                topRight: Radius.circular(8.r),
+                bottomRight: Radius.circular(8.r),
               ),
               child: CustomCacheImage(
-                imageUrl: "${Api.baseUrl}${newsItem.image}",
+                imageUrl: "${Api.baseImageUrl}${newsItem.image}",
                 width: 110.w,
                 height: 110.h,
                 fit: BoxFit.cover,

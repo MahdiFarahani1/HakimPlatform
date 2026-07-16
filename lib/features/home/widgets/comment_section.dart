@@ -4,6 +4,7 @@ import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/features/dialogue/data/models/dialogue_model.dart';
 import 'package:flutter_application_1/features/dialogue/presentation/dialouge_view.dart';
+import 'package:flutter_application_1/features/dialogue/widgets/content_modal.dart';
 import 'package:flutter_application_1/features/home/widgets/header.dart';
 import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -48,10 +49,12 @@ class InterviewsSection extends StatelessWidget {
     DialogueModel interview,
   ) {
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        showInterviewInfoDialog(context, interview);
+      },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(24.r),
+          borderRadius: BorderRadius.circular(8.r),
           color: Theme.of(context).colorScheme.onPrimaryContainer,
           boxShadow: [
             BoxShadow(
@@ -68,10 +71,10 @@ class InterviewsSection extends StatelessWidget {
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(24.r),
+                    top: Radius.circular(8.r),
                   ),
                   child: CustomCacheImage(
-                    imageUrl: "${Api.baseUrl}${interview.image}",
+                    imageUrl: "${Api.baseImageUrl}${interview.image}",
                     width: double.infinity,
                     height: 180.h,
                     fit: BoxFit.cover,
@@ -81,7 +84,7 @@ class InterviewsSection extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.vertical(
-                        top: Radius.circular(24.r),
+                        top: Radius.circular(8.r),
                       ),
                       gradient: LinearGradient(
                         begin: Alignment.topCenter,
@@ -104,7 +107,7 @@ class InterviewsSection extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: Colors.white.withOpacity(0.95),
-                      borderRadius: BorderRadius.circular(30.r),
+                      borderRadius: BorderRadius.circular(8.r),
                       boxShadow: [
                         BoxShadow(
                           blurRadius: 8.r,
@@ -166,7 +169,7 @@ class InterviewsSection extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: AppColor.primaryOrange.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(20.r),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
@@ -199,7 +202,7 @@ class InterviewsSection extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: AppColor.primaryOrange.withOpacity(0.1),
 
-                          borderRadius: BorderRadius.circular(20.r),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,

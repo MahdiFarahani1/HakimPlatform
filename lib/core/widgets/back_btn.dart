@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
+import 'package:flutter_application_1/gen/assets.gen.dart';
 
 class AppBackButton extends StatelessWidget {
   final VoidCallback? onTap;
@@ -13,14 +14,14 @@ class AppBackButton extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(36),
         onTap: onTap ?? () => Navigator.of(context).pop(),
         child: Container(
-          width: 44,
-          height: 44,
+          width: 35,
+          height: 35,
           decoration: BoxDecoration(
             color: isDark ? Colors.white.withOpacity(.08) : Colors.white,
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(36),
             boxShadow: [
               if (!isDark)
                 BoxShadow(
@@ -30,10 +31,13 @@ class AppBackButton extends StatelessWidget {
                 ),
             ],
           ),
-          child: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 20,
-            color: AppColor.primaryBlue,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Assets.icons.angleSmallRight.image(
+              width: 24,
+              height: 24,
+              color: AppColor.primaryOrange,
+            ),
           ),
         ),
       ),

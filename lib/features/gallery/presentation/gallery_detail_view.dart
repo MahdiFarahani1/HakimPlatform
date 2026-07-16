@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/widgets/back_btn.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_application_1/config/di.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
@@ -23,13 +24,20 @@ class GalleryDetailScreen extends StatelessWidget {
         builder: (context) {
           return Scaffold(
             appBar: AppBar(
-              title: Text(
-                gallery.title,
-                style: const TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.2,
-                ),
+              automaticallyImplyLeading: false,
+              title: Row(
+                children: [
+                  AppBackButton(),
+                  context.gap(10),
+                  Text(
+                    gallery.title,
+                    style: const TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.2,
+                    ),
+                  ),
+                ],
               ),
               centerTitle: true,
               backgroundColor: Colors.white,
@@ -100,7 +108,7 @@ class GalleryDetailScreen extends StatelessWidget {
                             tag: 'gallery_image_$index',
                             child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(8),
                                 boxShadow: [
                                   BoxShadow(
                                     color: Colors.black.withOpacity(0.05),
@@ -110,7 +118,7 @@ class GalleryDetailScreen extends StatelessWidget {
                                 ],
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(8),
                                 child: CustomCacheImage(
                                   imageUrl: 'http://ammaralhakeem.com$imageUrl',
                                   fit: BoxFit.cover,
@@ -141,7 +149,7 @@ class GalleryDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
       decoration: BoxDecoration(
         color: backgroundColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,

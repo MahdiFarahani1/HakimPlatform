@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/config/di.dart';
+import 'package:flutter_application_1/core/widgets/custom_header.dart';
+import 'package:flutter_application_1/core/constans/api.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/logic/search/search_cubit.dart';
+import 'package:flutter_application_1/core/widgets/custom_cache_image.dart';
 import 'package:flutter_application_1/core/widgets/custom_refresh_widget.dart';
 import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
 import 'package:flutter_application_1/core/widgets/empty_widget.dart';
@@ -60,195 +63,63 @@ class _VideoGalleryScreenState extends State<VideoGalleryScreen>
       ],
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: context.appTheme.scaffoldGradient,
-            ),
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(28),
-                      bottomRight: Radius.circular(28),
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color: AppColor.primaryBlue,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Assets.icons.video.image(
-                              width: 28.w,
-                              height: 28.h,
-                              color: AppColor.primaryOrange,
-                            ),
-                          ),
-                          const SizedBox(width: 14),
-                          BlocBuilder<
-                            SearchCubit<VideoModel>,
-                            SearchState<VideoModel>
-                          >(
-                            builder: (context, searchState) {
-                              return BlocBuilder<VideosCubit, VideosState>(
-                                builder: (context, state) {
-                                  int videoCount = 0;
-                                  if (state is VideosSuccess) {
-                                    videoCount =
-                                        textEditingController.text.isEmpty
-                                        ? state.allVideos.length
-                                        : searchState.results.length;
-                                  }
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        'مكتبة الفيديو',
-                                        style: TextStyle(
-                                          fontSize: 24,
-                                          fontWeight: FontWeight.bold,
-                                          color:
-                                              Theme.of(context).brightness ==
-                                                  Brightness.dark
-                                              ? Colors.white
-                                              : const Color(0xFF1E293B),
-                                        ),
-                                      ),
-                                      const SizedBox(height: 2),
-                                      Text(
-                                        '$videoCount فيديو',
-                                        style: TextStyle(
-                                          color: AppColor.primaryBlue,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-                      BlocListener<VideosCubit, VideosState>(
-                        listener: (context, state) {
-                          if (state is VideosSuccess) {
-                            context.read<SearchCubit<VideoModel>>().clear(
-                              state.allVideos,
-                            );
-                          }
-                        },
-                        child: BlocBuilder<VideosCubit, VideosState>(
-                          builder: (context, state) {
-                            if (state is VideosSuccess) {
-                              final data = state.allVideos;
-                              return CustomSearchBar(
-                                controller: textEditingController,
-                                onChanged: (query) {
-                                  context
-                                      .read<SearchCubit<VideoModel>>()
-                                      .search(
-                                        query: query,
-                                        source: data,
-                                        title: (video) => video.title,
-                                      );
-                                },
-                                onClear: () {
-                                  context.read<SearchCubit<VideoModel>>().clear(
-                                    data,
-                                  );
-                                },
-                              );
-                            }
-                            return const SizedBox.shrink();
-                          },
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: context.appTheme.scaffoldGradient,
+          ),
+          child: Column(
+            children: [
+              BlocBuilder<SearchCubit<VideoModel>, SearchState<VideoModel>>(
+                builder: (context, searchState) {
+                  return BlocBuilder<VideosCubit, VideosState>(
+                    builder: (context, state) {
+                      int videoCount = 0;
+                      if (state is VideosSuccess) {
+                        videoCount = textEditingController.text.isEmpty
+                            ? state.allVideos.length
+                            : searchState.results.length;
+                      }
+                      return CustomHeader(
+                        showBackButton: false,
+                        title: 'مكتبة الفيديو',
+                        subtitle: state is VideosLoading
+                            ? 'جاري التحميل...'
+                            : '$videoCount فيديو',
+                        icon: Assets.icons.video.image(
+                          width: 28.w,
+                          height: 28.h,
+                          color: AppColor.primaryOrange,
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                Expanded(
+                      );
+                    },
+                  );
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
+                child: BlocListener<VideosCubit, VideosState>(
+                  listener: (context, state) {
+                    if (state is VideosSuccess) {
+                      context.read<SearchCubit<VideoModel>>().clear(
+                        state.allVideos,
+                      );
+                    }
+                  },
                   child: BlocBuilder<VideosCubit, VideosState>(
                     builder: (context, state) {
-                      if (state is VideosLoading) {
-                        return SkeletonLoaderVideos();
-                      } else if (state is VideosError) {
-                        return CustomErrorWidget(
-                          message: state.message,
-                          onRetry: () =>
-                              context.read<VideosCubit>().fetchVideos(),
-                        );
-                      } else if (state is VideosSuccess) {
-                        return BlocBuilder<
-                          SearchCubit<VideoModel>,
-                          SearchState<VideoModel>
-                        >(
-                          builder: (context, searchState) {
-                            final displayVideos =
-                                textEditingController.text.isEmpty
-                                ? state.allVideos
-                                : searchState.results;
-
-                            if (displayVideos.isEmpty) {
-                              return EmptySearchWidget(
-                                controller: textEditingController,
-                              );
-                            }
-                            return SimpleRefreshIndicator(
-                              onRefresh: () =>
-                                  context.read<VideosCubit>().fetchVideos(),
-                              child: AnimationLimiter(
-                                child: GridView.builder(
-                                  padding: const EdgeInsets.all(16),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        crossAxisSpacing: 14,
-                                        mainAxisSpacing: 16,
-                                        childAspectRatio: 0.7,
-                                      ),
-                                  itemCount: displayVideos.length,
-                                  itemBuilder: (context, index) {
-                                    final video = displayVideos[index];
-                                    return AnimationConfiguration.staggeredGrid(
-                                      position: index,
-                                      duration: const Duration(
-                                        milliseconds: 350,
-                                      ),
-                                      columnCount: 2,
-                                      child: ScaleAnimation(
-                                        child: FadeInAnimation(
-                                          child: VideoCard(
-                                            video: video,
-                                            onTap: () {
-                                              context.read<HistoryCubit>().addItem(
-                                                HistoryItem.fromVideo(video),
-                                              );
-                                              openYouTube(
-                                                video.youtubeId,
-                                                context,
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
+                      if (state is VideosSuccess) {
+                        final data = state.allVideos;
+                        return CustomSearchBar(
+                          controller: textEditingController,
+                          onChanged: (query) {
+                            context.read<SearchCubit<VideoModel>>().search(
+                              query: query,
+                              source: data,
+                              title: (video) => video.title,
                             );
+                          },
+                          onClear: () {
+                            context.read<SearchCubit<VideoModel>>().clear(data);
                           },
                         );
                       }
@@ -256,9 +127,87 @@ class _VideoGalleryScreenState extends State<VideoGalleryScreen>
                     },
                   ),
                 ),
-                SizedBox(height: 100.h),
-              ],
-            ),
+              ),
+
+              Expanded(
+                child: BlocBuilder<VideosCubit, VideosState>(
+                  builder: (context, state) {
+                    if (state is VideosLoading) {
+                      return SkeletonLoaderVideos();
+                    } else if (state is VideosError) {
+                      return CustomErrorWidget(
+                        message: state.message,
+                        onRetry: () =>
+                            context.read<VideosCubit>().fetchVideos(),
+                      );
+                    } else if (state is VideosSuccess) {
+                      return BlocBuilder<
+                        SearchCubit<VideoModel>,
+                        SearchState<VideoModel>
+                      >(
+                        builder: (context, searchState) {
+                          final displayVideos =
+                              textEditingController.text.isEmpty
+                              ? state.allVideos
+                              : searchState.results;
+
+                          if (displayVideos.isEmpty) {
+                            return EmptySearchWidget(
+                              controller: textEditingController,
+                            );
+                          }
+                          return SimpleRefreshIndicator(
+                            onRefresh: () =>
+                                context.read<VideosCubit>().fetchVideos(),
+                            child: AnimationLimiter(
+                              child: GridView.builder(
+                                padding: const EdgeInsets.all(16),
+                                gridDelegate:
+                                    const SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      crossAxisSpacing: 14,
+                                      mainAxisSpacing: 16,
+                                      childAspectRatio: 0.7,
+                                    ),
+                                itemCount: displayVideos.length,
+                                itemBuilder: (context, index) {
+                                  final video = displayVideos[index];
+                                  return AnimationConfiguration.staggeredGrid(
+                                    position: index,
+                                    duration: const Duration(milliseconds: 350),
+                                    columnCount: 2,
+                                    child: ScaleAnimation(
+                                      child: FadeInAnimation(
+                                        child: VideoCard(
+                                          video: video,
+                                          onTap: () {
+                                            context
+                                                .read<HistoryCubit>()
+                                                .addItem(
+                                                  HistoryItem.fromVideo(video),
+                                                );
+                                            openYouTube(
+                                              video.youtubeId,
+                                              context,
+                                            );
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
+                ),
+              ),
+              SizedBox(height: 100.h),
+            ],
           ),
         ),
       ),
@@ -282,7 +231,7 @@ class VideoCard extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           color: context.theme.colorScheme.onPrimaryContainer,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
               color: context.theme.brightness == Brightness.dark
@@ -298,8 +247,8 @@ class VideoCard extends StatelessWidget {
           children: [
             ClipRRect(
               borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(20),
-                topRight: Radius.circular(20),
+                topLeft: Radius.circular(8),
+                topRight: Radius.circular(8),
               ),
               child: SizedBox(
                 width: double.infinity,
@@ -308,15 +257,10 @@ class VideoCard extends StatelessWidget {
                   fit: StackFit.expand,
                   children: [
                     video.image.isNotEmpty
-                        ? Image.network(
-                            video.image,
+                        ? CustomCacheImage(
+                            imageUrl: '${Api.baseImageUrl}${video.image}',
                             fit: BoxFit.cover,
                             width: double.infinity,
-                            errorBuilder: (_, __, ___) => Container(
-                              color: context.theme.brightness == Brightness.dark
-                                  ? Colors.grey.shade800
-                                  : Colors.grey.shade200,
-                            ),
                           )
                         : Container(
                             color: context.theme.brightness == Brightness.dark
@@ -544,7 +488,7 @@ class _SaveButtonState extends State<_SaveButton>
                 color: isSaved
                     ? AppColor.primaryOrange.withOpacity(0.92)
                     : Colors.black.withOpacity(0.55),
-                borderRadius: BorderRadius.circular(20),
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(
                   color: isSaved
                       ? AppColor.primaryOrange

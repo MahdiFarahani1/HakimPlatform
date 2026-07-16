@@ -21,8 +21,8 @@ class AboutSkeletonLoading extends StatelessWidget {
                 end: Alignment.bottomRight,
               ),
               borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40),
+                bottomLeft: Radius.circular(8),
+                bottomRight: Radius.circular(8),
               ),
             ),
             child: Column(
@@ -33,7 +33,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                       height: 120,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(40),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     )
                     .animate(onPlay: (controller) => controller.repeat())
@@ -44,7 +44,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                       height: 24,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.9),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     )
                     .animate(onPlay: (controller) => controller.repeat())
@@ -66,7 +66,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                       height: 24,
                       decoration: BoxDecoration(
                         color: Colors.white.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     )
                     .animate(onPlay: (controller) => controller.repeat())
@@ -120,7 +120,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.onPrimaryContainer,
-                    borderRadius: BorderRadius.circular(28),
+                    borderRadius: BorderRadius.circular(8),
                   ),
                   child: Column(
                     children: [
@@ -163,7 +163,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                                       height: 80,
                                       decoration: BoxDecoration(
                                         color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(16),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                     )
                                     .animate(
@@ -179,7 +179,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                                       height: 80,
                                       decoration: BoxDecoration(
                                         color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
-                                        borderRadius: BorderRadius.circular(16),
+                                        borderRadius: BorderRadius.circular(8),
                                       ),
                                     )
                                     .animate(
@@ -202,7 +202,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                       height: 80,
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.onPrimaryContainer,
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
                         children: [
@@ -212,7 +212,7 @@ class AboutSkeletonLoading extends StatelessWidget {
                                 height: 50,
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey[300],
-                                  borderRadius: BorderRadius.circular(16),
+                                  borderRadius: BorderRadius.circular(8),
                                 ),
                               )
                               .animate(

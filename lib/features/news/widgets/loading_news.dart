@@ -28,7 +28,7 @@ class SkeletonLoadingWidget extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(30)),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,

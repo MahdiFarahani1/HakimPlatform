@@ -252,7 +252,7 @@ class _GalleryScreenState extends State<GalleryScreen>
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(16),
+                                        borderRadius: BorderRadius.circular(8),
                                         boxShadow: [
                                           BoxShadow(
                                             color: Colors.black.withOpacity(
@@ -264,7 +264,7 @@ class _GalleryScreenState extends State<GalleryScreen>
                                         ],
                                       ),
                                       child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(16),
+                                        borderRadius: BorderRadius.circular(8),
                                         child: Stack(
                                           fit: StackFit.expand,
                                           children: [

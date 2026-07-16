@@ -28,7 +28,7 @@ class HistoryItem {
       id: news.id,
       type: HistoryType.news,
       title: news.title,
-      image: news.fullImageUrl,
+      image: news.image,
       openedAt: DateTime.now().toIso8601String(),
       extraData: {'newsId': news.id},
     );

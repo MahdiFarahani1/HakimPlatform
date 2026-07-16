@@ -65,7 +65,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
       curve: Curves.easeOut,
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.onPrimaryContainer,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: _isFocused
               ? AppColor.primaryBlue
@@ -139,7 +139,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
                     key: const ValueKey('clear_button'),
                     padding: const EdgeInsets.all(8),
                     child: InkWell(
-                      borderRadius: BorderRadius.circular(20),
+                      borderRadius: BorderRadius.circular(8),
                       onTap: () {
                         widget.controller.clear();
                         widget.onChanged?.call('');
