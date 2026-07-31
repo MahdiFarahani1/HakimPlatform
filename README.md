@@ -1,17 +1,206 @@
-# flutter_application_1
+# 📚 Dijlah Library
 
-A new Flutter project.
+اپلیکیشن **Dijlah Library** یک برنامه کتابخانه دیجیتال و محتوای چندرسانه‌ای است که با استفاده از Flutter توسعه داده شده است.
 
-## Getting Started
+این پروژه با هدف ارائه تجربه‌ای روان برای دسترسی به کتاب‌ها، ویدیوها، فایل‌های صوتی، اخبار و محتوای دیجیتال طراحی شده و با تمرکز بر **ساختار قابل توسعه، مدیریت state استاندارد و تجربه کاربری مدرن** پیاده‌سازی شده است.
 
-This project is a starting point for a Flutter application.
+---
 
-A few resources to get you started if this is your first Flutter project:
+## 📱 دانلود
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+نسخه اندروید اپلیکیشن از طریق Google Play در دسترس است:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+🔗 Google Play:
+[لینک اپلیکیشن در Google Play]
+
+---
+
+# ✨ امکانات اصلی
+
+## 📚 کتابخانه دیجیتال
+
+* مشاهده و مدیریت کتاب‌ها
+* دسترسی به محتوای دیجیتال
+* دسته‌بندی محتوا
+* ذخیره کتاب‌ها و محتواهای مورد علاقه
+
+## 🎬 محتوای چندرسانه‌ای
+
+* پخش ویدیو
+* پخش فایل‌های صوتی
+* نمایش گالری تصاویر
+* مدیریت محتوای رسانه‌ای
+
+## 🔖 امکانات کاربر
+
+* افزودن محتوا به علاقه‌مندی‌ها
+* مشاهده تاریخچه فعالیت‌ها
+* جستجو بین محتوا
+* مدیریت تنظیمات برنامه
+
+## 🎨 تجربه کاربری
+
+* پشتیبانی از حالت تاریک (Dark Mode)
+* پشتیبانی از چند زبان
+* طراحی Responsive
+* انیمیشن‌های روان
+* نمایش Loading Skeleton
+* کامپوننت‌های UI قابل استفاده مجدد
+
+---
+
+# 🏗️ معماری پروژه
+
+ساختار پروژه بر اساس معماری **Feature First** طراحی شده است.
+
+در این معماری هر قابلیت به صورت مستقل مدیریت می‌شود که باعث افزایش:
+
+* خوانایی کد
+* قابلیت توسعه
+* نگهداری آسان‌تر پروژه
+* جداسازی مسئولیت‌ها
+
+می‌شود.
+
+اصول استفاده شده در پروژه:
+
+* Feature First Architecture
+* Separation of Concerns
+* Repository Pattern
+* Dependency Injection
+* BLoC / Cubit State Management
+
+---
+
+# 📂 ساختار پروژه
+
+```text
+lib/
+│
+├── config/
+│
+├── core/
+│
+├── custom-widgets/
+│
+├── features/
+│   │
+│   ├── books/
+│   ├── news/
+│   ├── videos/
+│   ├── gallery/
+│   ├── sounds/
+│   ├── bookmark/
+│   ├── history/
+│   ├── search/
+│   ├── settings/
+│   └── home/
+│
+├── gen/
+│
+└── main.dart
+```
+
+---
+
+# 🛠️ تکنولوژی‌ها و ابزارها
+
+## Framework
+
+* Flutter
+* Dart
+
+## مدیریت State
+
+* BLoC
+* Cubit
+* Hydrated BLoC
+
+## ارتباط با API
+
+* Dio
+* REST API
+* Pretty Dio Logger
+
+## Dependency Injection
+
+* GetIt
+
+## مدیریت داده‌ها
+
+* Repository Pattern
+* JSON Serialization
+* Dartz برای مدیریت خطاها با Either
+
+## ذخیره‌سازی محلی
+
+* Get Storage
+* Hydrated Storage
+* Path Provider
+
+## پخش رسانه
+
+* Video Player
+* Just Audio
+
+## طراحی رابط کاربری
+
+* Flutter ScreenUtil
+* Flutter Animate
+* Skeletonizer
+* Lottie
+* Flutter SVG
+* Google Fonts
+
+---
+
+# 🔌 مدیریت ارتباط با سرور
+
+لایه ارتباط با داده‌ها به صورت جداگانه طراحی شده و شامل:
+
+* مدیریت درخواست‌های API
+* Data Source
+* Repository
+* تبدیل داده‌های دریافتی به Model
+* مدیریت خطاها
+
+است.
+
+---
+
+# 🎨 رابط کاربری
+
+در طراحی رابط کاربری پروژه موارد زیر پیاده‌سازی شده است:
+
+* Widgetهای اختصاصی و قابل استفاده مجدد
+* طراحی Responsive
+* پشتیبانی از Dark Theme
+* انیمیشن‌های UI
+* Loading Stateهای حرفه‌ای
+* تجربه کاربری روان
+
+---
+
+# 🚀 بهینه‌سازی عملکرد
+
+برای بهبود عملکرد برنامه از موارد زیر استفاده شده است:
+
+* Cache تصاویر
+* مدیریت بهینه State
+* ذخیره‌سازی وضعیت‌ها
+* بارگذاری مرحله‌ای محتوا
+* مدیریت بهینه فایل‌های رسانه‌ای
+
+---
+
+# 🔐 امنیت
+
+اطلاعات حساس پروژه مانند:
+
+* کلیدهای دسترسی
+* تنظیمات خصوصی
+* اطلاعات محیط توسعه
+
+در Repository عمومی قرار نگرفته‌اند و توسط فایل‌های تنظیمات خصوصی مدیریت می‌شوند.
+
+---
