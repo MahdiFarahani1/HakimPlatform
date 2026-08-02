@@ -11,9 +11,23 @@ class VideosRemoteDataSource {
 
   VideosRemoteDataSource(this.dio);
 
-  Future<Either<Failure, List<VideoModel>>> getVideosData() {
+  Future<Either<Failure, List<VideoModel>>> getVideosData({
+    int? categoryId,
+    int page = 1,
+  }) {
     return safeApiCall(() async {
-      final response = await dio.get(Api.videos);
+      final Map<String, dynamic> queryParameters = {
+        'all': 1,
+        'per_page': 15,
+        'page': page,
+      };
+      if (categoryId != null && categoryId != 0) {
+        queryParameters['category_id'] = categoryId;
+      }
+      final response = await dio.get(
+        Api.videos,
+        queryParameters: queryParameters.isNotEmpty ? queryParameters : null,
+      );
       return (response.data['data'] as List)
           .map((e) => VideoModel.fromJson(e))
           .toList();

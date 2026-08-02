@@ -10,9 +10,20 @@ class DialogueDataSource {
 
   DialogueDataSource(this.dioClient);
 
-  Future<Either<Failure, List<DialogueModel>>> getDialogues() {
+  Future<Either<Failure, List<DialogueModel>>> getDialogues({
+    int page = 1,
+    int perPage = 12,
+    String lang = 'ar',
+  }) {
     return safeApiCall(() async {
-      final response = await dioClient.get(Api.dialogues);
+      final response = await dioClient.get(
+        Api.allDialogues,
+        queryParameters: {
+          'lang': lang,
+          'page': page,
+          'per_page': perPage,
+        },
+      );
       final data = response.data['data'] as List<dynamic>;
       return data.map((e) => DialogueModel.fromJson(e)).toList();
     });

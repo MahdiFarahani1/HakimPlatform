@@ -21,7 +21,9 @@ class HistoryCubit extends Cubit<HistoryState> {
     try {
       await _repository.saveItem(item);
       await loadHistory();
-    } catch (e) {}
+    } catch (e) {
+      emit(HistoryError(e.toString()));
+    }
   }
 
   Future<void> clearHistory() async {

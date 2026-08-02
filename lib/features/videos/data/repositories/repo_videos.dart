@@ -9,8 +9,11 @@ class VideosRepository {
 
   VideosRepository(this.remote);
 
-  Future<Either<Failure, List<VideoModel>>> getVideosData() {
-    return remote.getVideosData();
+  Future<Either<Failure, List<VideoModel>>> getVideosData({
+    int? categoryId,
+    int page = 1,
+  }) {
+    return remote.getVideosData(categoryId: categoryId, page: page);
   }
 
   Future<Either<Failure, List<VideoCategoryModel>>> getCategoryVideosData() {

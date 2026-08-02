@@ -130,44 +130,75 @@ class _DialogueScreenState extends State<DialogueScreen> {
                                             .read<DialougeCubit>()
                                             .fetchDialogues();
                                       },
-                                      child: AnimationLimiter(
-                                        child: ListView.builder(
-                                          padding: const EdgeInsets.fromLTRB(
-                                            16,
-                                            8,
-                                            16,
-                                            24,
-                                          ),
-                                          itemCount: dialogues.length,
-                                          itemBuilder: (context, index) {
-                                            return AnimationConfiguration.staggeredList(
-                                              position: index,
-                                              duration: const Duration(
-                                                milliseconds: 450,
-                                              ),
-                                              child: SlideAnimation(
-                                                verticalOffset: 30.0,
-                                                child: FadeInAnimation(
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                          bottom: 16,
+                                      child: NotificationListener<ScrollNotification>(
+                                        onNotification: (scrollInfo) {
+                                          if (scrollInfo.metrics.pixels >=
+                                              scrollInfo.metrics.maxScrollExtent - 200) {
+                                            if (_searchController.text.isEmpty) {
+                                              context
+                                                  .read<DialougeCubit>()
+                                                  .fetchMoreDialogues();
+                                            }
+                                          }
+                                          return false;
+                                        },
+                                        child: Column(
+                                          children: [
+                                            Expanded(
+                                              child: AnimationLimiter(
+                                                child: ListView.builder(
+                                                  padding: const EdgeInsets.fromLTRB(
+                                                    16,
+                                                    8,
+                                                    16,
+                                                    24,
+                                                  ),
+                                                  itemCount: dialogues.length,
+                                                  itemBuilder: (context, index) {
+                                                    return AnimationConfiguration.staggeredList(
+                                                      position: index,
+                                                      duration: const Duration(
+                                                        milliseconds: 450,
+                                                      ),
+                                                      child: SlideAnimation(
+                                                        verticalOffset: 30.0,
+                                                        child: FadeInAnimation(
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets.only(
+                                                                  bottom: 16,
+                                                                ),
+                                                            child: _DialogueCard(
+                                                              dialogue:
+                                                                  dialogues[index],
+                                                              onTap: () {
+                                                                showInterviewInfoDialog(
+                                                                  context,
+                                                                  dialogues[index],
+                                                                );
+                                                              },
+                                                            ),
+                                                          ),
                                                         ),
-                                                    child: _DialogueCard(
-                                                      dialogue:
-                                                          dialogues[index],
-                                                      onTap: () {
-                                                        showInterviewInfoDialog(
-                                                          context,
-                                                          dialogues[index],
-                                                        );
-                                                      },
-                                                    ),
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                            if (state.fetchMore)
+                                              const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                  vertical: 12,
+                                                ),
+                                                child: Center(
+                                                  child: CircularProgressIndicator(
+                                                    color: AppColor.primaryOrange,
+                                                    strokeWidth: 2.5,
                                                   ),
                                                 ),
                                               ),
-                                            );
-                                          },
+                                          ],
                                         ),
                                       ),
                                     );

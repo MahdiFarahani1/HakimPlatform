@@ -8,7 +8,15 @@ class DialogueRepository {
 
   DialogueRepository(this.dataSource);
 
-  Future<Either<Failure, List<DialogueModel>>> getDialogues() {
-    return dataSource.getDialogues();
+  Future<Either<Failure, List<DialogueModel>>> getDialogues({
+    int page = 1,
+    int perPage = 12,
+    String lang = 'ar',
+  }) {
+    return dataSource.getDialogues(
+      page: page,
+      perPage: perPage,
+      lang: lang,
+    );
   }
 }
