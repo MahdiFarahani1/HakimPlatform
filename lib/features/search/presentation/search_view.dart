@@ -2,14 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/core/utils/url_luncher.dart';
 import 'package:flutter_application_1/core/widgets/custom_loading.dart';
 import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
+import 'package:flutter_application_1/core/widgets/empty_widget.dart';
 import 'package:flutter_application_1/core/widgets/error_widget.dart';
+import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:flutter_application_1/features/news/presentation/detail_news_view.dart';
 import 'package:flutter_application_1/features/search/data/models/search_result_model.dart';
 import 'package:flutter_application_1/features/search/logic/cubit/search_cubit.dart';
 import 'package:flutter_application_1/features/search/logic/cubit/search_state.dart';
+import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class SearchPage extends StatefulWidget {
   final String? initialQuery;
@@ -173,7 +178,7 @@ class _SearchPageState extends State<SearchPage> {
                       }
 
                       if (state is SearchEmpty) {
-                        return _buildEmptyResultsView(state.query);
+                        return EmptySearchWidget(controller: _searchController);
                       }
 
                       if (state is SearchSuccess) {
@@ -245,10 +250,10 @@ class _SearchPageState extends State<SearchPage> {
             ),
             child: Row(
               children: [
-                Icon(
-                  Icons.info_outline_rounded,
+                Assets.icons.info.image(
+                  width: 24,
+                  height: 24,
                   color: AppColor.primaryBlue,
-                  size: 24,
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -297,10 +302,10 @@ class _SearchPageState extends State<SearchPage> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              Icons.north_west_rounded,
-              size: 14,
-              color: AppColor.primaryBlue,
+            Assets.icons.arrowUpLeft.image(
+              width: 9,
+              height: 9,
+              color: Colors.black,
             ),
             const SizedBox(width: 6),
             Text(
@@ -309,53 +314,6 @@ class _SearchPageState extends State<SearchPage> {
                 fontSize: 13,
                 fontWeight: FontWeight.w500,
                 color: isDark ? Colors.grey.shade300 : const Color(0xFF334155),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildEmptyResultsView(String query) {
-    final bool isDark = context.theme.brightness == Brightness.dark;
-
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 80,
-              height: 80,
-              decoration: BoxDecoration(
-                color: AppColor.primaryBlue.withOpacity(0.1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.search_off_rounded,
-                size: 40,
-                color: AppColor.primaryBlue,
-              ),
-            ),
-            const SizedBox(height: 18),
-            Text(
-              'لا توجد نتائج بحث',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: isDark ? Colors.white : const Color(0xFF1E293B),
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'لم نجد أي نتائچ تطابق "$query"\nجرّب البحث باستخدام كلمات أخرى.',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 13,
-                height: 1.5,
-                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
               ),
             ),
           ],
@@ -373,6 +331,16 @@ class _SearchPageState extends State<SearchPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 16),
+          child: Wrap(
+            spacing: 8,
+            runSpacing: 10,
+            children: _suggestedKeywords.map((keyword) {
+              return _buildKeywordChip(keyword);
+            }).toList(),
+          ),
+        ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
           child: Text(
@@ -422,12 +390,22 @@ class _SearchPageState extends State<SearchPage> {
           borderRadius: BorderRadius.circular(12),
           onTap: () {
             HapticFeedback.lightImpact();
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NewsDetailScreen(newsId: item.id),
-              ),
-            );
+            switch (item.type) {
+              case 'فيديو':
+                LaunchUrlService.videoOpener(context, item.link);
+                break;
+
+              case 'خبر':
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NewsDetailScreen(newsId: item.id),
+                  ),
+                );
+                break;
+              default:
+                AppSnackBar.error(context, 'لا يوجد ${item.type} لهذا الخبر ');
+            }
           },
           child: Padding(
             padding: const EdgeInsets.all(14),
@@ -461,12 +439,10 @@ class _SearchPageState extends State<SearchPage> {
                       Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(
-                            Icons.calendar_today_outlined,
-                            size: 12,
-                            color: isDark
-                                ? Colors.grey.shade400
-                                : Colors.grey.shade500,
+                          Assets.icons.calendar.image(
+                            width: 12,
+                            height: 12,
+                            color: AppColor.primaryBlue,
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -529,9 +505,9 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                     ),
                     const SizedBox(width: 4),
-                    const Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      size: 10,
+                    Assets.icons.angleSmallLeft.image(
+                      width: 10,
+                      height: 10,
                       color: AppColor.primaryBlue,
                     ),
                   ],

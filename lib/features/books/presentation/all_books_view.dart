@@ -463,7 +463,7 @@ class BookCardItem extends StatelessWidget {
                       context.read<HistoryCubit>().addItem(
                         HistoryItem.fromBook(book),
                       );
-                      LunchUrlService.urlOpener(
+                      LaunchUrlService.urlOpener(
                         context,
                         "${Api.baseImageUrl}${book.pdf}",
                       );

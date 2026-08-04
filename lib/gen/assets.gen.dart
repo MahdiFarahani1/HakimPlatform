@@ -29,6 +29,10 @@ class $AssetsIconsGen {
   AssetGenImage get arrowDownFromArc =>
       const AssetGenImage('assets/icons/arrow-down-from-arc.png');
 
+  /// File path: assets/icons/arrow-up-left.png
+  AssetGenImage get arrowUpLeft =>
+      const AssetGenImage('assets/icons/arrow-up-left.png');
+
   /// File path: assets/icons/book-arrow-right.png
   AssetGenImage get bookArrowRight =>
       const AssetGenImage('assets/icons/book-arrow-right.png');
@@ -240,6 +244,7 @@ class $AssetsIconsGen {
     angleSmallLeft,
     angleSmallRight,
     arrowDownFromArc,
+    arrowUpLeft,
     bookArrowRight,
     bookOpenCover,
     bookmarkFill,

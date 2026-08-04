@@ -51,7 +51,7 @@ class VideoListSection extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         context.read<HistoryCubit>().addItem(HistoryItem.fromVideo(video));
-        LunchUrlService.videoOpener(context, video.youtubeId);
+        LaunchUrlService.videoOpener(context, video.youtubeId);
       },
       child: Container(
         width: 300.w,

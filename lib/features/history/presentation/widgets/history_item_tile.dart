@@ -142,10 +142,10 @@ class HistoryItemTile extends StatelessWidget {
         );
       case HistoryType.book:
         final pdfUrl = item.extraData['pdfUrl'] as String? ?? '';
-        LunchUrlService.urlOpener(context, "${Api.baseImageUrl}$pdfUrl");
+        LaunchUrlService.urlOpener(context, "${Api.baseImageUrl}$pdfUrl");
       case HistoryType.video:
         final youtubeId = item.extraData['youtubeId'] as String? ?? '';
-        LunchUrlService.videoOpener(context, youtubeId);
+        LaunchUrlService.videoOpener(context, youtubeId);
       case HistoryType.audio:
         final songId = item.extraData['songId'] as String? ?? '';
         final song = sampleSongs.cast<Song?>().firstWhere(

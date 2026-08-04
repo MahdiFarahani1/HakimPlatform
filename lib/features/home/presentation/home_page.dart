@@ -171,7 +171,9 @@ class _HomePageState extends State<HomePage>
                                         border: InputBorder.none,
                                         prefixIcon: GestureDetector(
                                           onTap: () {
-                                            _performSearch(searchController.text);
+                                            _performSearch(
+                                              searchController.text,
+                                            );
                                           },
                                           child: Assets.icons.search.image(
                                             color: AppColor.primaryBlue,
@@ -229,7 +231,7 @@ class _HomePageState extends State<HomePage>
                             final slider = sliders[index];
 
                             return InkWell(
-                              onTap: () => LunchUrlService.urlOpener(
+                              onTap: () => LaunchUrlService.urlOpener(
                                 context,
                                 slider.linkUrl,
                               ),
@@ -465,7 +467,7 @@ class _HomePageState extends State<HomePage>
                                                 .addItem(
                                                   HistoryItem.fromBook(book),
                                                 );
-                                            LunchUrlService.urlOpener(
+                                            LaunchUrlService.urlOpener(
                                               context,
                                               "${Api.baseImageUrl}${book.pdf}",
                                             );

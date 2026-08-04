@@ -651,7 +651,7 @@ class _AboutContent extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        LunchUrlService.urlOpener(context, link.url);
+        LaunchUrlService.urlOpener(context, link.url);
       },
       borderRadius: BorderRadius.circular(8.r),
       child: Container(

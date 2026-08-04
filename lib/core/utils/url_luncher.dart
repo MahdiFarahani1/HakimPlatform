@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/widgets/snackbar_common.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class LunchUrlService {
+class LaunchUrlService {
   static Future<void> videoOpener(
     BuildContext context,
     String youtubeId,

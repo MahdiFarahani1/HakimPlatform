@@ -89,7 +89,10 @@ class BookmarkCard extends StatelessWidget {
           duration: '',
         );
         context.read<HistoryCubit>().addItem(HistoryItem.fromVideo(video));
-        LunchUrlService.videoOpener(context, item.extraData['youtubeId'] ?? '');
+        LaunchUrlService.videoOpener(
+          context,
+          item.extraData['youtubeId'] ?? '',
+        );
       case 'book':
         final book = BookModel(
           id: item.id,
@@ -102,7 +105,7 @@ class BookmarkCard extends StatelessWidget {
           number: '',
         );
         context.read<HistoryCubit>().addItem(HistoryItem.fromBook(book));
-        LunchUrlService.urlOpener(
+        LaunchUrlService.urlOpener(
           context,
           "${Api.baseImageUrl}${item.extraData['pdfUrl'] ?? ''}",
         );
