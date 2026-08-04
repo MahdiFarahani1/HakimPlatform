@@ -13,6 +13,10 @@ import 'package:flutter_application_1/gen/assets.gen.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'package:flutter_application_1/config/di.dart';
+import 'package:flutter_application_1/features/search/logic/cubit/search_cubit.dart';
+import 'package:flutter_application_1/features/search/presentation/search_view.dart';
+
 class WrapperPage extends StatefulWidget {
   const WrapperPage({super.key});
 
@@ -23,7 +27,7 @@ class WrapperPage extends StatefulWidget {
 class _WrapperPageState extends State<WrapperPage> {
   final pages = [
     HomePage(),
-    Container(),
+    const SearchPage(),
     BookmarkScreen(),
     VideoGalleryScreen(),
     GalleryScreen(),
@@ -31,8 +35,11 @@ class _WrapperPageState extends State<WrapperPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => NavigationCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => NavigationCubit()),
+        BlocProvider(create: (context) => getIt<SearchCubit>()),
+      ],
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(

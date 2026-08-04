@@ -14,11 +14,13 @@ import 'package:flutter_application_1/features/history/data/models/history_item.
 import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
 
 import 'package:flutter_application_1/features/home/logic/bloc/bloc/home_bloc.dart';
+import 'package:flutter_application_1/features/home/logic/cubit/navigation_cubit.dart';
 import 'package:flutter_application_1/features/home/widgets/news_section.dart';
 import 'package:flutter_application_1/features/home/widgets/comment_section.dart';
 import 'package:flutter_application_1/features/home/widgets/home_loading.dart';
 import 'package:flutter_application_1/features/home/widgets/video_section.dart';
 import 'package:flutter_application_1/features/news/presentation/all_news_view.dart';
+import 'package:flutter_application_1/features/search/logic/cubit/search_cubit.dart';
 import 'package:flutter_application_1/features/search/presentation/search_view.dart';
 import 'package:flutter_application_1/features/history/presentation/widgets/history_bottom_sheet.dart';
 import 'package:flutter_application_1/features/sounds/presentation/music_list_view.dart';
@@ -65,8 +67,33 @@ class _HomePageState extends State<HomePage>
 
   @override
   void dispose() {
+    searchController.dispose();
     selectedIndex.dispose();
     super.dispose();
+  }
+
+  void _performSearch(String query) {
+    final trimmed = query.trim();
+    if (trimmed.isEmpty) {
+      AppSnackBar.error(context, "البحث لا يمكن أن يكون فارغ");
+      return;
+    }
+
+    try {
+      context.read<SearchCubit>().search(trimmed);
+      final navCubit = context.read<NavigationCubit>();
+      navCubit.changeNavState(1);
+      if (navCubit.pageController.hasClients) {
+        navCubit.pageController.jumpToPage(1);
+      }
+    } catch (_) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SearchPage(initialQuery: trimmed),
+        ),
+      );
+    }
   }
 
   @override
@@ -136,29 +163,7 @@ class _HomePageState extends State<HomePage>
                                             : Colors.black,
                                       ),
                                       onSubmitted: (value) {
-                                        if (value.isEmpty) {
-                                          AppSnackBar.error(
-                                            context,
-
-                                            "البحث لا يمكن أن يكون فارغ",
-                                          );
-                                          return;
-                                        }
-                                        if (value.length < 3) {
-                                          AppSnackBar.error(
-                                            context,
-                                            "البحث يجب أن يكون أطول من 3 أحرف",
-                                          );
-                                          return;
-                                        }
-
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                const SearchPage(),
-                                          ),
-                                        );
+                                        _performSearch(value);
                                       },
                                       textDirection: TextDirection.rtl,
                                       textAlign: TextAlign.right,
@@ -166,29 +171,7 @@ class _HomePageState extends State<HomePage>
                                         border: InputBorder.none,
                                         prefixIcon: GestureDetector(
                                           onTap: () {
-                                            if (searchController.text.isEmpty) {
-                                              AppSnackBar.error(
-                                                context,
-                                                "البحث لا يمكن أن يكون فارغ",
-                                              );
-                                              return;
-                                            }
-                                            if (searchController.text.length <
-                                                3) {
-                                              AppSnackBar.error(
-                                                context,
-                                                "البحث يجب أن يكون أطول من 3 أحرف",
-                                              );
-                                              return;
-                                            }
-
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const SearchPage(),
-                                              ),
-                                            );
+                                            _performSearch(searchController.text);
                                           },
                                           child: Assets.icons.search.image(
                                             color: AppColor.primaryBlue,

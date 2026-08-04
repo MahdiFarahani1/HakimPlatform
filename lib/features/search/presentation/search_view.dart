@@ -1,139 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/core/constans/app_color.dart';
-import 'package:flutter_application_1/core/widgets/custom_loading.dart';
 import 'package:flutter_application_1/core/utils/extension.dart';
+import 'package:flutter_application_1/core/widgets/custom_loading.dart';
+import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
+import 'package:flutter_application_1/core/widgets/error_widget.dart';
+import 'package:flutter_application_1/features/news/presentation/detail_news_view.dart';
+import 'package:flutter_application_1/features/search/data/models/search_result_model.dart';
+import 'package:flutter_application_1/features/search/logic/cubit/search_cubit.dart';
+import 'package:flutter_application_1/features/search/logic/cubit/search_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+  final String? initialQuery;
+
+  const SearchPage({super.key, this.initialQuery});
 
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
 
-class _SearchPageState extends State<SearchPage>
-    with SingleTickerProviderStateMixin {
-  final TextEditingController _searchController = TextEditingController();
+class _SearchPageState extends State<SearchPage> {
+  late final TextEditingController _searchController;
   final FocusNode _focusNode = FocusNode();
-  String _searchQuery = '';
-  bool _isLoading = false;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
 
-  final List<Map<String, dynamic>> _allItems = [
-    {
-      'id': 1,
-      'title': 'Eiffel Tower',
-      'category': 'Landmark',
-      'location': 'Paris, France',
-      'rating': 4.8,
-      'image': '🗼',
-      'color': 0xFFE8B86B,
-    },
-    {
-      'id': 2,
-      'title': 'Colosseum',
-      'category': 'Historical',
-      'location': 'Rome, Italy',
-      'rating': 4.9,
-      'image': '🏛️',
-      'color': 0xFFD4A373,
-    },
-    {
-      'id': 3,
-      'title': 'Sagrada Familia',
-      'category': 'Church',
-      'location': 'Barcelona, Spain',
-      'rating': 4.7,
-      'image': '⛪',
-      'color': 0xFFA8D5BA,
-    },
-    {
-      'id': 4,
-      'title': 'Machu Picchu',
-      'category': 'Ancient City',
-      'location': 'Cusco, Peru',
-      'rating': 4.9,
-      'image': '🏔️',
-      'color': 0xFF6B8E7B,
-    },
-    {
-      'id': 5,
-      'title': 'Great Wall',
-      'category': 'Fortification',
-      'location': 'Beijing, China',
-      'rating': 4.8,
-      'image': '🧱',
-      'color': 0xFFD9896A,
-    },
-    {
-      'id': 6,
-      'title': 'Taj Mahal',
-      'category': 'Mausoleum',
-      'location': 'Agra, India',
-      'rating': 4.9,
-      'image': '🕌',
-      'color': 0xFFF4E4BA,
-    },
-    {
-      'id': 7,
-      'title': 'Statue of Liberty',
-      'category': 'Monument',
-      'location': 'New York, USA',
-      'rating': 4.6,
-      'image': '🗽',
-      'color': 0xFF7CB9A8,
-    },
-    {
-      'id': 8,
-      'title': 'Sydney Opera',
-      'category': 'Arts Centre',
-      'location': 'Sydney, Australia',
-      'rating': 4.7,
-      'image': '🎭',
-      'color': 0xFFE0AFA0,
-    },
-    {
-      'id': 9,
-      'title': 'Christ Redeemer',
-      'category': 'Statue',
-      'location': 'Rio, Brazil',
-      'rating': 4.8,
-      'image': '⛰️',
-      'color': 0xFFB8D8D8,
-    },
-    {
-      'id': 10,
-      'title': 'Stonehenge',
-      'category': 'Megalith',
-      'location': 'Wiltshire, UK',
-      'rating': 4.5,
-      'image': '🪨',
-      'color': 0xFFB0B0B0,
-    },
+  final List<String> _suggestedKeywords = [
+    'العراق',
+    'بيان',
+    'عمار الحكيم',
+    'لقاء',
+    'زيارة',
+    'تصريح',
   ];
-
-  List<Map<String, dynamic>> _filteredItems = [];
 
   @override
   void initState() {
     super.initState();
-    _filteredItems = _allItems;
-    _animationController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 400),
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    );
-    _animationController.forward();
+    _searchController = TextEditingController(text: widget.initialQuery ?? '');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.initialQuery != null && widget.initialQuery!.isNotEmpty) {
+        context.read<SearchCubit>().search(widget.initialQuery!);
+      }
+    });
 
     _searchController.addListener(() {
-      setState(() {
-        _searchQuery = _searchController.text;
-      });
-      _filterItems();
+      setState(() {});
     });
   }
 
@@ -141,478 +53,492 @@ class _SearchPageState extends State<SearchPage>
   void dispose() {
     _searchController.dispose();
     _focusNode.dispose();
-    _animationController.dispose();
     super.dispose();
   }
 
-  void _filterItems() async {
-    setState(() {
-      _isLoading = true;
-    });
-
-    await Future.delayed(
-      const Duration(milliseconds: 150),
-    ); 
-
-    setState(() {
-      if (_searchQuery.isEmpty) {
-        _filteredItems = _allItems;
-      } else {
-        _filteredItems = _allItems.where((item) {
-          return item['title'].toLowerCase().contains(
-                _searchQuery.toLowerCase(),
-              ) ||
-              item['category'].toLowerCase().contains(
-                _searchQuery.toLowerCase(),
-              ) ||
-              item['location'].toLowerCase().contains(
-                _searchQuery.toLowerCase(),
-              );
-        }).toList();
-      }
-      _isLoading = false;
-    });
+  void _onSearchSubmitted(String query) {
+    if (query.trim().isEmpty) return;
+    _focusNode.unfocus();
+    context.read<SearchCubit>().search(query.trim());
   }
 
   void _clearSearch() {
     _searchController.clear();
     _focusNode.unfocus();
     HapticFeedback.lightImpact();
+    context.read<SearchCubit>().clearSearch();
+  }
+
+  void _searchKeyword(String keyword) {
+    _searchController.text = keyword;
+    _onSearchSubmitted(keyword);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: context.appTheme.scaffoldGradient,
-          ),
+    final bool isDark = context.theme.brightness == Brightness.dark;
 
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.fromLTRB(20, 16, 20, 8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Discover',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: -0.5,
-                            color: context.theme.brightness == Brightness.dark
-                                ? Colors.white
-                                : const Color(0xFF0F172A),
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: context.theme.colorScheme.onPrimaryContainer,
-                            borderRadius: BorderRadius.circular(8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: context.theme.brightness == Brightness.dark
-                                    ? Colors.transparent
-                                    : Colors.black.withOpacity(0.05),
-                                blurRadius: 10,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
-                          ),
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(Icons.tune_rounded),
-                            color: AppColor.primaryBlue,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'Find the world\'s most amazing places',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: context.theme.brightness == Brightness.dark
-                            ? Colors.grey.shade400
-                            : const Color(0xFF64748B),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      decoration: BoxDecoration(
-                        color: context.theme.colorScheme.onPrimaryContainer,
-                        borderRadius: BorderRadius.circular(8),
-                        boxShadow: [
-                          BoxShadow(
-                            color: context.theme.brightness == Brightness.dark
-                                ? Colors.transparent
-                                : (_focusNode.hasFocus
-                                    ? AppColor.primaryBlue.withOpacity(0.2)
-                                    : Colors.black.withOpacity(0.03)),
-                            blurRadius: _focusNode.hasFocus ? 16 : 8,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: TextField(
-                        controller: _searchController,
-                        focusNode: _focusNode,
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: context.theme.brightness == Brightness.dark
-                              ? Colors.white
-                              : Colors.black,
-                        ),
-                        decoration: InputDecoration(
-                          hintText: 'Search destinations...',
-                          hintStyle: TextStyle(color: Colors.grey.shade400),
-                          prefixIcon: const Icon(
-                            Icons.search_rounded,
-                            color: AppColor.primaryBlue,
-                          ),
-                          suffixIcon: _searchQuery.isNotEmpty
-                              ? GestureDetector(
-                                  onTap: _clearSearch,
-                                  child: Container(
-                                    margin: const EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: context.theme.brightness == Brightness.dark
-                                          ? Colors.grey.shade800
-                                          : Colors.grey.shade200,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: const Icon(
-                                      Icons.close_rounded,
-                                      size: 18,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                )
-                              : null,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: context.theme.colorScheme.onPrimaryContainer,
-                          contentPadding: const EdgeInsets.symmetric(
-                            vertical: 14,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              if (_searchQuery.isEmpty)
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: context.appTheme.scaffoldGradient,
+            ),
+            child: Column(
+              children: [
+                // Header & Search Box Section
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'البحث',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.bold,
+                              color: isDark
+                                  ? Colors.white
+                                  : const Color(0xFF0F172A),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      Text(
+                        'ابحث في الأخبار والبيانات الصحفية والمحتوى',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: isDark
+                              ? Colors.grey.shade400
+                              : const Color(0xFF64748B),
+                        ),
+                      ),
                       const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Container(
-                            width: 4,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: AppColor.primaryBlue,
-                              borderRadius: BorderRadius.circular(8),
+
+                      // Search input box
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        decoration: BoxDecoration(
+                          color: context.theme.colorScheme.onPrimaryContainer,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: isDark
+                                  ? Colors.transparent
+                                  : (_focusNode.hasFocus
+                                        ? AppColor.primaryBlue.withOpacity(0.15)
+                                        : Colors.black.withOpacity(0.04)),
+                              blurRadius: _focusNode.hasFocus ? 12 : 6,
+                              offset: const Offset(0, 3),
                             ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Recent Searches',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: context.theme.brightness == Brightness.dark
-                                  ? Colors.white
-                                  : const Color(0xFF1E293B),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        children: [
-                          _buildRecentChip('🏔️  Mountains'),
-                          _buildRecentChip('🏛️  Historical'),
-                          _buildRecentChip('🏝️  Beaches'),
-                          _buildRecentChip('🌆  City breaks'),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      Row(
-                        children: [
-                          Container(
-                            width: 4,
-                            height: 20,
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF59E0B),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Trending Destinations',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: context.theme.brightness == Brightness.dark
-                                  ? Colors.white
-                                  : const Color(0xFF1E293B),
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
+                        child: CustomSearchBar(
+                          controller: _searchController,
+                          hintText:
+                              'ابحث في الأخبار والبيانات الصحفية والمحتوى',
+                          onClear: _clearSearch,
+                          onSubmitted: () {
+                            context.read<SearchCubit>().search(
+                              _searchController.text,
+                            );
+                          },
+                        ),
                       ),
                     ],
                   ),
                 ),
 
-              Expanded(
-                child: _isLoading
-                    ? const Center(child: CustomLoading())
-                    : _filteredItems.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 80,
-                              height: 80,
-                              decoration: BoxDecoration(
-                                color: Colors.grey.shade200,
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(
-                                Icons.search_off_rounded,
-                                size: 36,
-                                color: Colors.grey.shade400,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              'No results found',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.grey.shade600,
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Try searching for something else',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.grey.shade500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    : FadeTransition(
-                        opacity: _fadeAnimation,
-                        child: ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(20, 16, 20, 80),
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: _filteredItems.length,
-                          itemBuilder: (context, index) {
-                            final item = _filteredItems[index];
-                            return _buildSearchResultCard(item);
+                // Main Content Area
+                Expanded(
+                  child: BlocBuilder<SearchCubit, SearchState>(
+                    builder: (context, state) {
+                      if (state is SearchLoading) {
+                        return const Center(child: CustomLoading());
+                      }
+
+                      if (state is SearchError) {
+                        return CustomErrorWidget(
+                          message: state.message,
+                          onRetry: () {
+                            context.read<SearchCubit>().search(state.query);
                           },
-                        ),
-                      ),
-              ),
-            ],
+                        );
+                      }
+
+                      if (state is SearchEmpty) {
+                        return _buildEmptyResultsView(state.query);
+                      }
+
+                      if (state is SearchSuccess) {
+                        return _buildSearchResultsList(
+                          state.results,
+                          state.query,
+                        );
+                      }
+
+                      // Default / Initial State
+                      return _buildInitialView();
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildRecentChip(String label) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _searchController.text = label.split(' ')[1];
-        });
-        HapticFeedback.lightImpact();
-      },
+  Widget _buildInitialView() {
+    final bool isDark = context.theme.brightness == Brightness.dark;
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                width: 4,
+                height: 18,
+                decoration: BoxDecoration(
+                  color: AppColor.primaryBlue,
+                  borderRadius: BorderRadius.circular(4),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                'كلمات دلالية مقترحة',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? Colors.white : const Color(0xFF1E293B),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Wrap(
+            spacing: 8,
+            runSpacing: 10,
+            children: _suggestedKeywords.map((keyword) {
+              return _buildKeywordChip(keyword);
+            }).toList(),
+          ),
+          const SizedBox(height: 32),
+
+          // Search Tip Box
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: AppColor.primaryBlue.withOpacity(0.08),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColor.primaryBlue.withOpacity(0.2)),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.info_outline_rounded,
+                  color: AppColor.primaryBlue,
+                  size: 24,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    'يمكنك البحث برقم الخبر، العنوان، أو كلمات مفتاحية للحصول على نتائج دقيقة.',
+                    style: TextStyle(
+                      fontSize: 13,
+                      height: 1.5,
+                      color: isDark
+                          ? Colors.grey.shade300
+                          : const Color(0xFF334155),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildKeywordChip(String keyword) {
+    final bool isDark = context.theme.brightness == Brightness.dark;
+
+    return InkWell(
+      onTap: () => _searchKeyword(keyword),
+      borderRadius: BorderRadius.circular(20),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
           color: context.theme.colorScheme.onPrimaryContainer,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: context.theme.brightness == Brightness.dark
-                ? Colors.white12
-                : Colors.grey.shade200,
+            color: isDark ? Colors.white12 : Colors.grey.shade300,
           ),
           boxShadow: [
             BoxShadow(
-              color: context.theme.brightness == Brightness.dark
+              color: isDark
                   ? Colors.transparent
                   : Colors.black.withOpacity(0.02),
               blurRadius: 4,
             ),
           ],
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-            color: context.theme.brightness == Brightness.dark
-                ? Colors.grey.shade300
-                : const Color(0xFF334155),
-          ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.north_west_rounded,
+              size: 14,
+              color: AppColor.primaryBlue,
+            ),
+            const SizedBox(width: 6),
+            Text(
+              keyword,
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: isDark ? Colors.grey.shade300 : const Color(0xFF334155),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildSearchResultCard(Map<String, dynamic> item) {
-    return GestureDetector(
-      onTap: () {
-        HapticFeedback.selectionClick();
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Selected: ${item['title']}'),
-            duration: const Duration(milliseconds: 500),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-      },
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: context.theme.colorScheme.onPrimaryContainer,
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: context.theme.brightness == Brightness.dark
-                  ? Colors.transparent
-                  : Colors.black.withOpacity(0.03),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
+  Widget _buildEmptyResultsView(String query) {
+    final bool isDark = context.theme.brightness == Brightness.dark;
+
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(32),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                color: AppColor.primaryBlue.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.search_off_rounded,
+                size: 40,
+                color: AppColor.primaryBlue,
+              ),
+            ),
+            const SizedBox(height: 18),
+            Text(
+              'لا توجد نتائج بحث',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: isDark ? Colors.white : const Color(0xFF1E293B),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'لم نجد أي نتائچ تطابق "$query"\nجرّب البحث باستخدام كلمات أخرى.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 13,
+                height: 1.5,
+                color: isDark ? Colors.grey.shade400 : Colors.grey.shade600,
+              ),
             ),
           ],
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: Color(item['color']).withOpacity(0.2),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Center(
-                child: Text(
-                  item['image'],
-                  style: const TextStyle(fontSize: 32),
-                ),
-              ),
+      ),
+    );
+  }
+
+  Widget _buildSearchResultsList(
+    List<SearchResultModel> results,
+    String query,
+  ) {
+    final bool isDark = context.theme.brightness == Brightness.dark;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+          child: Text(
+            'تم العثور على ${results.length} نتيجة لـ "$query"',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: isDark ? Colors.grey.shade400 : const Color(0xFF64748B),
             ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          item['title'],
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: context.theme.brightness == Brightness.dark
-                                ? Colors.white
-                                : const Color(0xFF0F172A),
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
+          ),
+        ),
+        Expanded(
+          child: ListView.builder(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 90),
+            physics: const BouncingScrollPhysics(),
+            itemCount: results.length,
+            itemBuilder: (context, index) {
+              final item = results[index];
+              return _buildSearchResultCard(item);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSearchResultCard(SearchResultModel item) {
+    final bool isDark = context.theme.brightness == Brightness.dark;
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      decoration: BoxDecoration(
+        color: context.theme.colorScheme.onPrimaryContainer,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: isDark ? Colors.transparent : Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        borderRadius: BorderRadius.circular(12),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () {
+            HapticFeedback.lightImpact();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NewsDetailScreen(newsId: item.id),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(14),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Top row: Type badge & Date
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (item.type.isNotEmpty)
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
+                          horizontal: 10,
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFFEF3C7),
-                          borderRadius: BorderRadius.circular(8),
+                          color: AppColor.primaryBlue.withOpacity(0.12),
+                          borderRadius: BorderRadius.circular(6),
                         ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.star,
-                              size: 12,
-                              color: Color(0xFFF59E0B),
-                            ),
-                            const SizedBox(width: 2),
-                            Text(
-                              item['rating'].toString(),
-                              style: const TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFFB45309),
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          item.type,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.primaryBlue,
+                          ),
                         ),
                       ),
-                    ],
+                    if (item.date.isNotEmpty)
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.calendar_today_outlined,
+                            size: 12,
+                            color: isDark
+                                ? Colors.grey.shade400
+                                : Colors.grey.shade500,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            item.date,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: isDark
+                                  ? Colors.grey.shade400
+                                  : Colors.grey.shade600,
+                            ),
+                          ),
+                        ],
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+
+                // Title
+                Text(
+                  item.title,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    height: 1.4,
+                    color: isDark ? Colors.white : const Color(0xFF0F172A),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '${item['category']} • ${item['location']}',
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: context.theme.brightness == Brightness.dark
-                          ? Colors.grey.shade400
-                          : Colors.grey.shade600,
-                    ),
-                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                // Description preview if available
+                if (item.cleanDescription.isNotEmpty) ...[
                   const SizedBox(height: 6),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
+                  Text(
+                    item.cleanDescription,
+                    style: TextStyle(
+                      fontSize: 12.5,
+                      height: 1.45,
+                      color: isDark
+                          ? Colors.grey.shade400
+                          : const Color(0xFF475569),
                     ),
-                    decoration: BoxDecoration(
-                      color: AppColor.primaryBlue.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Text(
-                      item['category'],
-                      style: const TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+
+                const SizedBox(height: 10),
+
+                // Bottom row: Read more hint
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Text(
+                      'عرض التفاصيل',
+                      style: TextStyle(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w600,
                         color: AppColor.primaryBlue,
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(width: 4),
+                    const Icon(
+                      Icons.arrow_back_ios_new_rounded,
+                      size: 10,
+                      color: AppColor.primaryBlue,
+                    ),
+                  ],
+                ),
+              ],
             ),
-            Icon(Icons.chevron_right_rounded, color: Colors.grey.shade400),
-          ],
+          ),
         ),
       ),
     );

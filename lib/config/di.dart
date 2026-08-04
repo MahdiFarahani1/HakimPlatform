@@ -25,6 +25,9 @@ import 'package:flutter_application_1/features/wrapper/logic/cubit/about_cubit.d
 import 'package:flutter_application_1/features/history/data/datasource/history_local_datasource.dart';
 import 'package:flutter_application_1/features/history/data/repository/history_repository_impl.dart';
 import 'package:flutter_application_1/features/history/logic/cubit/history_cubit.dart';
+import 'package:flutter_application_1/features/search/data/data_source/search_remote_datasource.dart';
+import 'package:flutter_application_1/features/search/data/repositories/search_repository.dart';
+import 'package:flutter_application_1/features/search/logic/cubit/search_cubit.dart';
 import 'package:get_it/get_it.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -104,6 +107,17 @@ void setupDependencyInjection() {
   );
   getIt.registerFactory<HistoryCubit>(
     () => HistoryCubit(getIt<HistoryRepository>()),
+  );
+
+  // Search
+  getIt.registerLazySingleton<SearchRemoteDataSource>(
+    () => SearchRemoteDataSource(getIt<Dio>()),
+  );
+  getIt.registerLazySingleton<SearchRepository>(
+    () => SearchRepository(getIt<SearchRemoteDataSource>()),
+  );
+  getIt.registerFactory<SearchCubit>(
+    () => SearchCubit(getIt<SearchRepository>()),
   );
 }
 
